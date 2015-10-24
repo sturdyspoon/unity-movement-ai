@@ -11,6 +11,13 @@ Feel free to only use what you need from the package.
 #Examples
 If you would like to play around with the library then download this whole repository and open it in unity. The **Examples** folder holds a number of premade scenes for you to play around with.
 
+#Additional Info
+The library comes with the following steering behaviors:
+`Arrive`, `Cohesion`, `Collision Avoidance`, `Evade`, `Flee`, `Follow Path`, `Hide`, `Interpose`, `Offset Pursuit`, `Pursue`, `Seek`, `Separation`, `Velocity Match`, `Wall Avoidance`, and `Wander`.
+
+Most steering behaviors have their own file, but `Arrive`, `Interpose`, and `Seek` are all located within the **SteeringBasics.cs** file.
+
+#Previews
 Here are some previews of the different movement AI that come with this library.
 
 ### Arrive
