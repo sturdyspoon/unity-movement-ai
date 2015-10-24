@@ -12,3 +12,15 @@ Feel free to only use what you need from the package.
 If you would like to play around with the library then download this whole repository and open it in unity. The **Examples** folder holds a number of premade scenes for you to play around with.
 
 Here are some previews of the different movement AI that come with this library.
+
+### Arrive
+<a href="https://github.com/antonpantev/unity-movement-ai/raw/master/PreviewImages/arrive.gif"><img src="https://github.com/antonpantev/unity-movement-ai/raw/master/PreviewImages/arrive.gif" width="550" ></a>
+
+### Hide
+<a href="https://github.com/antonpantev/unity-movement-ai/raw/master/PreviewImages/hide.gif"><img src="https://github.com/antonpantev/unity-movement-ai/raw/master/PreviewImages/hide.gif" width="550" ></a>
+
+### Flocking
+<a href="https://github.com/antonpantev/unity-movement-ai/raw/master/PreviewImages/flocking.gif"><img src="https://github.com/antonpantev/unity-movement-ai/raw/master/PreviewImages/flocking.gif" width="550" ></a>
+
+### Wall Avoidance
+<a href="https://github.com/antonpantev/unity-movement-ai/raw/master/PreviewImages/wallAvoid.gif"><img src="https://github.com/antonpantev/unity-movement-ai/raw/master/PreviewImages/wallAvoid.gif" width="550" ></a>
