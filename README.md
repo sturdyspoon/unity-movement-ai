@@ -9,7 +9,7 @@ If you want to add this library to your game then import the [**unity-movement-a
 Feel free to only use what you need from the package.
 
 #Examples
-If you would like to play around with the library then download this whole repository and open it in unity. The **Examples** folder holds a number of premade scenes for you to play around with.
+If you would like to play around with the library then download this whole repository and open it in Unity. The **Examples** folder holds a number of premade scenes for you to play around with.
 
 #Additional Info
 The library comes with the following steering behaviors:
