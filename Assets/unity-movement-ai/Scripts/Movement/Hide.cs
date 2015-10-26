@@ -16,19 +16,19 @@ public class Hide : MonoBehaviour {
         evade = GetComponent<Evade>();
 	}
 
-    public Vector3 getSteering(Rigidbody target, ICollection<Rigidbody> obstacles)
+    public Vector3 getSteering(GenericRigidbody target, ICollection<GenericRigidbody> obstacles)
     {
         Vector3 bestHidingSpot;
         return getSteering(target, obstacles, out bestHidingSpot);
     }
 
-    public Vector3 getSteering(Rigidbody target, ICollection<Rigidbody> obstacles, out Vector3 bestHidingSpot)
+    public Vector3 getSteering(GenericRigidbody target, ICollection<GenericRigidbody> obstacles, out Vector3 bestHidingSpot)
     {
         //Find the closest hiding spot
         float distToClostest = Mathf.Infinity;
         bestHidingSpot = Vector3.zero;
 
-        foreach(Rigidbody r in obstacles)
+        foreach(GenericRigidbody r in obstacles)
         {
             Vector3 hidingSpot = getHidingPosition(r, target);
 
@@ -52,9 +52,9 @@ public class Hide : MonoBehaviour {
         return steeringBasics.arrive(bestHidingSpot);
     }
 
-    private Vector3 getHidingPosition(Rigidbody obstacle, Rigidbody target)
+    private Vector3 getHidingPosition(GenericRigidbody obstacle, GenericRigidbody target)
     {
-        float distAway = SteeringBasics.getBoundingRadius(obstacle.transform) + distanceFromBoundary;
+        float distAway = obstacle.boundingRadius + distanceFromBoundary;
 
         Vector3 dir = obstacle.position - target.position;
         dir.Normalize();

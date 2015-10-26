@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(SteeringBasics))]
 public class Separation : MonoBehaviour {
 
     /* The maximum acceleration for separation */
@@ -17,7 +18,8 @@ public class Separation : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        boundingRadius = SteeringBasics.getBoundingRadius(transform);
+        SteeringBasics steeringBasics = GetComponent<SteeringBasics>();
+        boundingRadius = steeringBasics.rb.boundingRadius;
     }
 
     public Vector3 getSteering(ICollection<GenericRigidbody> targets)
@@ -32,10 +34,8 @@ public class Separation : MonoBehaviour {
 
             if (dist < maxSepDist)
             {
-                float targetRadius = SteeringBasics.getBoundingRadius(r.transform);
-
                 /* Calculate the separation strength (can be changed to use inverse square law rather than linear) */
-                var strength = sepMaxAcceleration * (maxSepDist - dist) / (maxSepDist - boundingRadius - targetRadius);
+                var strength = sepMaxAcceleration * (maxSepDist - dist) / (maxSepDist - boundingRadius - r.boundingRadius);
 
                 /* Added separation acceleration to the existing steering */
                 direction.Normalize();

@@ -10,15 +10,14 @@ public class Spawner : MonoBehaviour {
     public bool randomizeOrientation = false;
     public float boundaryPadding = 1f;
     public float spaceBetweenObjects = 1f;
-    public Transform[] thingsToAvoid;
+    public GameObject[] thingsToAvoid;
+    private GenericRigidbody[] rigidBodiesToAvoid;
 
     private Vector3 bottomLeft;
     private Vector3 widthHeight;
 
-    private float[] thingsToAvoidRadius;
-
     [System.NonSerialized]
-    public List<Rigidbody> objs = new List<Rigidbody>();
+    public List<GenericRigidbody> objs = new List<GenericRigidbody>();
 
     // Use this for initialization
     void Start()
@@ -30,12 +29,12 @@ public class Spawner : MonoBehaviour {
         Vector3 topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, z));
         widthHeight = topRight - bottomLeft;
 
-        //Find the radius' of the things to avoid
-        thingsToAvoidRadius = new float[thingsToAvoid.Length];
+        //Find the GenericRigidbodies' of the things to avoid
+        rigidBodiesToAvoid = new GenericRigidbody[thingsToAvoid.Length];
 
         for (int i = 0; i < thingsToAvoid.Length; i++)
         {
-            thingsToAvoidRadius[i] = SteeringBasics.getBoundingRadius(thingsToAvoid[i].transform);
+            rigidBodiesToAvoid[i] = SteeringBasics.getGenericRigidbody(thingsToAvoid[i]);
         }
 
         //Create the create the objects
@@ -73,7 +72,7 @@ public class Spawner : MonoBehaviour {
                 transform.eulerAngles = euler;
             }
 
-            objs.Add(t.GetComponent<Rigidbody>());
+            objs.Add(SteeringBasics.getGenericRigidbody(t.gameObject));
 
             return true;
         }
@@ -84,24 +83,22 @@ public class Spawner : MonoBehaviour {
     private bool canPlaceObject(float halfSize, Vector3 pos)
     {
         //Make sure it does not overlap with any thing to avoid
-        for (int i = 0; i < thingsToAvoid.Length; i++)
+        for (int i = 0; i < rigidBodiesToAvoid.Length; i++)
         {
-            float dist = Vector3.Distance(thingsToAvoid[i].position, pos);
+            float dist = Vector3.Distance(rigidBodiesToAvoid[i].position, pos);
 
-            if(dist < halfSize + thingsToAvoidRadius[i])
+            if(dist < halfSize + rigidBodiesToAvoid[i].boundingRadius)
             {
                 return false;
             }
         }
 
         //Make sure it does not overlap with any existing object
-        foreach(Rigidbody o in objs)
+        foreach(GenericRigidbody o in objs)
         {
             float dist = Vector3.Distance(o.position, pos);
 
-            float oRadius = SteeringBasics.getBoundingRadius(o.transform);
-
-            if (dist < oRadius + spaceBetweenObjects + halfSize)
+            if (dist < o.boundingRadius + spaceBetweenObjects + halfSize)
             {
                 return false;
             }

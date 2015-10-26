@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GenericRigidbody {
 
+    public float boundingRadius = -1f;
+
     private Rigidbody rb;
     private Rigidbody2D rb2D;
 
@@ -12,12 +14,14 @@ public class GenericRigidbody {
     {
         this.rb = rb;
         isRigidbody = true;
+        setBoundingRadius();
     }
 
     public GenericRigidbody(Rigidbody2D rb2D)
     {
         this.rb2D = rb2D;
         isRigidbody = false;
+        setBoundingRadius();
     }
 
     public Vector3 position
@@ -84,4 +88,26 @@ public class GenericRigidbody {
             }
         }
     }
+
+    private void setBoundingRadius()
+    {
+        if (isRigidbody)
+        {
+            SphereCollider col = rb.GetComponent<SphereCollider>();
+
+            if(col != null)
+            {
+                boundingRadius = Mathf.Max(rb.transform.localScale.x, rb.transform.localScale.y, rb.transform.localScale.z) * col.radius; ;
+            } 
+        }
+        else
+        {
+            CircleCollider2D col = rb2D.GetComponent<CircleCollider2D>();
+
+            if(col != null)
+            {
+                boundingRadius = Mathf.Max(rb2D.transform.localScale.x, rb2D.transform.localScale.y) * col.radius;
+            }
+        }
     }
+}

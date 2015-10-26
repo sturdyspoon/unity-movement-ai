@@ -22,7 +22,7 @@ public class SteeringBasics : MonoBehaviour {
 
 	public float turnSpeed = 20f;
 
-	private GenericRigidbody rb;
+	public GenericRigidbody rb;
 
 	public bool smoothing = true;
 	public int numSamplesForSmoothing = 5;
@@ -207,12 +207,6 @@ public class SteeringBasics : MonoBehaviour {
         directionToTarget.Normalize();
 
         return Vector2.Dot(facing, directionToTarget) >= cosineValue;
-    }
-
-    public static float getBoundingRadius(Transform t)
-    {
-        SphereCollider col = t.GetComponent<SphereCollider>();
-        return Mathf.Max(t.localScale.x, t.localScale.y, t.localScale.z) * col.radius;
     }
 
     //Since we use editor calls we omit this function on build time
