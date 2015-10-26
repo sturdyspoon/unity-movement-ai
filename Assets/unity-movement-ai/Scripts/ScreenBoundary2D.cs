@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ScreenBoundary : MonoBehaviour {
+public class ScreenBoundary2D : MonoBehaviour {
 
     private Vector3 bottomLeft;
     private Vector3 topRight;
     private Vector3 widthHeight;
 
     // Use this for initialization
-    void Start () {
-        float z = -1*Camera.main.transform.position.z;
+    void Start()
+    {
+        float z = -1 * Camera.main.transform.position.z;
 
         bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, z));
         topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, z));
@@ -18,7 +19,7 @@ public class ScreenBoundary : MonoBehaviour {
         transform.localScale = new Vector3(widthHeight.x, widthHeight.y, transform.localScale.z);
     }
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerStay2D(Collider2D other)
     {
         Transform t = other.transform;
 
