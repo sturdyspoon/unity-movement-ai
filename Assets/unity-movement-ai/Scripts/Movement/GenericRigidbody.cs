@@ -3,6 +3,11 @@ using System.Collections;
 
 public class GenericRigidbody {
 
+    /// <summary>
+    /// This holds the bounding radius for the current game object (either the radius of a sphere
+    /// or circle collider). If the game object does not have a sphere or circle collider this 
+    /// will be set to -1.
+    /// </summary>
     public float boundingRadius = -1f;
 
     private Rigidbody rb;
