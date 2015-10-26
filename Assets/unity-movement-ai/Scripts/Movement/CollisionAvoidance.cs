@@ -7,15 +7,11 @@ public class CollisionAvoidance : MonoBehaviour {
 
     //public float agentRadius = 0.25f;
 
-    private float characterRadius;
-
     private GenericRigidbody rb;
 
     // Use this for initialization
     void Start()
     {
-        characterRadius = SteeringBasics.getBoundingRadius(transform);
-
         rb = SteeringBasics.getGenericRigidbody(gameObject);
     }
 
@@ -54,9 +50,9 @@ public class CollisionAvoidance : MonoBehaviour {
             Vector3 separation = relativePos + relativeVel * timeToCollision;
             float minSeparation = separation.magnitude;
 
-            float targetRadius = SteeringBasics.getBoundingRadius(r.transform);
+            float targetRadius = r.boundingRadius;
 
-            if (minSeparation > characterRadius + targetRadius)
+            if (minSeparation > rb.boundingRadius + targetRadius)
             //if (minSeparation > 2 * agentRadius)
             {
                 continue;
@@ -85,7 +81,7 @@ public class CollisionAvoidance : MonoBehaviour {
 
         /* If we are going to collide with no separation or if we are already colliding then 
 		 * steer based on current position */
-        if (firstMinSeparation <= 0 || firstDistance < characterRadius + firstRadius)
+        if (firstMinSeparation <= 0 || firstDistance < rb.boundingRadius + firstRadius)
         //if (firstMinSeparation <= 0 || firstDistance < 2 * agentRadius)
         {
             acceleration = transform.position - firstTarget.position;
