@@ -31,21 +31,25 @@ public class SteeringBasics : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        setGenericRigidbody();
+        rb = getGenericRigidbody(gameObject);
     }
 
-    private void setGenericRigidbody()
+    public static GenericRigidbody getGenericRigidbody(GameObject go)
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
+        GenericRigidbody result;
+
+        Rigidbody rb = go.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            this.rb = new GenericRigidbody(rb);
+            result = new GenericRigidbody(rb);
         }
         else
         {
-            Rigidbody2D rb2D = GetComponent<Rigidbody2D>();
-            this.rb = new GenericRigidbody(rb2D);
+            Rigidbody2D rb2D = go.GetComponent<Rigidbody2D>();
+            result = new GenericRigidbody(rb2D);
         }
+
+        return result;
     }
 
     /* Updates the velocity of the current game object by the given linear acceleration */
@@ -176,7 +180,7 @@ public class SteeringBasics : MonoBehaviour {
 		return acceleration;
 	}
 
-    public Vector3 interpose(Rigidbody target1, Rigidbody target2)
+    public Vector3 interpose(GenericRigidbody target1, GenericRigidbody target2)
     {
         Vector3 midPoint = (target1.position + target2.position) / 2;
 
