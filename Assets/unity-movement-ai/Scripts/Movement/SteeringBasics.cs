@@ -22,7 +22,7 @@ public class SteeringBasics : MonoBehaviour {
 
 	public float turnSpeed = 20f;
 
-	public GenericRigidbody rb;
+	private GenericRigidbody rb;
 
 	public bool smoothing = true;
 	public int numSamplesForSmoothing = 5;
