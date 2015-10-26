@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 /* A helper class for steering a game object in 2D */
 using System.Collections.Generic;
 
 
-[RequireComponent (typeof (Rigidbody))]
 public class SteeringBasics : MonoBehaviour {
 	
 	public float maxVelocity = 3.5f;
@@ -24,19 +22,34 @@ public class SteeringBasics : MonoBehaviour {
 
 	public float turnSpeed = 20f;
 
-	private Rigidbody rb;
+	private GenericRigidbody rb;
 
 	public bool smoothing = true;
 	public int numSamplesForSmoothing = 5;
 	private Queue<Vector2> velocitySamples = new Queue<Vector2>();
 
 	// Use this for initialization
-	void Start () {
-		rb = GetComponent<Rigidbody> ();
-	}
-	
-	/* Updates the velocity of the current game object by the given linear acceleration */
-	public void steer(Vector3 linearAcceleration) {
+	void Start ()
+    {
+        setGenericRigidbody();
+    }
+
+    private void setGenericRigidbody()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            this.rb = new GenericRigidbody(rb);
+        }
+        else
+        {
+            Rigidbody2D rb2D = GetComponent<Rigidbody2D>();
+            this.rb = new GenericRigidbody(rb2D);
+        }
+    }
+
+    /* Updates the velocity of the current game object by the given linear acceleration */
+    public void steer(Vector3 linearAcceleration) {
 		rb.velocity += linearAcceleration * Time.deltaTime;
 		
 		if (rb.velocity.magnitude > maxVelocity) {
@@ -198,4 +211,23 @@ public class SteeringBasics : MonoBehaviour {
         return Mathf.Max(t.localScale.x, t.localScale.y, t.localScale.z) * col.radius;
     }
 
+    //Since we use editor calls we omit this function on build time
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    public void Reset()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        Rigidbody2D rb2D = GetComponent<Rigidbody2D>();
+
+        if (rb == null && rb2D == null)
+        {
+            if (UnityEditor.EditorUtility.DisplayDialog("Choose a Component", "You are missing one of the required componets. Please choose one to add", "Rigidbody", "Rigidbody2D"))
+            {
+                gameObject.AddComponent<Rigidbody>();
+            }
+            else
+            {
+                gameObject.AddComponent<Rigidbody2D>();
+            }
+        }
+    }
 }
