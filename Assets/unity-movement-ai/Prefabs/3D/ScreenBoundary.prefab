@@ -8,7 +8,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 457112}
-  - 33: {fileID: 3324950}
   - 65: {fileID: 6565720}
   - 114: {fileID: 11470440}
   m_Layer: 8
@@ -30,13 +29,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!33 &3324950
-MeshFilter:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 160320}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!65 &6565720
 BoxCollider:
   m_ObjectHideFlags: 1

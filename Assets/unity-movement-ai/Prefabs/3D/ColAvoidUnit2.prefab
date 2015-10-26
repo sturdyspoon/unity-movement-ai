@@ -17,7 +17,7 @@ GameObject:
   - 114: {fileID: 11480236}
   - 114: {fileID: 11460476}
   m_Layer: 0
-  m_Name: ColAvoidUnit1
+  m_Name: ColAvoidUnit2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 442132}
   - 114: {fileID: 11485160}
-  - 135: {fileID: 13572740}
+  - 65: {fileID: 6513130}
   m_Layer: 8
   m_Name: ColAvoidSensor
   m_TagString: Untagged
@@ -111,6 +111,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
+--- !u!65 &6513130
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 137442}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: .600000024, z: .600000024}
+  m_Center: {x: .449999988, y: 0, z: 0}
 --- !u!114 &11423876
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -130,8 +142,6 @@ MonoBehaviour:
   turnSpeed: 20
   smoothing: 1
   numSamplesForSmoothing: 5
-  sepMaxAcceleration: 10
-  sepThreshold: 1.66659999
 --- !u!114 &11436192
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -196,18 +206,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: .300000012
   m_Center: {x: 0, y: 0, z: -.300000012}
---- !u!135 &13572740
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 137442}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.66666663
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -222,6 +220,22 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Center.x
+      value: .300000012
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Name
+      value: ColAvoidSensor
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: maxAcceleration

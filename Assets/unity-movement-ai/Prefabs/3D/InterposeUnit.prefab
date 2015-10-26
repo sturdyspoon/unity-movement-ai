@@ -98,8 +98,6 @@ MonoBehaviour:
   turnSpeed: 20
   smoothing: 1
   numSamplesForSmoothing: 5
-  sepMaxAcceleration: 10
-  sepThreshold: 1.66659999
 --- !u!114 &11470476
 MonoBehaviour:
   m_ObjectHideFlags: 1
