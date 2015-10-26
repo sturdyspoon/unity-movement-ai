@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public class NearSensor : MonoBehaviour {
 
-	public HashSet<Rigidbody> targets = new HashSet<Rigidbody>();
+	public HashSet<GenericRigidbody> targets = new HashSet<GenericRigidbody>();
 
 	void OnTriggerEnter(Collider other) {
-		targets.Add (other.GetComponent<Rigidbody>());
+		targets.Add (SteeringBasics.getGenericRigidbody(other.gameObject));
 	}
 	
 	void OnTriggerExit(Collider other) {
-		targets.Remove (other.GetComponent<Rigidbody>());
+		targets.Remove (SteeringBasics.getGenericRigidbody(other.gameObject));
 	}
 }

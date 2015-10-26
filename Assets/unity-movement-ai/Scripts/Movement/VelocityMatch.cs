@@ -24,12 +24,12 @@ public class VelocityMatch : MonoBehaviour
         steeringBasics = GetComponent<SteeringBasics>();
     }
 
-    public Vector3 getSteering(ICollection<Rigidbody> targets)
+    public Vector3 getSteering(ICollection<GenericRigidbody> targets)
     {
         Vector3 accel = Vector3.zero;
         int count = 0;
 
-        foreach (Rigidbody r in targets)
+        foreach (GenericRigidbody r in targets)
         {
             if (steeringBasics.isFacing(r.position, facingCosineVal))
             {

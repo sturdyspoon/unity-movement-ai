@@ -69,4 +69,19 @@ public class GenericRigidbody {
             }
         }
     }
-}
+
+    public Transform transform
+    {
+        get
+        {
+            if (isRigidbody)
+            {
+                return rb.transform;
+            }
+            else
+            {
+                return rb2D.transform;
+            }
+        }
+    }
+    }
