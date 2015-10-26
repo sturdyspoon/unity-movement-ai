@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(SteeringBasics))]
 public class Flee : MonoBehaviour {
 
     public float panicDist = 3.5f;
@@ -12,12 +12,12 @@ public class Flee : MonoBehaviour {
 
     public float timeToTarget = 0.1f;
 
-    private Rigidbody rb;
+    private GenericRigidbody rb;
 
     // Use this for initialization
     void Start () {
-        rb = GetComponent<Rigidbody>();
-	}
+        rb = SteeringBasics.getGenericRigidbody(gameObject);
+    }
 
     /* A flee steering behavior. Will return the steering for the current game object to flee a given position */
     public Vector3 getSteering(Vector3 targetPosition)

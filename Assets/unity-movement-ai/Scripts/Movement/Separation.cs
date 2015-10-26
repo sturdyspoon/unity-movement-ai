@@ -18,8 +18,8 @@ public class Separation : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        SteeringBasics steeringBasics = GetComponent<SteeringBasics>();
-        boundingRadius = steeringBasics.rb.boundingRadius;
+        GenericRigidbody rb = SteeringBasics.getGenericRigidbody(gameObject);
+        boundingRadius = rb.boundingRadius;
     }
 
     public Vector3 getSteering(ICollection<GenericRigidbody> targets)
