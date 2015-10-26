@@ -13,4 +13,14 @@ public class NearSensor : MonoBehaviour {
 	void OnTriggerExit(Collider other) {
 		targets.Remove (SteeringBasics.getGenericRigidbody(other.gameObject));
 	}
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        targets.Add(SteeringBasics.getGenericRigidbody(other.gameObject));
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        targets.Remove(SteeringBasics.getGenericRigidbody(other.gameObject));
+    }
 }
