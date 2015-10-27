@@ -13,19 +13,19 @@ public class GenericRigidbody {
     private Rigidbody rb;
     private Rigidbody2D rb2D;
 
-    private bool isRigidbody;
+    public bool is3D;
 
     public GenericRigidbody(Rigidbody rb)
     {
         this.rb = rb;
-        isRigidbody = true;
+        is3D = true;
         setBoundingRadius();
     }
 
     public GenericRigidbody(Rigidbody2D rb2D)
     {
         this.rb2D = rb2D;
-        isRigidbody = false;
+        is3D = false;
         setBoundingRadius();
     }
 
@@ -33,7 +33,7 @@ public class GenericRigidbody {
     {
         get
         {
-            if(isRigidbody)
+            if(is3D)
             {
                 return rb.position;
             } else
@@ -43,7 +43,7 @@ public class GenericRigidbody {
         }
         set
         {
-            if(isRigidbody)
+            if(is3D)
             {
                 rb.position = value;
             } else
@@ -57,7 +57,7 @@ public class GenericRigidbody {
     {
         get
         {
-            if (isRigidbody)
+            if (is3D)
             {
                 return rb.velocity;
             }
@@ -68,7 +68,7 @@ public class GenericRigidbody {
         }
         set
         {
-            if (isRigidbody)
+            if (is3D)
             {
                 rb.velocity = value;
             }
@@ -83,7 +83,7 @@ public class GenericRigidbody {
     {
         get
         {
-            if (isRigidbody)
+            if (is3D)
             {
                 return rb.transform;
             }
@@ -96,7 +96,7 @@ public class GenericRigidbody {
 
     private void setBoundingRadius()
     {
-        if (isRigidbody)
+        if (is3D)
         {
             SphereCollider col = rb.GetComponent<SphereCollider>();
 
