@@ -16,12 +16,12 @@ public class WallAvoidance : MonoBehaviour {
 
     public float maxAcceleration = 40f;
 
-    private Rigidbody rb;
+    private GenericRigidbody rb;
     private SteeringBasics steeringBasics;
 
     // Use this for initialization
     void Start () {
-        rb = GetComponent<Rigidbody>();
+        rb = SteeringBasics.getGenericRigidbody(gameObject);
         steeringBasics = GetComponent<SteeringBasics>();
     }
 
@@ -43,7 +43,7 @@ public class WallAvoidance : MonoBehaviour {
         rayDirs[1] = orientationToVector(orientation + sideWhiskerAngle * Mathf.Deg2Rad);
         rayDirs[2] = orientationToVector(orientation - sideWhiskerAngle * Mathf.Deg2Rad);
 
-        RaycastHit hit;
+        GenericRayHit hit;
 
         /* If no collision do nothing */
         if (!findObstacle(rayDirs, out hit))
@@ -71,18 +71,18 @@ public class WallAvoidance : MonoBehaviour {
         return new Vector3(Mathf.Cos(orientation), Mathf.Sin(orientation), 0);
     }
 
-    private bool findObstacle(Vector3[] rayDirs, out RaycastHit firstHit)
+    private bool findObstacle(Vector3[] rayDirs, out GenericRayHit firstHit)
     {
-        firstHit = new RaycastHit();
+        firstHit = new GenericRayHit();
         bool foundObs = false;
 
         for (int i = 0; i < rayDirs.Length; i++)
         {
             float rayDist = (i == 0) ? mainWhiskerLen : sideWhiskerLen;
 
-            RaycastHit hit;
+            GenericRayHit hit;
 
-            if (Physics.Raycast(transform.position, rayDirs[i], out hit, rayDist))
+            if (genericRaycast(transform.position, rayDirs[i], out hit, rayDist))
             {
                 foundObs = true;
                 firstHit = hit;
@@ -94,4 +94,43 @@ public class WallAvoidance : MonoBehaviour {
 
         return foundObs;
     }
+
+    private bool genericRaycast(Vector3 origin, Vector3 direction, out GenericRayHit hit, float distance = Mathf.Infinity)
+    {
+        bool result = false;
+
+        if (rb.is3D)
+        {
+            RaycastHit h;
+            result = Physics.Raycast(origin, direction, out h, distance);
+            hit = new GenericRayHit(h);
+        }
+        else
+        {
+            RaycastHit2D h = Physics2D.Raycast(origin, direction, distance);
+            result = (h.collider != null); //RaycastHit2D auto evaluates to true or false evidently
+            hit = new GenericRayHit(h);
+        }
+
+        return result;
+    }
+
+    private struct GenericRayHit
+    {
+        public Vector3 point;
+        public Vector3 normal;
+
+        public GenericRayHit(RaycastHit h)
+        {
+            this.point = h.point;
+            this.normal = h.normal;
+        }
+
+        public GenericRayHit(RaycastHit2D h)
+        {
+            this.point = h.point;
+            this.normal = h.normal;
+        }
+    }
 }
+
