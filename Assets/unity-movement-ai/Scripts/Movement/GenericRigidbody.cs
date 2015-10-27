@@ -115,4 +115,69 @@ public class GenericRigidbody {
             }
         }
     }
+
+    public override bool Equals(System.Object obj)
+    {
+        // If parameter is null return false.
+        if (obj == null)
+        {
+            return false;
+        }
+
+        // If parameter cannot be cast to Point return false.
+        GenericRigidbody p = obj as GenericRigidbody;
+        if ((System.Object)p == null)
+        {
+            return false;
+        }
+
+        // Return true if the fields match:
+        return (rb == p.rb) && (rb2D == p.rb2D);
+    }
+
+    public bool Equals(GenericRigidbody p)
+    {
+        // If parameter is null return false:
+        if ((object)p == null)
+        {
+            return false;
+        }
+
+        // Return true if the fields match:
+        return (rb == p.rb) && (rb2D == p.rb2D);
+    }
+
+    public override int GetHashCode()
+    {
+        if(is3D)
+        {
+            return rb.GetHashCode();
+        } else
+        {
+            return rb2D.GetHashCode();
+        }
+    }
+
+    public static bool operator ==(GenericRigidbody a, GenericRigidbody b)
+    {
+        // If both are null, or both are same instance, return true.
+        if (System.Object.ReferenceEquals(a, b))
+        {
+            return true;
+        }
+
+        // If one is null, but not both, return false.
+        if (((object)a == null) || ((object)b == null))
+        {
+            return false;
+        }
+
+        // Return true if the fields match:
+        return a.rb == b.rb && a.rb2D == b.rb2D;
+    }
+
+    public static bool operator !=(GenericRigidbody a, GenericRigidbody b)
+    {
+        return !(a == b);
+    }
 }
