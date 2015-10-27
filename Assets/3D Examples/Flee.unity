@@ -260,7 +260,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 551253050}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -15}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -269,25 +269,6 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 471744, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
   m_PrefabInternal: {fileID: 260153143}
---- !u!1 &686763080 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 131706, guid: 28bd245136767a6439883098b9d5f339, type: 2}
-  m_PrefabInternal: {fileID: 1215689966}
---- !u!114 &686763081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 686763080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cdf64bcab4d4d8468c92f1bc4b23f7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panicDist: 3.5
-  decelerateOnStop: 1
-  maxAcceleration: 10
-  timeToTarget: .100000001
 --- !u!1 &735375198
 GameObject:
   m_ObjectHideFlags: 0
