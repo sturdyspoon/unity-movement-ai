@@ -94,6 +94,23 @@ public class GenericRigidbody {
         }
     }
 
+    public Quaternion rotation
+    {
+        get
+        {
+            if (is3D)
+            {
+                return rb.rotation;
+            }
+            else
+            {
+                Quaternion r = Quaternion.identity;
+                r.eulerAngles = new Vector3(0, 0, rb2D.rotation);
+                return r;
+            }
+        }
+    }
+
     private void setBoundingRadius()
     {
         if (is3D)

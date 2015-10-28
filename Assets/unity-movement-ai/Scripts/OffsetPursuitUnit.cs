@@ -3,7 +3,9 @@ using System.Collections;
 
 public class OffsetPursuitUnit : MonoBehaviour {
 
-    public Rigidbody target;
+    public GameObject target;
+    private GenericRigidbody targetRigidBody;
+
     public Vector3 offset;
     public float groupLookDist = 1.5f;
 
@@ -16,6 +18,8 @@ public class OffsetPursuitUnit : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        targetRigidBody = SteeringBasics.getGenericRigidbody(target);
+
         steeringBasics = GetComponent<SteeringBasics>();
         offsetPursuit = GetComponent<OffsetPursuit>();
         separation = GetComponent<Separation>();
@@ -27,7 +31,7 @@ public class OffsetPursuitUnit : MonoBehaviour {
     void LateUpdate()
     {
         Vector3 targetPos;
-        Vector3 offsetAccel = offsetPursuit.getSteering(target, offset, out targetPos);
+        Vector3 offsetAccel = offsetPursuit.getSteering(targetRigidBody, offset, out targetPos);
         Vector3 sepAccel = separation.getSteering(sensor.targets);
 
         steeringBasics.steer(offsetAccel + sepAccel);
@@ -38,7 +42,7 @@ public class OffsetPursuitUnit : MonoBehaviour {
             steeringBasics.lookWhereYoureGoing();
         } else
         {
-            steeringBasics.lookAtDirection(target.rotation);
+            steeringBasics.lookAtDirection(targetRigidBody.rotation);
         }
     }
 }

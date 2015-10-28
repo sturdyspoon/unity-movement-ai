@@ -16,13 +16,13 @@ public class OffsetPursuit : MonoBehaviour {
         steeringBasics = GetComponent<SteeringBasics>();
     }
 
-    public Vector3 getSteering(Rigidbody target, Vector3 offset)
+    public Vector3 getSteering(GenericRigidbody target, Vector3 offset)
     {
         Vector3 targetPos;
         return getSteering(target, offset, out targetPos);
     }
 
-    public Vector3 getSteering(Rigidbody target, Vector3 offset, out Vector3 targetPos)
+    public Vector3 getSteering(GenericRigidbody target, Vector3 offset, out Vector3 targetPos)
     {
         Vector3 worldOffsetPos = target.position + target.transform.TransformDirection(offset);
 

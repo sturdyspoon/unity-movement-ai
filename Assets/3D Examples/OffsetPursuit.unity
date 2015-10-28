@@ -85,6 +85,10 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &177746284 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 163698, guid: 11eae3e40166fd0429da122769705e13, type: 2}
+  m_PrefabInternal: {fileID: 640805474}
 --- !u!1 &551253050
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,7 +191,7 @@ MonoBehaviour:
   show: 1
   cellSize: 1
   zPosition: 0
-  lineMat: {fileID: 2100000, guid: 68454679857835641ae4595960001fbf, type: 2}
+  lineMat: {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &551253057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,11 +204,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 757470802}
---- !u!54 &600780046 stripped
-Rigidbody:
-  m_PrefabParentObject: {fileID: 5424576, guid: 11eae3e40166fd0429da122769705e13,
-    type: 2}
-  m_PrefabInternal: {fileID: 640805474}
 --- !u!1001 &609579693
 Prefab:
   m_ObjectHideFlags: 0
@@ -251,7 +250,7 @@ Prefab:
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 600780046}
+      objectReference: {fileID: 177746284}
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: offset.x
       value: -1.20000005
@@ -423,7 +422,7 @@ Prefab:
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 600780046}
+      objectReference: {fileID: 177746284}
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: offset.x
       value: -.600000024
@@ -485,7 +484,7 @@ Prefab:
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 600780046}
+      objectReference: {fileID: 177746284}
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: offset.x
       value: -1.20000005
@@ -539,7 +538,7 @@ Prefab:
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 600780046}
+      objectReference: {fileID: 177746284}
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: offset.x
       value: -.600000024
@@ -643,7 +642,7 @@ Prefab:
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 600780046}
+      objectReference: {fileID: 177746284}
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: offset.x
       value: -1.20000005
