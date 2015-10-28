@@ -133,8 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b54d0c5e57344f4994540c2b983849a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sepMaxAcceleration: 25
-  maxSepDist: 1
+  sepMaxAcceleration: 20
+  maxSepDist: 1.29999995
 --- !u!114 &11414464
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -237,7 +237,15 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: maxSepDist
+      value: 1.29999995
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: sepMaxAcceleration
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 176874}
