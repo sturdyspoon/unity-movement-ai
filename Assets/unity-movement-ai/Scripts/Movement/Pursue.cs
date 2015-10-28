@@ -7,12 +7,12 @@ public class Pursue : MonoBehaviour
     /* Maximum prediction time the pursue will predict in the future */
     public float maxPrediction = 1f;
 
-    private Rigidbody rb;
+    private GenericRigidbody rb;
     private SteeringBasics steeringBasics;
 
 	// Use this for initialization
 	void Start () {
-        rb = GetComponent<Rigidbody>();
+        rb = SteeringBasics.getGenericRigidbody(gameObject);
         steeringBasics = GetComponent<SteeringBasics>();
 	}
 	

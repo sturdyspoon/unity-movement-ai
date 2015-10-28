@@ -14,7 +14,7 @@ GameObject:
   - 114: {fileID: 11466988}
   - 50: {fileID: 5096216}
   - 58: {fileID: 5823258}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Wander2Unit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,6 +141,10 @@ Prefab:
     m_Modifications:
     - target: {fileID: 0}
       propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
