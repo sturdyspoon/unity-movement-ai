@@ -113,6 +113,7 @@ public class SteeringBasics : MonoBehaviour {
 		if (direction.sqrMagnitude > 0.001f) {
             if(rb.is3D)
             {
+                // Mulitply by -1 because counter clockwise on the y-axis is in the negative direction
                 float toRotation = -1*(Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg);
                 float rotation = Mathf.LerpAngle(transform.rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
 
@@ -209,6 +210,35 @@ public class SteeringBasics : MonoBehaviour {
         directionToTarget.Normalize();
 
         return Vector2.Dot(facing, directionToTarget) >= cosineValue;
+    }
+
+    /* Returns the orientation as a unit vector */
+    public static Vector3 orientationToVector(float orientation, bool is3DGameObj)
+    {
+        if(is3DGameObj)
+        {
+            // Mulitply the orientation by -1 because counter clockwise on the y-axis is in the negative
+            // direction, but Cos And Sin expect clockwise orientation to be the positive direction
+            return new Vector3(Mathf.Cos(-orientation), 0, Mathf.Sin(-orientation));
+        } else
+        {
+            return new Vector3(Mathf.Cos(orientation), Mathf.Sin(orientation), 0);
+        }
+    }
+
+    /* Gets the orientation of a vector as radians. For 3D it gives the orienation around the Y axis.
+     * For 2D it gaves the orienation around the Z axis. */
+    public static float vectorToOrientation(Vector3 direction, bool is3DGameObj)
+    {
+        if (is3DGameObj)
+        {
+            // Mulitply by -1 because counter clockwise on the y-axis is in the negative direction
+            return -1*Mathf.Atan2(direction.z, direction.x);
+        }
+        else
+        {
+            return Mathf.Atan2(direction.y, direction.x);
+        }
     }
 
 

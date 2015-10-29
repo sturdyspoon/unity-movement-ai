@@ -27,21 +27,29 @@ public class WallAvoidance : MonoBehaviour {
 
     public Vector3 getSteering()
     {
-        return getSteering(rb.velocity);
+        if (rb.velocity.magnitude > 0.005f)
+        {
+            return getSteering(rb.velocity);
+        } else
+        {
+            return getSteering(rb.facing);
+        }
     }
 
     public Vector3 getSteering(Vector3 facingDir)
     {
         Vector3 acceleration = Vector3.zero;
 
+        facingDir.Normalize();
+
         /* Creates the ray direction vector */
         Vector3[] rayDirs = new Vector3[3];
-        rayDirs[0] = facingDir.normalized;
+        rayDirs[0] = facingDir;
 
-        float orientation = Mathf.Atan2(rb.velocity.y, rb.velocity.x);
+        float orientation = SteeringBasics.vectorToOrientation(facingDir, rb.is3D);
 
-        rayDirs[1] = orientationToVector(orientation + sideWhiskerAngle * Mathf.Deg2Rad);
-        rayDirs[2] = orientationToVector(orientation - sideWhiskerAngle * Mathf.Deg2Rad);
+        rayDirs[1] = SteeringBasics.orientationToVector(orientation + sideWhiskerAngle * Mathf.Deg2Rad, rb.is3D);
+        rayDirs[2] = SteeringBasics.orientationToVector(orientation - sideWhiskerAngle * Mathf.Deg2Rad, rb.is3D);
 
         GenericRayHit hit;
 
@@ -59,16 +67,20 @@ public class WallAvoidance : MonoBehaviour {
         Vector3 cross = Vector3.Cross(rb.velocity, hit.normal);
         if (cross.magnitude < 0.005f)
         {
-            targetPostition = targetPostition + new Vector3(-hit.normal.y, hit.normal.x, hit.normal.z);
+            Vector3 perp;
+
+            if(rb.is3D)
+            {
+                perp = new Vector3(-hit.normal.z, hit.normal.y, hit.normal.x);
+            } else
+            {
+                perp = new Vector3(-hit.normal.y, hit.normal.x, hit.normal.z);
+            }
+
+            targetPostition = targetPostition + perp;
         }
 
         return steeringBasics.seek(targetPostition, maxAcceleration);
-    }
-
-    /* Returns the orientation as a unit vector */
-    private Vector3 orientationToVector(float orientation)
-    {
-        return new Vector3(Mathf.Cos(orientation), Mathf.Sin(orientation), 0);
     }
 
     private bool findObstacle(Vector3[] rayDirs, out GenericRayHit firstHit)
