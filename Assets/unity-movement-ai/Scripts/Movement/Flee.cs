@@ -43,7 +43,7 @@ public class Flee : MonoBehaviour {
             }
             else
             {
-                rb.velocity = Vector2.zero;
+                rb.velocity = Vector3.zero;
                 return Vector3.zero;
             }
         }

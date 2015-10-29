@@ -17,6 +17,8 @@ public class Wander1 : MonoBehaviour {
 	
 	private SteeringBasics steeringBasics;
 
+    private bool is3D;
+
     //private GameObject debugRing;
 
     void Start() {
@@ -24,6 +26,8 @@ public class Wander1 : MonoBehaviour {
 		//		debugRing = debugDraw.createRing (Vector3.zero, wanderRadius);
 		
 		steeringBasics = GetComponent<SteeringBasics> ();
+
+        is3D = SteeringBasics.getGenericRigidbody(gameObject).is3D;
 	}
 
     public Vector3 getSteering() {
@@ -36,12 +40,12 @@ public class Wander1 : MonoBehaviour {
         float targetOrientation = wanderOrientation + characterOrientation;
 		
 		/* Calculate the center of the wander circle */
-		Vector3 targetPosition = transform.position + (orientationToVector (characterOrientation) * wanderOffset);
+		Vector3 targetPosition = transform.position + (SteeringBasics.orientationToVector (characterOrientation, is3D) * wanderOffset);
 		
 		//debugRing.transform.position = targetPosition;
 		
 		/* Calculate the target position */
-		targetPosition = targetPosition + (orientationToVector(targetOrientation) * wanderRadius);
+		targetPosition = targetPosition + (SteeringBasics.orientationToVector(targetOrientation, is3D) * wanderRadius);
 		
 		//Debug.DrawLine (transform.position, targetPosition);
 		
@@ -51,11 +55,6 @@ public class Wander1 : MonoBehaviour {
 	/* Returns a random number between -1 and 1. Values around zero are more likely. */
 	float randomBinomial() {
 		return Random.value - Random.value;
-	}
-	
-	/* Returns the orientation as a unit vector */
-	Vector3 orientationToVector(float orientation) {
-		return new Vector3(Mathf.Cos(orientation), Mathf.Sin(orientation), 0);
 	}
 
 }

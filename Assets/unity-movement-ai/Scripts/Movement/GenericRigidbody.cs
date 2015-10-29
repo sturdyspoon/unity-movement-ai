@@ -136,6 +136,21 @@ public class GenericRigidbody {
         }
     }
 
+    public Vector3 facing
+    {
+        get
+        {
+            if (is3D)
+            {
+                return SteeringBasics.orientationToVector(rb.rotation.eulerAngles.y, true);
+            }
+            else
+            {
+                return SteeringBasics.orientationToVector(rb2D.rotation, false);
+            }
+        }
+    }
+
     public override bool Equals(System.Object obj)
     {
         // If parameter is null return false.
