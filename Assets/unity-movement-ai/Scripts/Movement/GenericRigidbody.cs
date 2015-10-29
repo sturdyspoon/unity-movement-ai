@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// This is a wrapper class for either a Rigidbody or Rigidbody2D, so that either can be used with the Unity Movement AI code. 
+/// </summary>
 public class GenericRigidbody {
 
     /// <summary>
@@ -27,6 +30,28 @@ public class GenericRigidbody {
         this.rb2D = rb2D;
         is3D = false;
         setBoundingRadius();
+    }
+
+    private void setBoundingRadius()
+    {
+        if (is3D)
+        {
+            SphereCollider col = rb.GetComponent<SphereCollider>();
+
+            if (col != null)
+            {
+                boundingRadius = Mathf.Max(rb.transform.localScale.x, rb.transform.localScale.y, rb.transform.localScale.z) * col.radius; ;
+            }
+        }
+        else
+        {
+            CircleCollider2D col = rb2D.GetComponent<CircleCollider2D>();
+
+            if (col != null)
+            {
+                boundingRadius = Mathf.Max(rb2D.transform.localScale.x, rb2D.transform.localScale.y) * col.radius;
+            }
+        }
     }
 
     public Vector3 position
@@ -107,28 +132,6 @@ public class GenericRigidbody {
                 Quaternion r = Quaternion.identity;
                 r.eulerAngles = new Vector3(0, 0, rb2D.rotation);
                 return r;
-            }
-        }
-    }
-
-    private void setBoundingRadius()
-    {
-        if (is3D)
-        {
-            SphereCollider col = rb.GetComponent<SphereCollider>();
-
-            if(col != null)
-            {
-                boundingRadius = Mathf.Max(rb.transform.localScale.x, rb.transform.localScale.y, rb.transform.localScale.z) * col.radius; ;
-            } 
-        }
-        else
-        {
-            CircleCollider2D col = rb2D.GetComponent<CircleCollider2D>();
-
-            if(col != null)
-            {
-                boundingRadius = Mathf.Max(rb2D.transform.localScale.x, rb2D.transform.localScale.y) * col.radius;
             }
         }
     }
