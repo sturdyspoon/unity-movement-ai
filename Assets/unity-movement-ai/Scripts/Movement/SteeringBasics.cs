@@ -26,7 +26,7 @@ public class SteeringBasics : MonoBehaviour {
 
 	public bool smoothing = true;
 	public int numSamplesForSmoothing = 5;
-	private Queue<Vector2> velocitySamples = new Queue<Vector2>();
+	private Queue<Vector3> velocitySamples = new Queue<Vector3>();
 
 	// Use this for initialization
 	void Start ()
@@ -70,9 +70,6 @@ public class SteeringBasics : MonoBehaviour {
 		//Get the direction
 		Vector3 acceleration = targetPosition - transform.position;
 		
-		//Remove the z coordinate
-		acceleration.z = 0;
-		
 		acceleration.Normalize ();
 		
 		//Accelerate to the target
@@ -88,7 +85,7 @@ public class SteeringBasics : MonoBehaviour {
 
     /* Makes the current game object look where he is going */
     public void lookWhereYoureGoing() {
-		Vector2 direction = rb.velocity;
+		Vector3 direction = rb.velocity;
 
 		if (smoothing) {
 			if (velocitySamples.Count == numSamplesForSmoothing) {
@@ -97,9 +94,9 @@ public class SteeringBasics : MonoBehaviour {
 
 			velocitySamples.Enqueue (rb.velocity);
 
-			direction = Vector2.zero;
+			direction = Vector3.zero;
 
-			foreach (Vector2 v in velocitySamples) {
+			foreach (Vector3 v in velocitySamples) {
 				direction += v;
 			}
 
@@ -109,15 +106,23 @@ public class SteeringBasics : MonoBehaviour {
 		lookAtDirection (direction);
 	}
 
-	public void lookAtDirection(Vector2 direction) {
+	public void lookAtDirection(Vector3 direction) {
 		direction.Normalize();
 		
 		// If we have a non-zero direction then look towards that direciton otherwise do nothing
 		if (direction.sqrMagnitude > 0.001f) {
-			float toRotation = (Mathf.Atan2 (direction.y, direction.x) * Mathf.Rad2Deg);
-			float rotation = Mathf.LerpAngle(transform.rotation.eulerAngles.z, toRotation, Time.deltaTime*turnSpeed);
-			
-			transform.rotation = Quaternion.Euler(0, 0, rotation);
+            if(rb.is3D)
+            {
+                float toRotation = -1*(Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg);
+                float rotation = Mathf.LerpAngle(transform.rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
+
+                transform.rotation = Quaternion.Euler(0, rotation, 0);
+            } else {
+                float toRotation = (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
+                float rotation = Mathf.LerpAngle(transform.rotation.eulerAngles.z, toRotation, Time.deltaTime * turnSpeed);
+
+                transform.rotation = Quaternion.Euler(0, 0, rotation);
+            }
 		}
 	}
 
@@ -137,17 +142,14 @@ public class SteeringBasics : MonoBehaviour {
     public Vector3 arrive(Vector3 targetPosition) {
 		/* Get the right direction for the linear acceleration */
 		Vector3 targetVelocity = targetPosition - transform.position;
-
-		// Remove the z coordinate
-		targetVelocity.z = 0;
 		
 		/* Get the distance to the target */
 		float dist = targetVelocity.magnitude;
 		
 		/* If we are within the stopping radius then stop */
 		if(dist < targetRadius) {
-			rb.velocity = Vector2.zero;
-			return Vector2.zero;
+			rb.velocity = Vector3.zero;
+			return Vector3.zero;
 		}
 		
 		/* Calculate the target speed, full speed at slowRadius distance and 0 speed at 0 distance */
@@ -163,7 +165,7 @@ public class SteeringBasics : MonoBehaviour {
 		targetVelocity *= targetSpeed;
 		
 		/* Calculate the linear acceleration we want */
-		Vector3 acceleration = targetVelocity - new Vector3(rb.velocity.x, rb.velocity.y, 0);
+		Vector3 acceleration = targetVelocity - rb.velocity;
 		/*
 		 Rather than accelerate the character to the correct speed in 1 second, 
 		 accelerate so we reach the desired speed in timeToTarget seconds 
@@ -208,6 +210,9 @@ public class SteeringBasics : MonoBehaviour {
 
         return Vector2.Dot(facing, directionToTarget) >= cosineValue;
     }
+
+
+    /* This function is here to ensure we have a rigidbody (2D or 3D) */
 
     //Since we use editor calls we omit this function on build time
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
