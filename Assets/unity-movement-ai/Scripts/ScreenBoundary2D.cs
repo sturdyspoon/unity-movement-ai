@@ -10,10 +10,10 @@ public class ScreenBoundary2D : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        float z = -1 * Camera.main.transform.position.z;
+        float distAway = Mathf.Abs(Camera.main.transform.position.z);
 
-        bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, z));
-        topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, z));
+        bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distAway));
+        topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, distAway));
         widthHeight = topRight - bottomLeft;
 
         transform.localScale = new Vector3(widthHeight.x, widthHeight.y, transform.localScale.z);

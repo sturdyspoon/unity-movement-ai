@@ -10,14 +10,14 @@ public class Wander1 : MonoBehaviour {
 	/* The radius of the wander square */
 	public float wanderRadius = 4;
 	
-	/* The rate at which the wander orientation can change */
+	/* The rate at which the wander orientation can change in radians*/
 	public float wanderRate = 0.4f;
 	
 	private float wanderOrientation = 0;
 	
 	private SteeringBasics steeringBasics;
 
-    private bool is3D;
+    private GenericRigidbody rb;
 
     //private GameObject debugRing;
 
@@ -27,11 +27,12 @@ public class Wander1 : MonoBehaviour {
 		
 		steeringBasics = GetComponent<SteeringBasics> ();
 
-        is3D = SteeringBasics.getGenericRigidbody(gameObject).is3D;
+        rb = SteeringBasics.getGenericRigidbody(gameObject);
 	}
 
     public Vector3 getSteering() {
-		float characterOrientation = transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
+		float characterOrientation = rb.rotationInRadians;
+        //float characterOrientation = transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
 
         /* Update the wander orientation */
         wanderOrientation += randomBinomial() * wanderRate;
@@ -40,12 +41,12 @@ public class Wander1 : MonoBehaviour {
         float targetOrientation = wanderOrientation + characterOrientation;
 		
 		/* Calculate the center of the wander circle */
-		Vector3 targetPosition = transform.position + (SteeringBasics.orientationToVector (characterOrientation, is3D) * wanderOffset);
+		Vector3 targetPosition = transform.position + (SteeringBasics.orientationToVector (characterOrientation, rb.is3D) * wanderOffset);
 		
 		//debugRing.transform.position = targetPosition;
 		
 		/* Calculate the target position */
-		targetPosition = targetPosition + (SteeringBasics.orientationToVector(targetOrientation, is3D) * wanderRadius);
+		targetPosition = targetPosition + (SteeringBasics.orientationToVector(targetOrientation, rb.is3D) * wanderRadius);
 		
 		//Debug.DrawLine (transform.position, targetPosition);
 		

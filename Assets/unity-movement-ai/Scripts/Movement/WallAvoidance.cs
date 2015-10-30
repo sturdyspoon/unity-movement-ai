@@ -32,7 +32,7 @@ public class WallAvoidance : MonoBehaviour {
             return getSteering(rb.velocity);
         } else
         {
-            return getSteering(rb.facing);
+            return getSteering(rb.rotationAsVector);
         }
     }
 

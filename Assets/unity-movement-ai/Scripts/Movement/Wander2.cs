@@ -14,6 +14,8 @@ public class Wander2 : MonoBehaviour {
 
     private SteeringBasics steeringBasics;
 
+    private bool is3D;
+
     void Start()
     {
         //stuff for the wander behavior
@@ -23,6 +25,8 @@ public class Wander2 : MonoBehaviour {
         wanderTarget = new Vector3(wanderRadius * Mathf.Cos(theta), wanderRadius * Mathf.Sin(theta), 0f);
 
         steeringBasics = GetComponent<SteeringBasics>();
+
+        is3D = SteeringBasics.getGenericRigidbody(gameObject).is3D;
     }
 
     public Vector3 getSteering()
@@ -31,7 +35,13 @@ public class Wander2 : MonoBehaviour {
         float jitter = wanderJitter * Time.deltaTime;
 
         //add a small random vector to the target's position
-        wanderTarget += new Vector3(Random.Range(-1f, 1f) * jitter, Random.Range(-1f, 1f) * jitter, 0f);
+        if(is3D)
+        {
+            wanderTarget += new Vector3(Random.Range(-1f, 1f) * jitter, 0f, Random.Range(-1f, 1f) * jitter);
+        } else
+        {
+            wanderTarget += new Vector3(Random.Range(-1f, 1f) * jitter, Random.Range(-1f, 1f) * jitter, 0f);
+        }
 
         //make the wanderTarget fit on the wander circle again
         wanderTarget.Normalize();
