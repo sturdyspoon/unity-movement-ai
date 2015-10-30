@@ -9,13 +9,13 @@ public class ScreenBoundary3D : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        float z = -1*Camera.main.transform.position.z;
+        float distAway = Mathf.Abs(Camera.main.transform.position.y);
 
-        bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, z));
-        topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, z));
+        bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distAway));
+        topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, distAway));
         widthHeight = topRight - bottomLeft;
 
-        transform.localScale = new Vector3(widthHeight.x, widthHeight.y, transform.localScale.z);
+        transform.localScale = new Vector3(widthHeight.x, transform.localScale.y, widthHeight.z);
     }
 
     void OnTriggerStay(Collider other)
@@ -32,14 +32,14 @@ public class ScreenBoundary3D : MonoBehaviour {
             t.position = new Vector3(t.position.x - widthHeight.x, t.position.y, t.position.z);
         }
 
-        if (t.position.y < bottomLeft.y)
+        if (t.position.z < bottomLeft.z)
         {
-            t.position = new Vector3(t.position.x, t.position.y + widthHeight.y, t.position.z);
+            t.position = new Vector3(t.position.x, t.position.y, t.position.z + widthHeight.z);
         }
 
-        if (t.position.y > topRight.y)
+        if (t.position.z > topRight.z)
         {
-            t.position = new Vector3(t.position.x, t.position.y - widthHeight.y, t.position.z);
+            t.position = new Vector3(t.position.x, t.position.y, t.position.z - widthHeight.z);
         }
     }
 }

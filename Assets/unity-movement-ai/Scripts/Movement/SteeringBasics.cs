@@ -129,14 +129,33 @@ public class SteeringBasics : MonoBehaviour {
 
     public void lookAtDirection(Quaternion toRotation)
     {
-        lookAtDirection(toRotation.eulerAngles.z);
+        if(rb.is3D)
+        {
+            lookAtDirection(toRotation.eulerAngles.y);
+        } else
+        {
+            lookAtDirection(toRotation.eulerAngles.z);
+        }
     }
 
+    /// <summary>
+    /// Makes the character's rotation lerp closer to the given target rotation (in degrees).
+    /// </summary>
+    /// <param name="toRotation">the desired rotation to be looking at in degrees</param>
     public void lookAtDirection(float toRotation)
     {
+        if (rb.is3D)
+        {
+            float rotation = Mathf.LerpAngle(transform.rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
+
+            transform.rotation = Quaternion.Euler(0, rotation, 0);
+        }
+        else
+        {
             float rotation = Mathf.LerpAngle(transform.rotation.eulerAngles.z, toRotation, Time.deltaTime * turnSpeed);
 
             transform.rotation = Quaternion.Euler(0, 0, rotation);
+        }
     }
 
     /* Returns the steering for a character so it arrives at the target */
@@ -212,7 +231,12 @@ public class SteeringBasics : MonoBehaviour {
         return Vector2.Dot(facing, directionToTarget) >= cosineValue;
     }
 
-    /* Returns the orientation as a unit vector */
+    /// <summary>
+    /// Returns the given orientation (in radians) as a unit vector
+    /// </summary>
+    /// <param name="orientation">the orientation in radians</param>
+    /// <param name="is3DGameObj">is the orientation for a 3D game object or a 2D game object</param>
+    /// <returns></returns>
     public static Vector3 orientationToVector(float orientation, bool is3DGameObj)
     {
         if(is3DGameObj)
@@ -226,8 +250,13 @@ public class SteeringBasics : MonoBehaviour {
         }
     }
 
-    /* Gets the orientation of a vector as radians. For 3D it gives the orienation around the Y axis.
-     * For 2D it gaves the orienation around the Z axis. */
+    /// <summary>
+    /// Gets the orientation of a vector as radians. For 3D it gives the orienation around the Y axis.
+    /// For 2D it gaves the orienation around the Z axis.
+    /// </summary>
+    /// <param name="direction">the direction vector</param>
+    /// <param name="is3DGameObj">is the direction vector for a 3D game object or a 2D game object</param>
+    /// <returns>orientation in radians</returns>
     public static float vectorToOrientation(Vector3 direction, bool is3DGameObj)
     {
         if (is3DGameObj)

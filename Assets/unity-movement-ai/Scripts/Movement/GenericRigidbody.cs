@@ -136,18 +136,26 @@ public class GenericRigidbody {
         }
     }
 
-    public Vector3 facing
+    public float rotationInRadians
     {
         get
         {
             if (is3D)
             {
-                return SteeringBasics.orientationToVector(rb.rotation.eulerAngles.y, true);
+                return rb.rotation.eulerAngles.y * Mathf.Deg2Rad;
             }
             else
             {
-                return SteeringBasics.orientationToVector(rb2D.rotation, false);
+                return rb2D.rotation * Mathf.Deg2Rad;
             }
+        }
+    }
+
+    public Vector3 rotationAsVector
+    {
+        get
+        {
+            return SteeringBasics.orientationToVector(rotationInRadians, is3D);
         }
     }
 
