@@ -53,9 +53,6 @@ public class Flee : MonoBehaviour {
 
     private Vector3 giveMaxAccel(Vector3 v)
     {
-        //Remove the z coordinate
-        v.z = 0;
-
         v.Normalize();
 
         //Accelerate to the target
