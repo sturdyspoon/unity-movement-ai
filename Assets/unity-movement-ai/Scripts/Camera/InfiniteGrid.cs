@@ -12,32 +12,71 @@ public class InfiniteGrid : MonoBehaviour {
 	
 	public float cellSize = 1;
 
-	public float zPosition = 0;
+    public Vector3 gridLocation;
 
-	private float[] getGridBounds() {
-		float distToGrid = zPosition - transform.position.z;
+    private Vector3 bottomLeft;
+    private Vector3 topRight;
 
-		float angle = (GetComponent<Camera>().fieldOfView / 2) * Mathf.Deg2Rad;
+    private Vector3 upDir;
+    private Vector3 rightDir;
 
-		float halfHeight = Mathf.Tan (angle) * distToGrid;
-		float halfWidth = GetComponent<Camera>().aspect * halfHeight;
+    private Vector2 widthHeight;
 
-		float[] bounds = new float[4];
+    private void getGridBounds() {
+        float distAway = Camera.main.WorldToViewportPoint(gridLocation).z;
 
-		// Get the camera bounds
-		bounds [0] = transform.position.x - halfWidth;
-		bounds [1] = transform.position.y - halfHeight;
-		bounds [2] = transform.position.x + halfWidth;
-		bounds [3] = transform.position.y + halfHeight;
+        bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distAway));
+        topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, distAway));
 
-		// Convert the camera bounds to the grid bounds
-		bounds [0] = Mathf.Floor(bounds [0] / cellSize) * cellSize;
-		bounds [1] = Mathf.Floor(bounds [1] / cellSize) * cellSize;
-		bounds [2] = Mathf.Ceil(bounds [2] / cellSize) * cellSize;
-		bounds [3] = Mathf.Ceil(bounds [3] / cellSize) * cellSize;
+        Vector3 bottomRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distAway));
+        Vector3 topLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, distAway));
 
-		return bounds;
-	}
+        rightDir = bottomRight - bottomLeft;
+        rightDir.Normalize();
+
+        upDir = topLeft - bottomLeft;
+        upDir.Normalize();
+
+        // Convert the camera bounds to the grid bounds
+        convertToGridBounds();
+    }
+
+    private void convertToGridBounds()
+    {
+        Vector3 rightComponent, upComponent;
+
+        rightComponent = projectAndExtend(bottomLeft, rightDir, true);
+        upComponent = projectAndExtend(bottomLeft, upDir, true);
+        bottomLeft = rightComponent + upComponent;
+
+        rightComponent = projectAndExtend(topRight, rightDir, false);
+        upComponent = projectAndExtend(topRight, upDir, false);
+        topRight = rightComponent + upComponent;
+
+        Vector3 diagonalDir = topRight - bottomLeft;
+
+        widthHeight.x = Vector3.Project(diagonalDir, rightDir).magnitude;
+        widthHeight.y = Vector3.Project(diagonalDir, upDir).magnitude;
+    }
+
+    private Vector3 projectAndExtend(Vector3 vector, Vector3 onNormal, bool shouldFloor)
+    {
+        Vector3 projection = Vector3.Project(vector, onNormal);
+
+        float newMagnitude;
+
+        if(shouldFloor)
+        {
+            newMagnitude = Mathf.Floor(projection.magnitude / cellSize) * cellSize;
+        } else
+        {
+            newMagnitude = Mathf.Ceil(projection.magnitude / cellSize) * cellSize;
+        }
+        
+        projection = projection.normalized * newMagnitude;
+
+        return projection;
+    }
 
     public Material lineMat;
 	
@@ -50,20 +89,27 @@ public class InfiniteGrid : MonoBehaviour {
 			Material lineMaterial = lineMat;
 			lineMaterial.SetPass( 0 );
 
-			float[] bounds = getGridBounds ();
+			getGridBounds ();
 			
 			//X axis lines
-			for(float j = 0; bounds[1] + j <= bounds[3]; j += cellSize)
+			for(float j = 0; j <= widthHeight.y; j++)
 			{
-				GL.Vertex3( bounds[0], bounds[1] + j, zPosition);
-				GL.Vertex3( bounds[2], bounds[1] + j, zPosition);
+                Vector3 p1 = bottomLeft + upDir * j;
+                Vector3 p2 = p1 + rightDir * widthHeight.x;
+                 
+				GL.Vertex3( p1.x, p1.y, p1.z );
+				GL.Vertex3( p2.x, p2.y, p2.z );
 			}
 			
 			//Y axis lines
-			for(float k = 0; bounds[0] + k <= bounds[2]; k += cellSize)
+			for(float k = 0; k <= widthHeight.x; k++)
 			{
-				GL.Vertex3( bounds[0] + k, bounds[1], zPosition);
-				GL.Vertex3( bounds[0] + k, bounds[3], zPosition);
+
+                Vector3 p1 = bottomLeft + rightDir * k;
+                Vector3 p2 = p1 + upDir * widthHeight.y;
+
+                GL.Vertex3(p1.x, p1.y, p1.z);
+                GL.Vertex3(p2.x, p2.y, p2.z);
 			}
 		}
 		
