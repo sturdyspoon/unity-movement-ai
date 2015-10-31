@@ -98,11 +98,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
       propertyPath: m_LocalRotation.x
@@ -123,6 +123,10 @@ Prefab:
     - target: {fileID: 401788, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5402970, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
+      propertyPath: m_Constraints
+      value: 116
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
@@ -172,7 +176,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11449618, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
       propertyPath: path.nodes.Array.data[0].y
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11449618, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
       propertyPath: path.nodes.Array.data[1].x
@@ -185,6 +189,14 @@ Prefab:
     - target: {fileID: 11449618, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
       propertyPath: reversePath
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11449618, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
+      propertyPath: path.nodes.Array.data[0].z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11449618, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
+      propertyPath: path.nodes.Array.data[1].z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
@@ -269,8 +281,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 551253050}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: -8}
+  m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106709}
+  m_LocalPosition: {x: 0, y: 8, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -329,7 +341,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 735375198}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106709}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -348,11 +360,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
       propertyPath: m_LocalRotation.x
@@ -360,11 +372,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
       propertyPath: m_LocalRotation.w
@@ -392,6 +404,14 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11436192, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
       propertyPath: path.nodes.Array.data[1].y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11436192, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
+      propertyPath: path.nodes.Array.data[0].z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11436192, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
+      propertyPath: path.nodes.Array.data[1].z
       value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -410,11 +430,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: d6f1274d3e6263641a5045bd41ecdb94, type: 2}
       propertyPath: m_LocalPosition.y
-      value: .5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: d6f1274d3e6263641a5045bd41ecdb94, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: .5
       objectReference: {fileID: 0}
     - target: {fileID: 401788, guid: d6f1274d3e6263641a5045bd41ecdb94, type: 2}
       propertyPath: m_LocalRotation.x
@@ -442,7 +462,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11436192, guid: d6f1274d3e6263641a5045bd41ecdb94, type: 2}
       propertyPath: path.nodes.Array.data[0].y
-      value: .5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11436192, guid: d6f1274d3e6263641a5045bd41ecdb94, type: 2}
       propertyPath: path.nodes.Array.data[1].x
@@ -450,6 +470,14 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11436192, guid: d6f1274d3e6263641a5045bd41ecdb94, type: 2}
       propertyPath: path.nodes.Array.data[1].y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11436192, guid: d6f1274d3e6263641a5045bd41ecdb94, type: 2}
+      propertyPath: path.nodes.Array.data[0].z
+      value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11436192, guid: d6f1274d3e6263641a5045bd41ecdb94, type: 2}
+      propertyPath: path.nodes.Array.data[1].z
       value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
