@@ -223,12 +223,12 @@ public class SteeringBasics : MonoBehaviour {
     }
 
     public bool isFacing(Vector3 target, float cosineValue) { 
-        Vector2 facing = transform.right.normalized;
+        Vector3 facing = transform.right.normalized;
 
-        Vector2 directionToTarget = (target - transform.position);
+        Vector3 directionToTarget = (target - transform.position);
         directionToTarget.Normalize();
 
-        return Vector2.Dot(facing, directionToTarget) >= cosineValue;
+        return Vector3.Dot(facing, directionToTarget) >= cosineValue;
     }
 
     /// <summary>

@@ -32,7 +32,6 @@ public class Wander1 : MonoBehaviour {
 
     public Vector3 getSteering() {
 		float characterOrientation = rb.rotationInRadians;
-        //float characterOrientation = transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
 
         /* Update the wander orientation */
         wanderOrientation += randomBinomial() * wanderRate;
