@@ -6,15 +6,20 @@ public class Spawner : MonoBehaviour {
 
     public Transform obj;
     public Vector2 objectSizeRange = new Vector2(1, 2);
+
     public int numberOfObjects = 10;
     public bool randomizeOrientation = false;
+
     public float boundaryPadding = 1f;
     public float spaceBetweenObjects = 1f;
+
     public GameObject[] thingsToAvoid;
     private GenericRigidbody[] rigidBodiesToAvoid;
 
     private Vector3 bottomLeft;
     private Vector3 widthHeight;
+
+    private bool isObj3D;
 
     [System.NonSerialized]
     public List<GenericRigidbody> objs = new List<GenericRigidbody>();
@@ -22,11 +27,13 @@ public class Spawner : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        //Find the size of the map
-        float z = -1 * Camera.main.transform.position.z;
+        isObj3D = SteeringBasics.getGenericRigidbody(obj.gameObject).is3D;
 
-        bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, z));
-        Vector3 topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, z));
+        //Find the size of the map
+        float distAway = Camera.main.WorldToViewportPoint(Vector3.zero).z;
+
+        bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distAway));
+        Vector3 topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, distAway));
         widthHeight = topRight - bottomLeft;
 
         //Find the GenericRigidbodies' of the things to avoid
@@ -58,17 +65,38 @@ public class Spawner : MonoBehaviour {
 
         Vector3 pos = new Vector3();
         pos.x = bottomLeft.x + Random.Range(boundaryPadding + halfSize, widthHeight.x - boundaryPadding - halfSize);
-        pos.y = bottomLeft.y + Random.Range(boundaryPadding + halfSize, widthHeight.y - boundaryPadding - halfSize);
+
+        if(isObj3D)
+        {
+            pos.z = bottomLeft.z + Random.Range(boundaryPadding + halfSize, widthHeight.z - boundaryPadding - halfSize);
+        } else
+        {
+            pos.y = bottomLeft.y + Random.Range(boundaryPadding + halfSize, widthHeight.y - boundaryPadding - halfSize);
+        }
 
         if(canPlaceObject(halfSize, pos))
         {
             Transform t = Instantiate(obj, pos, Quaternion.identity) as Transform;
-            t.localScale = new Vector3(size, size, obj.localScale.z);
+
+            if(isObj3D)
+            {
+                t.localScale = new Vector3(size, obj.localScale.y, size);
+            } else
+            {
+                t.localScale = new Vector3(size, size, obj.localScale.z);
+            }
 
             if(randomizeOrientation)
             {
                 Vector3 euler = transform.eulerAngles;
-                euler.z = Random.Range(0f, 360f);
+                if(isObj3D)
+                {
+                    euler.y = Random.Range(0f, 360f);
+                } else
+                {
+                    euler.z = Random.Range(0f, 360f);
+                }
+                
                 transform.eulerAngles = euler;
             }
 
