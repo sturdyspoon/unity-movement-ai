@@ -442,14 +442,6 @@ Prefab:
       propertyPath: m_Constraints
       value: 116
       objectReference: {fileID: 0}
-    - target: {fileID: 13568662, guid: 28bd245136767a6439883098b9d5f339, type: 2}
-      propertyPath: m_Center.y
-      value: .300000012
-      objectReference: {fileID: 0}
-    - target: {fileID: 13568662, guid: 28bd245136767a6439883098b9d5f339, type: 2}
-      propertyPath: m_Center.z
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 28bd245136767a6439883098b9d5f339, type: 2}
   m_IsPrefabParent: 0
