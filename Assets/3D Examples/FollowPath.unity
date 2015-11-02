@@ -231,6 +231,48 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!1001 &767711854
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 499770, guid: e37ff5e8f5ea60649be97ed62cef6341, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 499770, guid: e37ff5e8f5ea60649be97ed62cef6341, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 499770, guid: e37ff5e8f5ea60649be97ed62cef6341, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 499770, guid: e37ff5e8f5ea60649be97ed62cef6341, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: .707106829
+      objectReference: {fileID: 0}
+    - target: {fileID: 499770, guid: e37ff5e8f5ea60649be97ed62cef6341, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 499770, guid: e37ff5e8f5ea60649be97ed62cef6341, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 499770, guid: e37ff5e8f5ea60649be97ed62cef6341, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: .707106709
+      objectReference: {fileID: 0}
+    - target: {fileID: 499770, guid: e37ff5e8f5ea60649be97ed62cef6341, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: e37ff5e8f5ea60649be97ed62cef6341, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &1901763279
 Prefab:
   m_ObjectHideFlags: 0
@@ -318,17 +360,9 @@ Prefab:
       propertyPath: path.nodes.Array.data[4].y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 13520100, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
-      propertyPath: m_Center.y
-      value: .300000012
-      objectReference: {fileID: 0}
-    - target: {fileID: 13520100, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
-      propertyPath: m_Center.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5448904, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
       propertyPath: m_Constraints
-      value: 116
+      value: 112
       objectReference: {fileID: 0}
     - target: {fileID: 11449618, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
       propertyPath: path.nodes.Array.data[0].z
