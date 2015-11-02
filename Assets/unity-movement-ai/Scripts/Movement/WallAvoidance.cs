@@ -16,6 +16,8 @@ public class WallAvoidance : MonoBehaviour {
 
     public float maxAcceleration = 40f;
 
+    public LayerMask raycastMask = Physics.DefaultRaycastLayers;
+
     private GenericRigidbody rb;
     private SteeringBasics steeringBasics;
 
@@ -114,12 +116,12 @@ public class WallAvoidance : MonoBehaviour {
         if (rb.is3D)
         {
             RaycastHit h;
-            result = Physics.Raycast(origin, direction, out h, distance);
+            result = Physics.Raycast(origin, direction, out h, distance, raycastMask.value);
             hit = new GenericRayHit(h);
         }
         else
         {
-            RaycastHit2D h = Physics2D.Raycast(origin, direction, distance);
+            RaycastHit2D h = Physics2D.Raycast(origin, direction, distance, raycastMask.value);
             result = (h.collider != null); //RaycastHit2D auto evaluates to true or false evidently
             hit = new GenericRayHit(h);
         }
