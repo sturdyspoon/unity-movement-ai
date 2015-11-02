@@ -113,6 +113,9 @@ MonoBehaviour:
   sideWhiskerLen: .700999975
   sideWhiskerAngle: 45
   maxAcceleration: 40
+  raycastMask:
+    serializedVersion: 2
+    m_Bits: 4294966523
 --- !u!114 &11496692
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -159,7 +162,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: raycastMask.m_Bits
+      value: 4294966523
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 187300}
