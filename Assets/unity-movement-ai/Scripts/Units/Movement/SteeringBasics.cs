@@ -24,9 +24,14 @@ public class SteeringBasics : MonoBehaviour {
 
 	private GenericRigidbody rb;
 
+    /* Smoothing controls if the character's look direction should be an average of its previous directions (to smooth out momentary changes in directions) */
 	public bool smoothing = true;
 	public int numSamplesForSmoothing = 5;
 	private Queue<Vector3> velocitySamples = new Queue<Vector3>();
+	private Queue<Vector3> groundNormalSamples = new Queue<Vector3>();
+
+    /* Controls how far a ray should try to reach to check for ground (for 3D characters only) */
+    public float groundCheckDistance = 0.1f;
 
 	// Use this for initialization
 	void Start ()
@@ -54,19 +59,166 @@ public class SteeringBasics : MonoBehaviour {
 
     /* Updates the velocity of the current game object by the given linear acceleration */
     public void steer(Vector3 linearAcceleration) {
-		rb.velocity += linearAcceleration * Time.deltaTime;
-		
-		if (rb.velocity.magnitude > maxVelocity) {
-			rb.velocity = rb.velocity.normalized * maxVelocity;
-		}
-	}
+        //If the character is moving in 3D then make sure we fully accelerate along the X/Z plane to help keep us moving up and down slopes (I assume this works because the character will move in the X/Z direction and if we move into the ground then Unity's physics will move us in the up direction out of the ground retaining our X/Z movement)
+        if(rb.is3D)
+        {
+            //RaycastHit hitInfo;
+            //Vector3 m_GroundNormal;
 
-	public void steer(Vector2 linearAcceleration) {
-		this.steer (new Vector3 (linearAcceleration.x, linearAcceleration.y, 0));
-	}
-	
-	/* A seek steering behavior. Will return the steering for the current game object to seek a given position */
-	public Vector3 seek(Vector3 targetPosition, float maxSeekAccel) {
+            //// helper to visualise the ground check ray in the scene view
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * 1f));
+
+            //// 0.1f is a small offset to start the ray from inside the character
+            //// it is also good to note that the transform position in the sample assets is at the base of the character
+            //if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, 1f))
+            ////if(Physics.SphereCast(transform.position + (Vector3.up *(0.1f + rb.boundingRadius)), rb.boundingRadius, Vector3.down, out hitInfo))
+            //{
+            //    m_GroundNormal = hitInfo.normal;
+            //}
+            //else
+            //{
+            //    m_GroundNormal = Vector3.up;
+            //}
+
+            //Vector3 temp = linearAcceleration;
+            //Vector3 xzTemp = new Vector3(linearAcceleration.x, 0, linearAcceleration.z);
+
+            //linearAcceleration = Vector3.ProjectOnPlane(linearAcceleration, m_GroundNormal).normalized * linearAcceleration.magnitude;
+            //Debug.Log(linearAcceleration.ToString("F4") + " " + temp.ToString("F4") + " " + m_GroundNormal.ToString("F4") + " " + Vector3.Angle(temp, linearAcceleration) + " " + Vector3.Angle(temp, -1*linearAcceleration));
+
+            //Vector3 xzLinearAccel = new Vector3(linearAcceleration.x, 0, linearAcceleration.z);
+            //if (Vector3.Angle(xzTemp, xzLinearAccel) > Vector3.Angle(xzTemp, -1*xzLinearAccel))
+            //{
+            //    linearAcceleration = -1 * linearAcceleration;
+            //}
+
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (m_GroundNormal.normalized), Color.cyan);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (temp.normalized), Color.green);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (linearAcceleration.normalized), Color.magenta);
+
+            //linearAcceleration = projectAndMagnifyOnGroundPlane(linearAcceleration);
+            linearAcceleration = projectAndMagnifyOnXZPlane(linearAcceleration);
+
+            //Vector3 xzDir = new Vector3(linearAcceleration.x, 0, linearAcceleration.z);
+            //linearAcceleration = xzDir.normalized * linearAcceleration.magnitude;
+        }
+
+        rb.velocity += linearAcceleration * Time.deltaTime;
+
+        if (rb.velocity.magnitude > maxVelocity)
+        {
+            rb.velocity = rb.velocity.normalized * maxVelocity;
+        }
+    }
+
+    public float fooGroundCheckDistance = 1f;
+
+    public Vector3 projectAndMagnifyOnGroundPlane(Vector3 v)
+    {
+        Vector3 originalXZ = new Vector3(v.x, 0, v.z);
+
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (v.normalized), Color.green);
+        Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * fooGroundCheckDistance));
+        Debug.DrawLine(transform.position + (Vector3.up * rb.boundingRadius), transform.position + (Vector3.up * rb.boundingRadius) + (transform.right * fooGroundCheckDistance));
+        //Debug.DrawLine(transform.position + (Vector3.up * rb.boundingRadius), transform.position + (Vector3.up * rb.boundingRadius) + (originalXZ.normalized * fooGroundCheckDistance));
+
+        RaycastHit hitInfo;
+        Vector3 m_GroundNormal = Vector3.up;
+        bool foobar = false;
+
+        //if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + rb.boundingRadius)), rb.boundingRadius, Vector3.down, out hitInfo, fooGroundCheckDistance))
+        if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, fooGroundCheckDistance))
+        {
+            m_GroundNormal = hitInfo.normal;
+            foobar = true;
+        }
+
+        //if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + rb.boundingRadius)), rb.boundingRadius, transform.right, out hitInfo, fooGroundCheckDistance))
+        if (Physics.Raycast(transform.position + (Vector3.up * rb.boundingRadius), transform.right, out hitInfo, fooGroundCheckDistance))
+        //if (Physics.Raycast(transform.position + (Vector3.up * rb.boundingRadius), originalXZ.normalized, out hitInfo, fooGroundCheckDistance))
+        {
+            if(foobar)
+            {
+                m_GroundNormal = (m_GroundNormal + hitInfo.normal) / 2;
+                m_GroundNormal.Normalize();
+            } else
+            {
+                m_GroundNormal = hitInfo.normal;
+            }
+        }
+
+        //// 0.1f is a small offset to start the ray from inside the character
+        //// it is also good to note that the transform position in the sample prefabs is at the base of the character
+        //if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, fooGroundCheckDistance))
+        ////if(Physics.SphereCast(transform.position + (Vector3.up *(0.1f + rb.boundingRadius)), rb.boundingRadius, Vector3.down, out hitInfo))
+        //{
+        //    m_GroundNormal = hitInfo.normal;
+        //}
+        //else
+        //{
+        //    m_GroundNormal = Vector3.up;
+        //}
+
+        Debug.Log(Vector3.Angle(v, m_GroundNormal));
+
+        //Vector3 originalXZ = new Vector3(v.x, 0, v.z);
+
+        if(Vector3.Angle(v, m_GroundNormal) > 171f)
+        {
+            v = Vector3.ProjectOnPlane(v, m_GroundNormal).normalized * v.magnitude;
+        } else
+        {
+            v = Vector3.ProjectOnPlane(originalXZ, m_GroundNormal).normalized * v.magnitude;
+        }
+
+        Vector3 projectedXZ = new Vector3(v.x, 0, v.z);
+
+        /* 
+          Check if we should inverse the projected vector by seeing if the inverse vector
+          is closer to the original vector along the X/Z plane.
+         */
+        if (Vector3.Angle(originalXZ, projectedXZ) > Vector3.Angle(originalXZ, -1 * projectedXZ))
+        {
+            v = -1 * v;
+        }
+
+
+
+        //float vSize = v.magnitude;
+
+        //if (groundNormalSamples.Count > 5)
+        //{
+        //    groundNormalSamples.Dequeue();
+        //}
+
+        //groundNormalSamples.Enqueue(v.normalized);
+
+        //v = Vector3.zero;
+
+        //foreach (Vector3 n in groundNormalSamples)
+        //{
+        //    v += n;
+        //}
+
+        //v /= groundNormalSamples.Count;
+        //v = v.normalized * vSize;
+
+
+
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (m_GroundNormal.normalized), Color.cyan);
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (v.normalized), Color.magenta);
+
+        return v;
+    }
+
+    public Vector3 projectAndMagnifyOnXZPlane(Vector3 v)
+    {
+        Vector3 xzDir = new Vector3(v.x, 0, v.z);
+        return xzDir.normalized * v.magnitude;
+    }
+
+    /* A seek steering behavior. Will return the steering for the current game object to seek a given position */
+    public Vector3 seek(Vector3 targetPosition, float maxSeekAccel) {
 		//Get the direction
 		Vector3 acceleration = targetPosition - transform.position;
 		
@@ -165,9 +317,11 @@ public class SteeringBasics : MonoBehaviour {
 		
 		/* Get the distance to the target */
 		float dist = targetVelocity.magnitude;
-		
-		/* If we are within the stopping radius then stop */
-		if(dist < targetRadius) {
+
+        //targetVelocity.y = 0;
+
+        /* If we are within the stopping radius then stop */
+        if (dist < targetRadius) {
 			rb.velocity = Vector3.zero;
 			return Vector3.zero;
 		}
