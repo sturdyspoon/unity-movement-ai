@@ -96,8 +96,8 @@ public class SteeringBasics : MonoBehaviour {
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (temp.normalized), Color.green);
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (linearAcceleration.normalized), Color.magenta);
 
-            //linearAcceleration = projectAndMagnifyOnGroundPlane(linearAcceleration);
-            linearAcceleration = projectAndMagnifyOnXZPlane(linearAcceleration);
+            linearAcceleration = projectAndMagnifyOnGroundPlane(linearAcceleration);
+            //linearAcceleration = projectAndMagnifyOnXZPlane(linearAcceleration);
 
             //Vector3 xzDir = new Vector3(linearAcceleration.x, 0, linearAcceleration.z);
             //linearAcceleration = xzDir.normalized * linearAcceleration.magnitude;
@@ -117,10 +117,15 @@ public class SteeringBasics : MonoBehaviour {
     {
         Vector3 originalXZ = new Vector3(v.x, 0, v.z);
 
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (originalXZ.normalized), Color.green);
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (v.normalized), Color.green);
         Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * fooGroundCheckDistance));
-        Debug.DrawLine(transform.position + (Vector3.up * rb.boundingRadius), transform.position + (Vector3.up * rb.boundingRadius) + (transform.right * fooGroundCheckDistance));
+        // Debug.DrawLine(transform.position + (Vector3.up * rb.boundingRadius), transform.position + (Vector3.up * rb.boundingRadius) + (transform.right * fooGroundCheckDistance));
         //Debug.DrawLine(transform.position + (Vector3.up * rb.boundingRadius), transform.position + (Vector3.up * rb.boundingRadius) + (originalXZ.normalized * fooGroundCheckDistance));
+
+        if(originalXZ.magnitude <0.05f) {
+        	return v;
+        }
 
         RaycastHit hitInfo;
         Vector3 m_GroundNormal = Vector3.up;
@@ -133,19 +138,19 @@ public class SteeringBasics : MonoBehaviour {
             foobar = true;
         }
 
-        //if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + rb.boundingRadius)), rb.boundingRadius, transform.right, out hitInfo, fooGroundCheckDistance))
-        if (Physics.Raycast(transform.position + (Vector3.up * rb.boundingRadius), transform.right, out hitInfo, fooGroundCheckDistance))
-        //if (Physics.Raycast(transform.position + (Vector3.up * rb.boundingRadius), originalXZ.normalized, out hitInfo, fooGroundCheckDistance))
-        {
-            if(foobar)
-            {
-                m_GroundNormal = (m_GroundNormal + hitInfo.normal) / 2;
-                m_GroundNormal.Normalize();
-            } else
-            {
-                m_GroundNormal = hitInfo.normal;
-            }
-        }
+        // //if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + rb.boundingRadius)), rb.boundingRadius, transform.right, out hitInfo, fooGroundCheckDistance))
+        // if (Physics.Raycast(transform.position + (Vector3.up * rb.boundingRadius), transform.right, out hitInfo, fooGroundCheckDistance))
+        // //if (Physics.Raycast(transform.position + (Vector3.up * rb.boundingRadius), originalXZ.normalized, out hitInfo, fooGroundCheckDistance))
+        // {
+        //     if(foobar)
+        //     {
+        //         m_GroundNormal = (m_GroundNormal + hitInfo.normal) / 2;
+        //         m_GroundNormal.Normalize();
+        //     } else
+        //     {
+        //         m_GroundNormal = hitInfo.normal;
+        //     }
+        // }
 
         //// 0.1f is a small offset to start the ray from inside the character
         //// it is also good to note that the transform position in the sample prefabs is at the base of the character
@@ -159,17 +164,17 @@ public class SteeringBasics : MonoBehaviour {
         //    m_GroundNormal = Vector3.up;
         //}
 
-        Debug.Log(Vector3.Angle(v, m_GroundNormal));
+        //Debug.Log(Vector3.Angle(v, m_GroundNormal));
 
         //Vector3 originalXZ = new Vector3(v.x, 0, v.z);
 
-        if(Vector3.Angle(v, m_GroundNormal) > 171f)
-        {
-            v = Vector3.ProjectOnPlane(v, m_GroundNormal).normalized * v.magnitude;
-        } else
-        {
+        // if(Vector3.Angle(v, m_GroundNormal) > 171f)
+        // {
+        //     v = Vector3.ProjectOnPlane(v, m_GroundNormal).normalized * v.magnitude;
+        // } else
+        // {
             v = Vector3.ProjectOnPlane(originalXZ, m_GroundNormal).normalized * v.magnitude;
-        }
+        // }
 
         Vector3 projectedXZ = new Vector3(v.x, 0, v.z);
 
