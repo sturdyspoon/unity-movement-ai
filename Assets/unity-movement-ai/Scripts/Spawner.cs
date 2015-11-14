@@ -14,7 +14,7 @@ public class Spawner : MonoBehaviour {
     public float spaceBetweenObjects = 1f;
 
     public GameObject[] thingsToAvoid;
-    private GenericRigidbody[] rigidBodiesToAvoid;
+    private MovementAIRigidbody[] rigidBodiesToAvoid;
 
     private Vector3 bottomLeft;
     private Vector3 widthHeight;
@@ -22,7 +22,7 @@ public class Spawner : MonoBehaviour {
     private bool isObj3D;
 
     [System.NonSerialized]
-    public List<GenericRigidbody> objs = new List<GenericRigidbody>();
+    public List<MovementAIRigidbody> objs = new List<MovementAIRigidbody>();
 
     // Use this for initialization
     void Start()
@@ -37,7 +37,7 @@ public class Spawner : MonoBehaviour {
         widthHeight = topRight - bottomLeft;
 
         //Find the GenericRigidbodies' of the things to avoid
-        rigidBodiesToAvoid = new GenericRigidbody[thingsToAvoid.Length];
+        rigidBodiesToAvoid = new MovementAIRigidbody[thingsToAvoid.Length];
 
         for (int i = 0; i < thingsToAvoid.Length; i++)
         {
@@ -122,7 +122,7 @@ public class Spawner : MonoBehaviour {
         }
 
         //Make sure it does not overlap with any existing object
-        foreach(GenericRigidbody o in objs)
+        foreach(MovementAIRigidbody o in objs)
         {
             float dist = Vector3.Distance(o.position, pos);
 

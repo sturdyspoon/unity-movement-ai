@@ -7,7 +7,7 @@ public class CollisionAvoidance : MonoBehaviour {
 
     //public float agentRadius = 0.25f;
 
-    private GenericRigidbody rb;
+    private MovementAIRigidbody rb;
 
     // Use this for initialization
     void Start()
@@ -15,7 +15,7 @@ public class CollisionAvoidance : MonoBehaviour {
         rb = SteeringBasics.getGenericRigidbody(gameObject);
     }
 
-    public Vector3 getSteering(ICollection<GenericRigidbody> targets)
+    public Vector3 getSteering(ICollection<MovementAIRigidbody> targets)
     {
         Vector3 acceleration = Vector3.zero;
 
@@ -26,12 +26,12 @@ public class CollisionAvoidance : MonoBehaviour {
 
         /* The first target that will collide and other data that
 		 * we will need and can avoid recalculating */
-        GenericRigidbody firstTarget = null;
+        MovementAIRigidbody firstTarget = null;
         //float firstMinSeparation = 0, firstDistance = 0;
         float firstMinSeparation = 0, firstDistance = 0, firstRadius = 0;
         Vector3 firstRelativePos = Vector3.zero, firstRelativeVel = Vector3.zero;
 
-        foreach (GenericRigidbody r in targets)
+        foreach (MovementAIRigidbody r in targets)
         {
             /* Calculate the time to collision */
             Vector3 relativePos = transform.position - r.position;

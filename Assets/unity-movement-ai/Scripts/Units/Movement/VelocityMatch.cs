@@ -12,7 +12,7 @@ public class VelocityMatch : MonoBehaviour
 
     private float facingCosineVal;
 
-    private GenericRigidbody rb;
+    private MovementAIRigidbody rb;
     private SteeringBasics steeringBasics;
 
     // Use this for initialization
@@ -24,12 +24,12 @@ public class VelocityMatch : MonoBehaviour
         steeringBasics = GetComponent<SteeringBasics>();
     }
 
-    public Vector3 getSteering(ICollection<GenericRigidbody> targets)
+    public Vector3 getSteering(ICollection<MovementAIRigidbody> targets)
     {
         Vector3 accel = Vector3.zero;
         int count = 0;
 
-        foreach (GenericRigidbody r in targets)
+        foreach (MovementAIRigidbody r in targets)
         {
             if (steeringBasics.isFacing(r.position, facingCosineVal))
             {

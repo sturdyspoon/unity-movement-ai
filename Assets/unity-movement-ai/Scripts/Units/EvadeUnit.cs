@@ -5,7 +5,7 @@ public class EvadeUnit : MonoBehaviour
 {
 
     public GameObject target;
-    private GenericRigidbody targetRigidBody;
+    private MovementAIRigidbody targetRigidBody;
 
     private SteeringBasics steeringBasics;
     private Evade evade;

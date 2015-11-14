@@ -12,7 +12,7 @@ public class Flee : MonoBehaviour {
 
     public float timeToTarget = 0.1f;
 
-    private GenericRigidbody rb;
+    private MovementAIRigidbody rb;
 
     // Use this for initialization
     void Start () {

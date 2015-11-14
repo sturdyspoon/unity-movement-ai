@@ -17,7 +17,7 @@ public class Wander1 : MonoBehaviour {
 	
 	private SteeringBasics steeringBasics;
 
-    private GenericRigidbody rb;
+    private MovementAIRigidbody rb;
 
     //private GameObject debugRing;
 

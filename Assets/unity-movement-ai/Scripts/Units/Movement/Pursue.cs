@@ -7,7 +7,7 @@ public class Pursue : MonoBehaviour
     /* Maximum prediction time the pursue will predict in the future */
     public float maxPrediction = 1f;
 
-    private GenericRigidbody rb;
+    private MovementAIRigidbody rb;
     private SteeringBasics steeringBasics;
 
 	// Use this for initialization
@@ -16,7 +16,7 @@ public class Pursue : MonoBehaviour
         steeringBasics = GetComponent<SteeringBasics>();
 	}
 	
-	public Vector3 getSteering (GenericRigidbody target) {
+	public Vector3 getSteering (MovementAIRigidbody target) {
         /* Calculate the distance to the target */
         Vector3 displacement = target.position - transform.position;
         float distance = displacement.magnitude;

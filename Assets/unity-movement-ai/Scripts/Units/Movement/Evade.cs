@@ -15,7 +15,7 @@ public class Evade : MonoBehaviour
         flee = GetComponent<Flee>();
     }
 
-    public Vector3 getSteering(GenericRigidbody target)
+    public Vector3 getSteering(MovementAIRigidbody target)
     {
         /* Calculate the distance to the target */
         Vector3 displacement = target.position - transform.position;

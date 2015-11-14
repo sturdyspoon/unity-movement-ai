@@ -6,8 +6,8 @@ public class InterposeUnit : MonoBehaviour {
     public GameObject target1;
     public GameObject target2;
 
-    private GenericRigidbody targetRigidbody1;
-    private GenericRigidbody targetRigidbody2;
+    private MovementAIRigidbody targetRigidbody1;
+    private MovementAIRigidbody targetRigidbody2;
 
     private SteeringBasics steeringBasics;
 

@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// This is a wrapper class for either a Rigidbody or Rigidbody2D, so that either can be used with the Unity Movement AI code. 
 /// </summary>
-public class GenericRigidbody {
+public class MovementAIRigidbody {
 
     /// <summary>
     /// This holds the bounding radius for the current game object (either the radius of a sphere
@@ -18,14 +18,14 @@ public class GenericRigidbody {
 
     public bool is3D;
 
-    public GenericRigidbody(Rigidbody rb)
+    public MovementAIRigidbody(Rigidbody rb)
     {
         this.rb = rb;
         is3D = true;
         setBoundingRadius();
     }
 
-    public GenericRigidbody(Rigidbody2D rb2D)
+    public MovementAIRigidbody(Rigidbody2D rb2D)
     {
         this.rb2D = rb2D;
         is3D = false;
@@ -168,7 +168,7 @@ public class GenericRigidbody {
         }
 
         // If parameter cannot be cast to Point return false.
-        GenericRigidbody p = obj as GenericRigidbody;
+        MovementAIRigidbody p = obj as MovementAIRigidbody;
         if ((System.Object)p == null)
         {
             return false;
@@ -178,7 +178,7 @@ public class GenericRigidbody {
         return (rb == p.rb) && (rb2D == p.rb2D);
     }
 
-    public bool Equals(GenericRigidbody p)
+    public bool Equals(MovementAIRigidbody p)
     {
         // If parameter is null return false:
         if ((object)p == null)
@@ -201,7 +201,7 @@ public class GenericRigidbody {
         }
     }
 
-    public static bool operator ==(GenericRigidbody a, GenericRigidbody b)
+    public static bool operator ==(MovementAIRigidbody a, MovementAIRigidbody b)
     {
         // If both are null, or both are same instance, return true.
         if (System.Object.ReferenceEquals(a, b))
@@ -219,7 +219,7 @@ public class GenericRigidbody {
         return a.rb == b.rb && a.rb2D == b.rb2D;
     }
 
-    public static bool operator !=(GenericRigidbody a, GenericRigidbody b)
+    public static bool operator !=(MovementAIRigidbody a, MovementAIRigidbody b)
     {
         return !(a == b);
     }
