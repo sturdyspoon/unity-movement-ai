@@ -10,7 +10,7 @@ public class FollowPath : MonoBehaviour {
 	public float pathDirection = 1f;
 
 	private SteeringBasics steeringBasics;
-	private GenericRigidbody rb;
+	private MovementAIRigidbody rb;
 
 	// Use this for initialization
 	void Start () {

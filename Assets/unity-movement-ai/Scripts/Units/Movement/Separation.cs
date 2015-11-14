@@ -18,15 +18,15 @@ public class Separation : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        GenericRigidbody rb = SteeringBasics.getGenericRigidbody(gameObject);
+        MovementAIRigidbody rb = SteeringBasics.getGenericRigidbody(gameObject);
         boundingRadius = rb.boundingRadius;
     }
 
-    public Vector3 getSteering(ICollection<GenericRigidbody> targets)
+    public Vector3 getSteering(ICollection<MovementAIRigidbody> targets)
     {
         Vector3 acceleration = Vector3.zero;
 
-        foreach (GenericRigidbody r in targets)
+        foreach (MovementAIRigidbody r in targets)
         {
             /* Get the direction and distance from the target */
             Vector3 direction = transform.position - r.position;

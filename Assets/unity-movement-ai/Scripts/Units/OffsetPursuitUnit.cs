@@ -4,7 +4,7 @@ using System.Collections;
 public class OffsetPursuitUnit : MonoBehaviour {
 
     public GameObject target;
-    private GenericRigidbody targetRigidBody;
+    private MovementAIRigidbody targetRigidBody;
 
     public Vector3 offset;
     public float groupLookDist = 1.5f;

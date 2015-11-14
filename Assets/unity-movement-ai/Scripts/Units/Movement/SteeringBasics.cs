@@ -43,7 +43,7 @@ public class SteeringBasics : MonoBehaviour {
     public float fooGroundCheckDistance = 1f;
 
 
-    private GenericRigidbody rb;
+    private MovementAIRigidbody rb;
 
 
     // Use this for initialization
@@ -52,19 +52,19 @@ public class SteeringBasics : MonoBehaviour {
         rb = getGenericRigidbody(gameObject);
     }
 
-    public static GenericRigidbody getGenericRigidbody(GameObject go)
+    public static MovementAIRigidbody getGenericRigidbody(GameObject go)
     {
-        GenericRigidbody result;
+        MovementAIRigidbody result;
 
         Rigidbody rb = go.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            result = new GenericRigidbody(rb);
+            result = new MovementAIRigidbody(rb);
         }
         else
         {
             Rigidbody2D rb2D = go.GetComponent<Rigidbody2D>();
-            result = new GenericRigidbody(rb2D);
+            result = new MovementAIRigidbody(rb2D);
         }
 
         return result;
@@ -219,7 +219,7 @@ public class SteeringBasics : MonoBehaviour {
 		return acceleration;
 	}
 
-    public Vector3 interpose(GenericRigidbody target1, GenericRigidbody target2)
+    public Vector3 interpose(MovementAIRigidbody target1, MovementAIRigidbody target2)
     {
         Vector3 midPoint = (target1.position + target2.position) / 2;
 

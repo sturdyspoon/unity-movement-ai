@@ -3,7 +3,7 @@ using System.Collections;
 
 public class HideUnit : MonoBehaviour {
     public GameObject target;
-    public GenericRigidbody targetRigidBody;
+    public MovementAIRigidbody targetRigidBody;
 
     private SteeringBasics steeringBasics;
     private Hide hide;

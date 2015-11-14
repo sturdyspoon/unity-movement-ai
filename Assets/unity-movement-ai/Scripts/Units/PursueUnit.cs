@@ -4,7 +4,7 @@ using System.Collections;
 public class PursueUnit : MonoBehaviour {
 
     public GameObject target;
-    private GenericRigidbody targetRigidbody;
+    private MovementAIRigidbody targetRigidbody;
 
     private SteeringBasics steeringBasics;
     private Pursue pursue;

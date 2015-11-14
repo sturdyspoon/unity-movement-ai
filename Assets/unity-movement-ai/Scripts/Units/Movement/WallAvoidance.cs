@@ -18,7 +18,7 @@ public class WallAvoidance : MonoBehaviour {
 
     public LayerMask raycastMask = Physics.DefaultRaycastLayers;
 
-    private GenericRigidbody rb;
+    private MovementAIRigidbody rb;
     private SteeringBasics steeringBasics;
 
     // Use this for initialization

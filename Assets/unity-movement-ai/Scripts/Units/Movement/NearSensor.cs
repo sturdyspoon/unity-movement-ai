@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class NearSensor : MonoBehaviour {
 
-	public HashSet<GenericRigidbody> targets = new HashSet<GenericRigidbody>();
+	public HashSet<MovementAIRigidbody> targets = new HashSet<MovementAIRigidbody>();
 
 	void OnTriggerEnter(Collider other) {
 		targets.Add (SteeringBasics.getGenericRigidbody(other.gameObject));
