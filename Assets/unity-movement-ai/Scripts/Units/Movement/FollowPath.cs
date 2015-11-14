@@ -61,8 +61,6 @@ public class FollowPath : MonoBehaviour {
 			targetPosition = path.getPosition(param, pathLoop);
 		}
 
-        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), targetPosition, Color.yellow);
-
         return steeringBasics.arrive(targetPosition);
 	}
 }
