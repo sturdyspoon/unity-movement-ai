@@ -19,6 +19,7 @@ public class InfiniteGrid : MonoBehaviour {
 
     private Vector3 upDir;
     private Vector3 rightDir;
+    private Vector3 oneByOneDiagonal;
 
     private Vector2 widthHeight;
 
@@ -37,6 +38,8 @@ public class InfiniteGrid : MonoBehaviour {
         upDir = topLeft - bottomLeft;
         upDir.Normalize();
 
+        oneByOneDiagonal = (rightDir + upDir).normalized * Mathf.Sqrt(cellSize * cellSize + cellSize * cellSize);
+
         // Convert the camera bounds to the grid bounds
         convertToGridBounds();
     }
@@ -47,11 +50,11 @@ public class InfiniteGrid : MonoBehaviour {
 
         rightComponent = projectAndExtend(bottomLeft, rightDir, true);
         upComponent = projectAndExtend(bottomLeft, upDir, true);
-        bottomLeft = rightComponent + upComponent;
+        bottomLeft = rightComponent + upComponent - oneByOneDiagonal;
 
         rightComponent = projectAndExtend(topRight, rightDir, false);
         upComponent = projectAndExtend(topRight, upDir, false);
-        topRight = rightComponent + upComponent;
+        topRight = rightComponent + upComponent + oneByOneDiagonal;
 
         Vector3 diagonalDir = topRight - bottomLeft;
 
@@ -63,15 +66,7 @@ public class InfiniteGrid : MonoBehaviour {
     {
         Vector3 projection = Vector3.Project(vector, onNormal);
 
-        float newMagnitude;
-
-        if(shouldFloor)
-        {
-            newMagnitude = Mathf.Floor(projection.magnitude / cellSize) * cellSize;
-        } else
-        {
-            newMagnitude = Mathf.Ceil(projection.magnitude / cellSize) * cellSize;
-        }
+        float newMagnitude = Mathf.Floor(projection.magnitude / cellSize) * cellSize;
         
         projection = projection.normalized * newMagnitude;
 
