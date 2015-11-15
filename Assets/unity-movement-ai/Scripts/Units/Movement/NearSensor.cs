@@ -7,20 +7,20 @@ public class NearSensor : MonoBehaviour {
 	public HashSet<MovementAIRigidbody> targets = new HashSet<MovementAIRigidbody>();
 
 	void OnTriggerEnter(Collider other) {
-		targets.Add (SteeringBasics.getGenericRigidbody(other.gameObject));
+		targets.Add (other.GetComponent<MovementAIRigidbody>());
 	}
 	
 	void OnTriggerExit(Collider other) {
-		targets.Remove (SteeringBasics.getGenericRigidbody(other.gameObject));
+		targets.Remove (other.GetComponent<MovementAIRigidbody>());
 	}
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        targets.Add(SteeringBasics.getGenericRigidbody(other.gameObject));
+        targets.Add(other.GetComponent<MovementAIRigidbody>());
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        targets.Remove(SteeringBasics.getGenericRigidbody(other.gameObject));
+        targets.Remove(other.GetComponent<MovementAIRigidbody>());
     }
 }

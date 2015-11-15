@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(MovementAIRigidbody))]
 public class CollisionAvoidance : MonoBehaviour {
     public float maxAcceleration = 15f;
 
@@ -12,7 +13,7 @@ public class CollisionAvoidance : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        rb = SteeringBasics.getGenericRigidbody(gameObject);
+        rb = GetComponent<MovementAIRigidbody>();
     }
 
     public Vector3 getSteering(ICollection<MovementAIRigidbody> targets)

@@ -13,8 +13,7 @@ public class Spawner : MonoBehaviour {
     public float boundaryPadding = 1f;
     public float spaceBetweenObjects = 1f;
 
-    public GameObject[] thingsToAvoid;
-    private MovementAIRigidbody[] rigidBodiesToAvoid;
+    public MovementAIRigidbody[] thingsToAvoid;
 
     private Vector3 bottomLeft;
     private Vector3 widthHeight;
@@ -27,7 +26,9 @@ public class Spawner : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        isObj3D = SteeringBasics.getGenericRigidbody(obj.gameObject).is3D;
+        MovementAIRigidbody rb = obj.GetComponent<MovementAIRigidbody>();
+        rb.setUp(); //Manually set up the MovementAIRigidbody since the given obj can be a prefab
+        isObj3D = rb.is3D;
 
         //Find the size of the map
         float distAway = Camera.main.WorldToViewportPoint(Vector3.zero).z;
@@ -35,14 +36,6 @@ public class Spawner : MonoBehaviour {
         bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distAway));
         Vector3 topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, distAway));
         widthHeight = topRight - bottomLeft;
-
-        //Find the GenericRigidbodies' of the things to avoid
-        rigidBodiesToAvoid = new MovementAIRigidbody[thingsToAvoid.Length];
-
-        for (int i = 0; i < thingsToAvoid.Length; i++)
-        {
-            rigidBodiesToAvoid[i] = SteeringBasics.getGenericRigidbody(thingsToAvoid[i]);
-        }
 
         //Create the create the objects
         for (int i = 0; i < numberOfObjects; i++)
@@ -100,7 +93,7 @@ public class Spawner : MonoBehaviour {
                 transform.eulerAngles = euler;
             }
 
-            objs.Add(SteeringBasics.getGenericRigidbody(t.gameObject));
+            objs.Add(t.GetComponent<MovementAIRigidbody>());
 
             return true;
         }
@@ -111,11 +104,11 @@ public class Spawner : MonoBehaviour {
     private bool canPlaceObject(float halfSize, Vector3 pos)
     {
         //Make sure it does not overlap with any thing to avoid
-        for (int i = 0; i < rigidBodiesToAvoid.Length; i++)
+        for (int i = 0; i < thingsToAvoid.Length; i++)
         {
-            float dist = Vector3.Distance(rigidBodiesToAvoid[i].position, pos);
+            float dist = Vector3.Distance(thingsToAvoid[i].position, pos);
 
-            if(dist < halfSize + rigidBodiesToAvoid[i].boundingRadius)
+            if(dist < halfSize + thingsToAvoid[i].boundingRadius)
             {
                 return false;
             }

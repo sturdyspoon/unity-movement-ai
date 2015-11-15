@@ -4,31 +4,46 @@ using System.Collections;
 /// <summary>
 /// This is a wrapper class for either a Rigidbody or Rigidbody2D, so that either can be used with the Unity Movement AI code. 
 /// </summary>
-public class MovementAIRigidbody {
+public class MovementAIRigidbody : MonoBehaviour {
 
     /// <summary>
     /// This holds the bounding radius for the current game object (either the radius of a sphere
     /// or circle collider). If the game object does not have a sphere or circle collider this 
     /// will be set to -1.
     /// </summary>
+    [System.NonSerialized]
     public float boundingRadius = -1f;
+
+    [System.NonSerialized]
+    public bool is3D;
 
     private Rigidbody rb;
     private Rigidbody2D rb2D;
 
-    public bool is3D;
-
-    public MovementAIRigidbody(Rigidbody rb)
+    void Awake()
     {
-        this.rb = rb;
-        is3D = true;
+        setUp();
+    }
+
+    public void setUp()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            this.rb = rb;
+            is3D = true;
+        }
+        else
+        {
+            this.rb2D = GetComponent<Rigidbody2D>();
+            is3D = false;
+        }
+
         setBoundingRadius();
     }
 
-    public MovementAIRigidbody(Rigidbody2D rb2D)
+    void Start()
     {
-        this.rb2D = rb2D;
-        is3D = false;
         setBoundingRadius();
     }
 
@@ -104,7 +119,7 @@ public class MovementAIRigidbody {
         }
     }
 
-    public Transform transform
+    public new Transform transform
     {
         get
         {
@@ -222,5 +237,27 @@ public class MovementAIRigidbody {
     public static bool operator !=(MovementAIRigidbody a, MovementAIRigidbody b)
     {
         return !(a == b);
+    }
+
+    /* This function is here to ensure we have a rigidbody (2D or 3D) */
+
+    //Since we use editor calls we omit this function on build time
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    public void Reset()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        Rigidbody2D rb2D = GetComponent<Rigidbody2D>();
+
+        if (rb == null && rb2D == null)
+        {
+            if (UnityEditor.EditorUtility.DisplayDialog("Choose a Component", "You are missing one of the required componets. Please choose one to add", "Rigidbody", "Rigidbody2D"))
+            {
+                gameObject.AddComponent<Rigidbody>();
+            }
+            else
+            {
+                gameObject.AddComponent<Rigidbody2D>();
+            }
+        }
     }
 }

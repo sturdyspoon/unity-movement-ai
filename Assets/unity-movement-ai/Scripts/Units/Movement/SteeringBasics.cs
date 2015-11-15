@@ -3,7 +3,7 @@
 /* A helper class for steering a game object in 2D */
 using System.Collections.Generic;
 
-
+[RequireComponent (typeof (MovementAIRigidbody))]
 public class SteeringBasics : MonoBehaviour {
     [Header("General")]
 
@@ -49,25 +49,7 @@ public class SteeringBasics : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        rb = getGenericRigidbody(gameObject);
-    }
-
-    public static MovementAIRigidbody getGenericRigidbody(GameObject go)
-    {
-        MovementAIRigidbody result;
-
-        Rigidbody rb = go.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            result = new MovementAIRigidbody(rb);
-        }
-        else
-        {
-            Rigidbody2D rb2D = go.GetComponent<Rigidbody2D>();
-            result = new MovementAIRigidbody(rb2D);
-        }
-
-        return result;
+        rb = GetComponent<MovementAIRigidbody>();
     }
 
     /* Updates the velocity of the current game object by the given linear acceleration */
@@ -284,29 +266,6 @@ public class SteeringBasics : MonoBehaviour {
         else
         {
             return Mathf.Atan2(direction.y, direction.x);
-        }
-    }
-
-
-    /* This function is here to ensure we have a rigidbody (2D or 3D) */
-
-    //Since we use editor calls we omit this function on build time
-    [System.Diagnostics.Conditional("UNITY_EDITOR")]
-    public void Reset()
-    {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        Rigidbody2D rb2D = GetComponent<Rigidbody2D>();
-
-        if (rb == null && rb2D == null)
-        {
-            if (UnityEditor.EditorUtility.DisplayDialog("Choose a Component", "You are missing one of the required componets. Please choose one to add", "Rigidbody", "Rigidbody2D"))
-            {
-                gameObject.AddComponent<Rigidbody>();
-            }
-            else
-            {
-                gameObject.AddComponent<Rigidbody2D>();
-            }
         }
     }
 }

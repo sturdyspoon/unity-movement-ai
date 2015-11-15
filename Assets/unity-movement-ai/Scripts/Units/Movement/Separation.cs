@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(SteeringBasics))]
+[RequireComponent(typeof(MovementAIRigidbody))]
 public class Separation : MonoBehaviour {
 
     /* The maximum acceleration for separation */
@@ -18,7 +18,7 @@ public class Separation : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        MovementAIRigidbody rb = SteeringBasics.getGenericRigidbody(gameObject);
+        MovementAIRigidbody rb = GetComponent<MovementAIRigidbody>();
         boundingRadius = rb.boundingRadius;
     }
 

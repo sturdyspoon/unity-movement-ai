@@ -85,10 +85,12 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &177746284 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 163698, guid: 11eae3e40166fd0429da122769705e13, type: 2}
+--- !u!114 &177746285 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11408390, guid: 11eae3e40166fd0429da122769705e13,
+    type: 2}
   m_PrefabInternal: {fileID: 640805474}
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
 --- !u!1 &551253050
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +252,7 @@ Prefab:
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 177746284}
+      objectReference: {fileID: 177746285}
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: offset.x
       value: -1.20000005
@@ -426,7 +428,7 @@ Prefab:
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 177746284}
+      objectReference: {fileID: 177746285}
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: offset.x
       value: -.600000024
@@ -492,7 +494,7 @@ Prefab:
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 177746284}
+      objectReference: {fileID: 177746285}
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: offset.x
       value: -1.20000005
@@ -546,7 +548,7 @@ Prefab:
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 177746284}
+      objectReference: {fileID: 177746285}
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: offset.x
       value: -.600000024
@@ -655,6 +657,10 @@ Prefab:
       propertyPath: m_LocalScale.y
       value: 250
       objectReference: {fileID: 0}
+    - target: {fileID: 2335092, guid: e37ff5e8f5ea60649be97ed62cef6341, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e37ff5e8f5ea60649be97ed62cef6341, type: 2}
   m_IsPrefabParent: 0
@@ -704,7 +710,7 @@ Prefab:
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 177746284}
+      objectReference: {fileID: 177746285}
     - target: {fileID: 11461530, guid: 85f9ae2daa0efae42a9814c8de2d0d2d, type: 2}
       propertyPath: offset.x
       value: -1.20000005

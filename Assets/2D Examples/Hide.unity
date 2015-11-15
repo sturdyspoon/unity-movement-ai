@@ -85,6 +85,12 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &42008722 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11433162, guid: 432c4eb9b895c0543b9d8443e79b7c04,
+    type: 2}
+  m_PrefabInternal: {fileID: 143871875}
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
 --- !u!1001 &143871875
 Prefab:
   m_ObjectHideFlags: 0
@@ -127,7 +133,7 @@ Prefab:
     - target: {fileID: 11418690, guid: 432c4eb9b895c0543b9d8443e79b7c04, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 256779208}
+      objectReference: {fileID: 256779209}
     - target: {fileID: 21251982, guid: 432c4eb9b895c0543b9d8443e79b7c04, type: 2}
       propertyPath: m_Color.r
       value: .298039228
@@ -143,10 +149,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 432c4eb9b895c0543b9d8443e79b7c04, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &256779208 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 123982, guid: 242737393c52473439f1cc5462f03fde, type: 2}
+--- !u!114 &256779209 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11482538, guid: 242737393c52473439f1cc5462f03fde,
+    type: 2}
   m_PrefabInternal: {fileID: 957381597}
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
 --- !u!1001 &273455171
 Prefab:
   m_ObjectHideFlags: 0
@@ -156,7 +164,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 2}
       propertyPath: thingsToAvoid.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 491568, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 2}
       propertyPath: m_LocalPosition.x
@@ -193,7 +201,7 @@ Prefab:
     - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 2}
       propertyPath: thingsToAvoid.Array.data[0]
       value: 
-      objectReference: {fileID: 256779208}
+      objectReference: {fileID: 256779209}
     - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 2}
       propertyPath: obj
       value: 
@@ -206,6 +214,14 @@ Prefab:
       propertyPath: m_Name
       value: ObstacleSpawner
       objectReference: {fileID: 0}
+    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 2}
+      propertyPath: thingsToAvoid.Array.data[1]
+      value: 
+      objectReference: {fileID: 42008722}
+    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 2}
+      propertyPath: thingsToAvoid.Array.data[2]
+      value: 
+      objectReference: {fileID: 1358001277}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 2}
   m_IsPrefabParent: 0
@@ -395,7 +411,7 @@ Prefab:
     - target: {fileID: 11418690, guid: 432c4eb9b895c0543b9d8443e79b7c04, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 256779208}
+      objectReference: {fileID: 256779209}
     - target: {fileID: 21251982, guid: 432c4eb9b895c0543b9d8443e79b7c04, type: 2}
       propertyPath: m_Color.r
       value: .298039228
@@ -411,6 +427,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 432c4eb9b895c0543b9d8443e79b7c04, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1358001277 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11433162, guid: 432c4eb9b895c0543b9d8443e79b7c04,
+    type: 2}
+  m_PrefabInternal: {fileID: 986211902}
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
 --- !u!1001 &1944599033
 Prefab:
   m_ObjectHideFlags: 0

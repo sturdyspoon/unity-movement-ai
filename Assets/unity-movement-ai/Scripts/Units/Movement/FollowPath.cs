@@ -15,7 +15,7 @@ public class FollowPath : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		steeringBasics = GetComponent<SteeringBasics> ();
-		rb = SteeringBasics.getGenericRigidbody(gameObject);
+        rb = GetComponent<MovementAIRigidbody>();
 	}
 
 	public Vector3 getSteering (LinePath path) {

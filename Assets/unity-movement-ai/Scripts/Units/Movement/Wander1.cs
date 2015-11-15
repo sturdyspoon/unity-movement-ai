@@ -27,7 +27,7 @@ public class Wander1 : MonoBehaviour {
 		
 		steeringBasics = GetComponent<SteeringBasics> ();
 
-        rb = SteeringBasics.getGenericRigidbody(gameObject);
+        rb = GetComponent<MovementAIRigidbody>();
 	}
 
     public Vector3 getSteering() {
