@@ -5,6 +5,14 @@ using System.Collections;
 /// This is a wrapper class for either a Rigidbody or Rigidbody2D, so that either can be used with the Unity Movement AI code. 
 /// </summary>
 public class MovementAIRigidbody : MonoBehaviour {
+    [Header("3D Only Settings")]
+
+    /* Determines if the character should follow the ground or can fly any where in 3D space */
+    public bool fooCanFly = false;
+
+    /* Controls how far a ray should try to reach to check for ground (for 3D characters only) */
+    public float fooGroundCheckDistance = 1f;
+
 
     /// <summary>
     /// This holds the bounding radius for the current game object (either the radius of a sphere
@@ -16,6 +24,13 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     [System.NonSerialized]
     public bool is3D;
+
+    /// <summary>
+    /// Holds the current ground normal for this character. This value is only used by 3D 
+    /// characters who cannot fly.
+    /// </summary>
+    [System.NonSerialized]
+    public Vector3 groundNormal = Vector3.up;
 
     private Rigidbody rb;
     private Rigidbody2D rb2D;
@@ -55,7 +70,7 @@ public class MovementAIRigidbody : MonoBehaviour {
 
             if (col != null)
             {
-                boundingRadius = Mathf.Max(rb.transform.localScale.x, rb.transform.localScale.y, rb.transform.localScale.z) * col.radius; ;
+                boundingRadius = Mathf.Max(rb.transform.localScale.x, rb.transform.localScale.y, rb.transform.localScale.z) * col.radius;
             }
         }
         else
@@ -69,31 +84,111 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        /* If the character can't fly then find the current the ground normal */
+        if(is3D && !fooCanFly)
+        {
+            RaycastHit hitInfo;
+
+            /* 
+            Start the ray with a small offset of 0.1f from inside the character. The
+            transform.position of the characer is assumed to be at the base of the character.
+             */
+            if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, fooGroundCheckDistance))
+            {
+                groundNormal = hitInfo.normal;
+            } else
+            {
+                groundNormal = Vector3.up;
+            }
+
+            Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * fooGroundCheckDistance), Color.white);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (this.velocity.normalized), Color.red);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow);
+        }
+    }
+
     public Vector3 position
     {
         get
         {
             if(is3D)
             {
-                return rb.position;
+                if (fooCanFly)
+                {
+                    return rb.position;
+                } else
+                {
+                    return new Vector3(rb.position.x, 0, rb.position.z);
+                }
             } else
             {
                 return rb2D.position;
             }
         }
+    }
+
+    /* The following are only used for non flying 3D characters */
+    private Vector3 groundedCharVel = Vector3.zero;
+    private Vector3 lastVel = Vector3.zero;
+    private Vector3 lastGroundNormal = Vector3.up;
+
+    private Vector3 getGroundedCharVel()
+    {
+        if (groundNormal != lastGroundNormal || lastVel != rb.velocity)
+        {
+            groundedCharVel = Vector3.ProjectOnPlane(rb.velocity, groundNormal);
+            groundedCharVel = Quaternion.FromToRotation(groundNormal, Vector3.up) * groundedCharVel;
+            lastGroundNormal = groundNormal;
+            lastVel = rb.velocity;
+        }
+
+        return groundedCharVel;
+    }
+
+    public Vector3 velocity
+    {
+        get
+        {
+            if (is3D)
+            {
+                if(fooCanFly)
+                {
+                    return rb.velocity;
+                } else
+                {
+                    return getGroundedCharVel();
+                }
+            }
+            else
+            {
+                return rb2D.velocity;
+            }
+        }
+
         set
         {
-            if(is3D)
+            if (is3D)
             {
-                rb.position = value;
-            } else
+                if(fooCanFly)
+                {
+                    rb.velocity = value;
+                } else
+                {
+                    Vector3 nonMovementVel = rb.velocity - getGroundedCharVel();
+                    rb.velocity = nonMovementVel + value;
+                }
+            }
+            else
             {
-                rb2D.position = value;
+                rb2D.velocity = value;
             }
         }
     }
 
-    public Vector3 velocity
+    public Vector3 realVelocity
     {
         get
         {
@@ -106,6 +201,7 @@ public class MovementAIRigidbody : MonoBehaviour {
                 return rb2D.velocity;
             }
         }
+
         set
         {
             if (is3D)
@@ -172,6 +268,22 @@ public class MovementAIRigidbody : MonoBehaviour {
         {
             return SteeringBasics.orientationToVector(rotationInRadians, is3D);
         }
+    }
+
+    public Vector3 convertVector(Vector3 v)
+    {
+        /* If the character is a 2D character then ignore the z component */
+        if (!is3D)
+        {
+            v.z = 0;
+        }
+        /* Else if the charater is a 3D character who can't fly then ignore the y component */
+        else if(!fooCanFly)
+        {
+            v.y = 0;
+        }
+
+        return v;
     }
 
     public override bool Equals(System.Object obj)
