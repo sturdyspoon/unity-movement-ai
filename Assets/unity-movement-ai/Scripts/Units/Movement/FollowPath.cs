@@ -39,14 +39,16 @@ public class FollowPath : MonoBehaviour {
             {
                 /* Find the final destination of the character on this path */
                 Vector3 finalDestination = (pathDirection > 0) ? path[path.Length - 1] : path[0];
+                finalDestination = rb.convertVector(finalDestination);
 
                 /* If we are close enough to the final destination then either stop moving or reverse if 
                  * the character is set to loop on paths */
-                if (Vector3.Distance(transform.position, finalDestination) < stopRadius)
+                if (Vector3.Distance(rb.position, finalDestination) < stopRadius)
                 {
+                    Debug.Log("FP YES");
                     targetPosition = finalDestination;
 
-                    rb.velocity = Vector3.zero;
+                    rb.realVelocity = Vector3.zero;
                     return Vector3.zero;
                 }
             }

@@ -34,15 +34,6 @@ public class SteeringBasics : MonoBehaviour {
 	private Queue<Vector3> velocitySamples = new Queue<Vector3>();
 
 
-    [Header("3D Only")]
-
-    /* Determines if the character should follow the ground or can fly any where in 3D space */
-    public bool fooCanFly = false;
-
-    /* Controls how far a ray should try to reach to check for ground (for 3D characters only) */
-    public float fooGroundCheckDistance = 1f;
-
-
     private MovementAIRigidbody rb;
 
 
@@ -54,6 +45,8 @@ public class SteeringBasics : MonoBehaviour {
 
     /* Updates the velocity of the current game object by the given linear acceleration */
     public void steer(Vector3 linearAcceleration) {
+        Vector3 f = linearAcceleration * Time.deltaTime;
+        //Debug.Log(rb.velocity.ToString("F4") + " " + f.ToString("F4"));
         rb.velocity += linearAcceleration * Time.deltaTime;
 
         if (rb.velocity.magnitude > maxVelocity)
@@ -157,17 +150,18 @@ public class SteeringBasics : MonoBehaviour {
 
     /* Returns the steering for a character so it arrives at the target */
     public Vector3 arrive(Vector3 targetPosition) {
-		/* Get the right direction for the linear acceleration */
-		Vector3 targetVelocity = targetPosition - transform.position;
+        targetPosition = rb.convertVector(targetPosition);
+
+        /* Get the right direction for the linear acceleration */
+        Vector3 targetVelocity = targetPosition - rb.position;
 		
 		/* Get the distance to the target */
 		float dist = targetVelocity.magnitude;
 
-        //targetVelocity.y = 0;
-
         /* If we are within the stopping radius then stop */
         if (dist < targetRadius) {
-			rb.velocity = Vector3.zero;
+            Debug.Log("YESS");
+			rb.realVelocity = Vector3.zero;
 			return Vector3.zero;
 		}
 		
@@ -186,9 +180,9 @@ public class SteeringBasics : MonoBehaviour {
 		/* Calculate the linear acceleration we want */
 		Vector3 acceleration = targetVelocity - rb.velocity;
 		/*
-		 Rather than accelerate the character to the correct speed in 1 second, 
-		 accelerate so we reach the desired speed in timeToTarget seconds 
-		 (if we were to actually accelerate for the full timeToTarget seconds).
+	    Rather than accelerate the character to the correct speed in 1 second, 
+	    accelerate so we reach the desired speed in timeToTarget seconds 
+	    (if we were to actually accelerate for the full timeToTarget seconds).
 		*/
 		acceleration *= 1/timeToTarget;
 		
