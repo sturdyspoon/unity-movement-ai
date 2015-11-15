@@ -20,7 +20,7 @@ public class VelocityMatch : MonoBehaviour
     {
         facingCosineVal = Mathf.Cos(facingCosine * Mathf.Deg2Rad);
 
-        rb = SteeringBasics.getGenericRigidbody(gameObject);
+        rb = GetComponent<MovementAIRigidbody>();
         steeringBasics = GetComponent<SteeringBasics>();
     }
 

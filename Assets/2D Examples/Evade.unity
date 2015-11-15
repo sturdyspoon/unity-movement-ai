@@ -85,10 +85,12 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &485359971 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 138492, guid: 4899abe30e28f2346ad7c7aad5ef6831, type: 2}
+--- !u!114 &485359974 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11476988, guid: 4899abe30e28f2346ad7c7aad5ef6831,
+    type: 2}
   m_PrefabInternal: {fileID: 562408714}
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
 --- !u!4 &532964221 stripped
 Transform:
   m_PrefabParentObject: {fileID: 449564, guid: 93bd2c6f518eac14ea4a7747fc3076a4, type: 2}
@@ -279,7 +281,7 @@ Prefab:
     - target: {fileID: 11403558, guid: 93bd2c6f518eac14ea4a7747fc3076a4, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 485359971}
+      objectReference: {fileID: 485359974}
     - target: {fileID: 21294878, guid: 93bd2c6f518eac14ea4a7747fc3076a4, type: 2}
       propertyPath: m_Color.r
       value: .298039228

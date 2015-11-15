@@ -166,10 +166,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 11499694, guid: dfd3517fffef456469be4b97538e3aed, type: 2}
-      propertyPath: maxVelocity
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 21290158, guid: dfd3517fffef456469be4b97538e3aed, type: 2}
       propertyPath: m_Color.r
       value: .298039228
@@ -271,10 +267,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!1 &1127238938 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 160260, guid: dfd3517fffef456469be4b97538e3aed, type: 2}
+--- !u!114 &1127238941 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11469772, guid: dfd3517fffef456469be4b97538e3aed,
+    type: 2}
   m_PrefabInternal: {fileID: 532964220}
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
 --- !u!1001 &1654532464
 Prefab:
   m_ObjectHideFlags: 0
@@ -317,7 +315,7 @@ Prefab:
     - target: {fileID: 11449918, guid: 52482609188547b43bab8186f2266ef7, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 1127238938}
+      objectReference: {fileID: 1127238941}
     - target: {fileID: 21289718, guid: 52482609188547b43bab8186f2266ef7, type: 2}
       propertyPath: m_Color.r
       value: .956862748

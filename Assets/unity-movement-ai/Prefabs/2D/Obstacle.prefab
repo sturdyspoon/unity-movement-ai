@@ -9,6 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 477218}
   - 212: {fileID: 21207890}
+  - 114: {fileID: 11404330}
   - 58: {fileID: 5866090}
   - 50: {fileID: 5097540}
   m_Layer: 0
@@ -59,6 +60,17 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: .5
+--- !u!114 &11404330
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 119102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &21207890
 SpriteRenderer:
   m_ObjectHideFlags: 1

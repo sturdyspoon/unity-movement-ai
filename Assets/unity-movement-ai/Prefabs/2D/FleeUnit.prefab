@@ -12,6 +12,7 @@ GameObject:
   - 114: {fileID: 11497822}
   - 114: {fileID: 11495628}
   - 114: {fileID: 11482096}
+  - 114: {fileID: 11444796}
   - 50: {fileID: 5050038}
   - 58: {fileID: 5865400}
   m_Layer: 0
@@ -62,6 +63,17 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: .300000012
+--- !u!114 &11444796
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11482096
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -90,12 +102,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVelocity: 3.5
   maxAcceleration: 6.66599989
+  turnSpeed: 20
   targetRadius: .00499999989
   slowRadius: 1
   timeToTarget: .100000001
-  turnSpeed: 20
   smoothing: 1
   numSamplesForSmoothing: 5
+  fooCanFly: 0
+  fooGroundCheckDistance: 1
 --- !u!114 &11497822
 MonoBehaviour:
   m_ObjectHideFlags: 1

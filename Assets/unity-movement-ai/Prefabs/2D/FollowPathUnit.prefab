@@ -12,6 +12,7 @@ GameObject:
   - 114: {fileID: 11400164}
   - 114: {fileID: 11415596}
   - 114: {fileID: 11489834}
+  - 114: {fileID: 11469978}
   - 50: {fileID: 5055334}
   - 58: {fileID: 5888310}
   m_Layer: 0
@@ -90,12 +91,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVelocity: 3.5
   maxAcceleration: 10
+  turnSpeed: 20
   targetRadius: .00499999989
   slowRadius: 1
   timeToTarget: .100000001
-  turnSpeed: 20
   smoothing: 1
   numSamplesForSmoothing: 5
+  fooCanFly: 0
+  fooGroundCheckDistance: 1
+--- !u!114 &11469978
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 156960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11489834
 MonoBehaviour:
   m_ObjectHideFlags: 1

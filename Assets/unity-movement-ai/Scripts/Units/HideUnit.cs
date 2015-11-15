@@ -2,8 +2,7 @@
 using System.Collections;
 
 public class HideUnit : MonoBehaviour {
-    public GameObject target;
-    public MovementAIRigidbody targetRigidBody;
+    public MovementAIRigidbody target;
 
     private SteeringBasics steeringBasics;
     private Hide hide;
@@ -14,8 +13,6 @@ public class HideUnit : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        targetRigidBody = SteeringBasics.getGenericRigidbody(target);
-
         steeringBasics = GetComponent<SteeringBasics>();
         hide = GetComponent<Hide>();
         obstacleSpawner = GameObject.Find("ObstacleSpawner").GetComponent<Spawner>();
@@ -27,7 +24,7 @@ public class HideUnit : MonoBehaviour {
     void Update()
     {
         Vector3 hidePosition;
-        Vector3 hideAccel = hide.getSteering(targetRigidBody, obstacleSpawner.objs, out hidePosition);
+        Vector3 hideAccel = hide.getSteering(target, obstacleSpawner.objs, out hidePosition);
 
         Vector3 accel = wallAvoid.getSteering(hidePosition - transform.position);
 

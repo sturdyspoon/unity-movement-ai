@@ -373,7 +373,7 @@ Prefab:
     - target: {fileID: 11443842, guid: 169903cbb559e444f97e4606acc79194, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 1978370654}
+      objectReference: {fileID: 1978370655}
     - target: {fileID: 2370856, guid: 169903cbb559e444f97e4606acc79194, type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -381,10 +381,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 169903cbb559e444f97e4606acc79194, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1756920971 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 118936, guid: 169903cbb559e444f97e4606acc79194, type: 2}
+--- !u!114 &1756920980 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11443894, guid: 169903cbb559e444f97e4606acc79194,
+    type: 2}
   m_PrefabInternal: {fileID: 1756920970}
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
 --- !u!1001 &1804033521
 Prefab:
   m_ObjectHideFlags: 0
@@ -455,15 +457,15 @@ Prefab:
     - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 2}
       propertyPath: thingsToAvoid.Array.data[0]
       value: 
-      objectReference: {fileID: 1978370654}
+      objectReference: {fileID: 1978370655}
     - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 2}
       propertyPath: thingsToAvoid.Array.data[1]
       value: 
-      objectReference: {fileID: 1903373596}
+      objectReference: {fileID: 1903373605}
     - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 2}
       propertyPath: thingsToAvoid.Array.data[2]
       value: 
-      objectReference: {fileID: 1756920971}
+      objectReference: {fileID: 1756920980}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 2}
   m_IsPrefabParent: 0
@@ -509,7 +511,7 @@ Prefab:
     - target: {fileID: 11443842, guid: 169903cbb559e444f97e4606acc79194, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 1978370654}
+      objectReference: {fileID: 1978370655}
     - target: {fileID: 2370856, guid: 169903cbb559e444f97e4606acc79194, type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -517,10 +519,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 169903cbb559e444f97e4606acc79194, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1903373596 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 118936, guid: 169903cbb559e444f97e4606acc79194, type: 2}
+--- !u!114 &1903373605 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11443894, guid: 169903cbb559e444f97e4606acc79194,
+    type: 2}
   m_PrefabInternal: {fileID: 1903373595}
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
 --- !u!1001 &1978370653
 Prefab:
   m_ObjectHideFlags: 0
@@ -571,7 +575,9 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1978370654 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 118562, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 2}
+--- !u!114 &1978370655 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11461348, guid: bd1d62c70d726f34eb654e97eb3686cd,
+    type: 2}
   m_PrefabInternal: {fileID: 1978370653}
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(SteeringBasics))]
 public class Wander2 : MonoBehaviour {
 
     public float wanderRadius = 1.2f;
@@ -26,7 +27,7 @@ public class Wander2 : MonoBehaviour {
 
         steeringBasics = GetComponent<SteeringBasics>();
 
-        is3D = SteeringBasics.getGenericRigidbody(gameObject).is3D;
+        is3D = GetComponent<MovementAIRigidbody>().is3D;
     }
 
     public Vector3 getSteering()

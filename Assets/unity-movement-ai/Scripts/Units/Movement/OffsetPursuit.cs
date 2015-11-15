@@ -12,7 +12,7 @@ public class OffsetPursuit : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        rb = SteeringBasics.getGenericRigidbody(gameObject);
+        rb = GetComponent<MovementAIRigidbody>();
         steeringBasics = GetComponent<SteeringBasics>();
     }
 

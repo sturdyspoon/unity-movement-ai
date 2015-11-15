@@ -12,7 +12,7 @@ public class Pursue : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-        rb = SteeringBasics.getGenericRigidbody(gameObject);
+        rb = GetComponent<MovementAIRigidbody>();
         steeringBasics = GetComponent<SteeringBasics>();
 	}
 	
@@ -37,6 +37,8 @@ public class Pursue : MonoBehaviour
 
         /* Put the target together based on where we think the target will be */
         Vector3 explicitTarget = target.position + target.velocity*prediction;
+
+        //Debug.DrawLine(transform.position, explicitTarget);
 
         return steeringBasics.seek(explicitTarget);
     }

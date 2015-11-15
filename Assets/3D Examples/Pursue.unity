@@ -361,7 +361,7 @@ Prefab:
     - target: {fileID: 11432080, guid: 877167d1f91274a4281ed4fe9864c393, type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 1169437416}
+      objectReference: {fileID: 1169437422}
     - target: {fileID: 2326942, guid: 877167d1f91274a4281ed4fe9864c393, type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -411,7 +411,9 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2fe3f13595b05354ab1b6bd1c710d777, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1169437416 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 163698, guid: 11eae3e40166fd0429da122769705e13, type: 2}
+--- !u!114 &1169437422 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11408390, guid: 11eae3e40166fd0429da122769705e13,
+    type: 2}
   m_PrefabInternal: {fileID: 640805474}
+  m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}

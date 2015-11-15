@@ -4,8 +4,7 @@ using System.Collections;
 public class EvadeUnit : MonoBehaviour
 {
 
-    public GameObject target;
-    private MovementAIRigidbody targetRigidBody;
+    public MovementAIRigidbody target;
 
     private SteeringBasics steeringBasics;
     private Evade evade;
@@ -13,8 +12,6 @@ public class EvadeUnit : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        targetRigidBody = SteeringBasics.getGenericRigidbody(target);
-
         steeringBasics = GetComponent<SteeringBasics>();
         evade = GetComponent<Evade>();
     }
@@ -22,7 +19,7 @@ public class EvadeUnit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 accel = evade.getSteering(targetRigidBody);
+        Vector3 accel = evade.getSteering(target);
 
         steeringBasics.steer(accel);
         steeringBasics.lookWhereYoureGoing();
