@@ -160,8 +160,7 @@ public class SteeringBasics : MonoBehaviour {
 
         /* If we are within the stopping radius then stop */
         if (dist < targetRadius) {
-            Debug.Log("YESS");
-			rb.realVelocity = Vector3.zero;
+            rb.realVelocity = Vector3.zero;
 			return Vector3.zero;
 		}
 		
