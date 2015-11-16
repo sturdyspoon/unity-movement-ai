@@ -45,7 +45,6 @@ public class FollowPath : MonoBehaviour {
                  * the character is set to loop on paths */
                 if (Vector3.Distance(rb.position, finalDestination) < stopRadius)
                 {
-                    Debug.Log("FP YES");
                     targetPosition = finalDestination;
 
                     rb.realVelocity = Vector3.zero;
