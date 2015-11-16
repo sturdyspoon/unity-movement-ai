@@ -93,41 +93,24 @@ public class MovementAIRigidbody : MonoBehaviour {
             groundNormal = Vector3.up;
 
             RaycastHit hitInfo;
-            bool firstRayHit = false;
-            float firstRayHitDist = Mathf.Infinity;
 
             /* 
             Start the ray with a small offset of 0.1f from inside the character. The
             transform.position of the characer is assumed to be at the base of the character.
              */
-            if (Physics.SphereCast(transform.position + (Vector3.up * 0.1f), boundingRadius, Vector3.down, out hitInfo, fooGroundCheckDistance))
+            if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, fooGroundCheckDistance))
             //if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, fooGroundCheckDistance))
             {
                 groundNormal = hitInfo.normal;
-                firstRayHit = true;
-                firstRayHitDist = hitInfo.distance;
             }
-
-            if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, velocity.normalized, out hitInfo, fooGroundCheckDistance))
-            //if (Physics.Raycast(transform.position + (Vector3.up * boundingRadius), velocity.normalized, out hitInfo, fooGroundCheckDistance))
-            {
-                //if (firstRayHit)
-                //{
-                //    groundNormal = (groundNormal + hitInfo.normal) / 2;
-                //}
-                //else
-                //{
-                //    groundNormal = hitInfo.normal;
-                //}
-                //if(firstRayHitDist > hitInfo.distance * 0.9f)
-                //{
-                groundNormal = hitInfo.normal;
-                //}
-            }
-
+            
             Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * fooGroundCheckDistance), Color.white);
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb.velocity.normalized*1.5f), Color.green);
+
+            //Vector3 foo = Vector3.ProjectOnPlane(rb.velocity, groundNormal);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (foo.normalized * 1.5f), Color.green);
+
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow);
         }
     }
