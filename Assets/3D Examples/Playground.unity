@@ -96,7 +96,7 @@ GameObject:
   - 33: {fileID: 48413355}
   - 65: {fileID: 48413354}
   - 23: {fileID: 48413353}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ramp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -561,7 +561,7 @@ GameObject:
   - 33: {fileID: 1209437394}
   - 65: {fileID: 1209437393}
   - 23: {fileID: 1209437392}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ramp (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -728,7 +728,7 @@ GameObject:
   - 218: {fileID: 1771989945}
   - 154: {fileID: 1771989944}
   - 114: {fileID: 1771989947}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
