@@ -169,8 +169,39 @@ public class SteeringBasics : MonoBehaviour {
 		if(dist > slowRadius) {
 			targetSpeed = maxVelocity;
 		} else {
-			targetSpeed = maxVelocity * (dist / slowRadius);
-		}
+            targetSpeed = maxVelocity * (dist / slowRadius);
+            //Debug.Log(rb.groundNormal.ToString("F4") + " " + Vector3.Angle(rb.groundNormal, Vector3.down) + " " + targetSpeed);
+
+            //if (rb.is3D && !rb.fooCanFly)
+            //{
+            //    float angle = Vector3.Angle(rb.groundNormal, Vector3.down) * Mathf.Deg2Rad;
+            //    float minSpeed = Mathf.Sin(angle) * Physics.gravity.magnitude / 10;
+            //    targetSpeed = ((maxVelocity - minSpeed) * (dist / slowRadius)) + minSpeed;
+            //}
+
+            //if (rb.is3D && !rb.fooCanFly)
+            //{
+            //    Vector3 targetVelDir = targetVelocity.normalized;
+            //    Vector3 gravOnPlane = Vector3.ProjectOnPlane(Physics.gravity, rb.groundNormal);
+
+                //    float a = targetVelDir.sqrMagnitude;
+                //    float b = -2 * (targetVelDir.x*rb.velocity.x + targetVelDir.y*rb.velocity.y);
+                //    float c = rb.velocity.sqrMagnitude - gravOnPlane.sqrMagnitude;
+
+                //    float minSpeed = quadForm(a, b, c, true);
+
+                //    if (!float.IsNaN(minSpeed))
+                //    {
+                //        targetSpeed = ( (maxVelocity - minSpeed) * (dist / slowRadius) ) + minSpeed;
+                //    }
+
+                //    Debug.Log(minSpeed + " " + targetSpeed + " " + (dist / slowRadius) + " " + gravOnPlane);
+                //}
+                //else
+                //{
+                //    targetSpeed = maxVelocity * (dist / slowRadius);
+                //}
+        }
 		
 		/* Give targetVelocity the correct speed */
 		targetVelocity.Normalize();
@@ -193,6 +224,20 @@ public class SteeringBasics : MonoBehaviour {
 
 		return acceleration;
 	}
+
+    static float quadForm(float a, float b, float c, bool pos)
+    {
+        float preRoot = b * b - 4 * a * c;
+        if (preRoot < 0)
+        {
+            return float.NaN;
+        }
+        else
+        {
+            float sgn = pos ? 1.0f : -1.0f;
+            return (sgn * Mathf.Sqrt(preRoot) - b) / (2.0f * a);
+        }
+    }
 
     public Vector3 interpose(MovementAIRigidbody target1, MovementAIRigidbody target2)
     {
