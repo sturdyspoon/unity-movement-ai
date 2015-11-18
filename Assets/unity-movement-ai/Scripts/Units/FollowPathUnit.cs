@@ -55,6 +55,7 @@ public class FollowPathUnit : MonoBehaviour {
     public bool isAtEndOfPath()
     {
         Vector3 end = rb.convertVector(path.endNode);
+        //Debug.Log(Vector3.Distance(end, rb.position));
         return Vector3.Distance(end, rb.position) < followPath.stopRadius;
     }
 }

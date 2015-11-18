@@ -11,7 +11,7 @@ public class MovementAIRigidbody : MonoBehaviour {
     public bool fooCanFly = false;
 
     /* Controls how far a ray should try to reach to check for ground (for 3D characters only) */
-    public float fooGroundCheckDistance = 1f;
+    public float barGroundCheckDistance = 0.01f;
 
 
     /// <summary>
@@ -91,6 +91,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         if(is3D && !fooCanFly)
         {
             groundNormal = Vector3.up;
+            rb.useGravity = true;
 
             RaycastHit hitInfo;
 
@@ -98,13 +99,14 @@ public class MovementAIRigidbody : MonoBehaviour {
             Start the ray with a small offset of 0.1f from inside the character. The
             transform.position of the characer is assumed to be at the base of the character.
              */
-            if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, fooGroundCheckDistance))
+            if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, (0.1f + barGroundCheckDistance)))
             //if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, fooGroundCheckDistance))
             {
                 groundNormal = hitInfo.normal;
+                rb.useGravity = false;
             }
             
-            Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * fooGroundCheckDistance), Color.white);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * barGroundCheckDistance), Color.white);
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb.velocity.normalized*1.5f), Color.green);
 
