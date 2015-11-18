@@ -45,8 +45,6 @@ public class SteeringBasics : MonoBehaviour {
 
     /* Updates the velocity of the current game object by the given linear acceleration */
     public void steer(Vector3 linearAcceleration) {
-        Vector3 f = linearAcceleration * Time.deltaTime;
-        //Debug.Log(rb.velocity.ToString("F4") + " " + f.ToString("F4"));
         rb.velocity += linearAcceleration * Time.deltaTime;
 
         if (rb.velocity.magnitude > maxVelocity)
@@ -170,37 +168,6 @@ public class SteeringBasics : MonoBehaviour {
 			targetSpeed = maxVelocity;
 		} else {
             targetSpeed = maxVelocity * (dist / slowRadius);
-            //Debug.Log(rb.groundNormal.ToString("F4") + " " + Vector3.Angle(rb.groundNormal, Vector3.down) + " " + targetSpeed);
-
-            //if (rb.is3D && !rb.fooCanFly)
-            //{
-            //    float angle = Vector3.Angle(rb.groundNormal, Vector3.down) * Mathf.Deg2Rad;
-            //    float minSpeed = Mathf.Sin(angle) * Physics.gravity.magnitude / 10;
-            //    targetSpeed = ((maxVelocity - minSpeed) * (dist / slowRadius)) + minSpeed;
-            //}
-
-            //if (rb.is3D && !rb.fooCanFly)
-            //{
-            //    Vector3 targetVelDir = targetVelocity.normalized;
-            //    Vector3 gravOnPlane = Vector3.ProjectOnPlane(Physics.gravity, rb.groundNormal);
-
-                //    float a = targetVelDir.sqrMagnitude;
-                //    float b = -2 * (targetVelDir.x*rb.velocity.x + targetVelDir.y*rb.velocity.y);
-                //    float c = rb.velocity.sqrMagnitude - gravOnPlane.sqrMagnitude;
-
-                //    float minSpeed = quadForm(a, b, c, true);
-
-                //    if (!float.IsNaN(minSpeed))
-                //    {
-                //        targetSpeed = ( (maxVelocity - minSpeed) * (dist / slowRadius) ) + minSpeed;
-                //    }
-
-                //    Debug.Log(minSpeed + " " + targetSpeed + " " + (dist / slowRadius) + " " + gravOnPlane);
-                //}
-                //else
-                //{
-                //    targetSpeed = maxVelocity * (dist / slowRadius);
-                //}
         }
 		
 		/* Give targetVelocity the correct speed */
