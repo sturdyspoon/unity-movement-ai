@@ -3,14 +3,11 @@ using System.Collections;
 
 public class RandomizeTerrain : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+    public float tiling = 10.0f;
 
     public void randomize()
     {
-        Debug.Log("YOOO");
+        generateHeights(GetComponent<Terrain>(), tiling);
     }
 
     public void generateHeights(Terrain terrain, float tileSize)
