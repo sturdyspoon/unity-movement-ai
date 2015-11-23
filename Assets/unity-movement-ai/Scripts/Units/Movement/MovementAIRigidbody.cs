@@ -13,6 +13,9 @@ public class MovementAIRigidbody : MonoBehaviour {
     /* Controls how far a ray should try to reach to check for ground (for 3D characters only) */
     public float barGroundCheckDistance = 0.01f;
 
+    /* The sphere cast mask that determines what layers should be consider the ground */
+    public LayerMask zarGroundCheckMask = Physics.DefaultRaycastLayers;
+
 
     /// <summary>
     /// This holds the bounding radius for the current game object (either the radius of a sphere
@@ -99,7 +102,7 @@ public class MovementAIRigidbody : MonoBehaviour {
             Start the ray with a small offset of 0.1f from inside the character. The
             transform.position of the characer is assumed to be at the base of the character.
              */
-            if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, (0.1f + barGroundCheckDistance)))
+            if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, (0.1f + barGroundCheckDistance), zarGroundCheckMask.value))
             {
                 groundNormal = hitInfo.normal;
                 rb.useGravity = false;
@@ -272,6 +275,15 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Converts the given vector to a vector that is appropriate for the kind of 
+    /// character this rigidbody is on. If the character is a 2D character then
+    /// the z component will be zeroed out. If the character is a grounded 3D 
+    /// character then the y component will be zeroed out. And if the character is 
+    /// flying 3D character no changes will be made to the vector.
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
     public Vector3 convertVector(Vector3 v)
     {
         /* If the character is a 2D character then ignore the z component */
