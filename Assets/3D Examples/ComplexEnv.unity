@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: .0469999984, g: .0430000015, b: .0350000001, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 0
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: .5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -97,6 +97,7 @@ GameObject:
   - 92: {fileID: 551253053}
   - 124: {fileID: 551253052}
   - 81: {fileID: 551253051}
+  - 114: {fileID: 551253056}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -133,8 +134,8 @@ Camera:
   m_GameObject: {fileID: 551253050}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: .933333337, g: .933333337, b: .933333337, a: 1}
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -171,6 +172,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &551253056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 551253050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d89bc7817f877c488234bbad9ad6115, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 15
+  xSensitivity: 2
+  ySensitivity: 2
+  clampVerticalRotation: 1
 --- !u!1 &735375198
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 784ef8823e460e24ca42d72d7d75173d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tiling: 5
+  perlinScale: 5
 --- !u!154 &1178004548
 TerrainCollider:
   m_ObjectHideFlags: 0
@@ -309,7 +325,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1178004546}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -50, y: 0, z: -50}
+  m_LocalPosition: {x: -100, y: 0, z: -100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
