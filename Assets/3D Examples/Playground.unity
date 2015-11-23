@@ -704,7 +704,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 199308, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2307250, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
       propertyPath: m_Enabled
@@ -799,3 +799,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 784ef8823e460e24ca42d72d7d75173d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  perlinScale: 10
