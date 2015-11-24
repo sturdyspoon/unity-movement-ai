@@ -4,6 +4,8 @@ using System.Collections;
 public class RandomizeTerrain : MonoBehaviour {
 
     public float perlinScale = 10.0f;
+    public float minHeight = 0f;
+    public float maxHeight = 10f;
 
     public void randomize()
     {
@@ -12,6 +14,9 @@ public class RandomizeTerrain : MonoBehaviour {
 
     public void generateHeights(Terrain terrain, float perlinScale)
     {
+        float minHeightPercent = minHeight / terrain.terrainData.heightmapScale.y;
+        float maxHeightPercent = maxHeight / terrain.terrainData.heightmapScale.y;
+
         PerlinHelper ph = new PerlinHelper(terrain.terrainData.heightmapWidth, terrain.terrainData.heightmapHeight, perlinScale);
 
         float[,] heights = new float[terrain.terrainData.heightmapWidth, terrain.terrainData.heightmapHeight];
@@ -20,7 +25,7 @@ public class RandomizeTerrain : MonoBehaviour {
         {
             for (int k = 0; k < terrain.terrainData.heightmapHeight; k++)
             {
-                heights[i, k] = ph[i, k];
+                heights[i, k] = minHeightPercent + (ph[i, k] * (maxHeightPercent - minHeightPercent));
             }
         }
 
