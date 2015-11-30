@@ -6,9 +6,11 @@ using System;
 [System.Serializable]
 public class LinePath  {
 	public Vector3[] nodes;
-	private float[] distances;
+
     [System.NonSerialized]
 	public float maxDist;
+
+    private float[] distances;
 
 	// Indexer declaration.
 	public Vector3 this[int i]
@@ -65,10 +67,10 @@ public class LinePath  {
 	}
 	
 	/* Gets the param for the closest point on the path given a position */
-	public float getParam(Vector3 position) {
+	public float getParam(Vector3 position, MovementAIRigidbody rb) {
 		int closestSegment = getClosestSegment(position);
 		
-		float param = this.distances[closestSegment] + getParamForSegment(position, nodes[closestSegment], nodes[closestSegment+1]);
+		float param = this.distances[closestSegment] + getParamForSegment(position, nodes[closestSegment], nodes[closestSegment+1], rb);
 		
 		return param; 
 	}
@@ -123,7 +125,7 @@ public class LinePath  {
 	
 	/* Gives the distance of a point to a line segment.
 	 * p is the point, v and w are the two points of the line segment */
-	private static float distToSegment(Vector3 p, Vector3 v, Vector3 w) { 
+	private float distToSegment(Vector3 p, Vector3 v, Vector3 w) { 
 		Vector3 vw = w - v;
 		
 		float l2 = Vector3.Dot(vw, vw);
@@ -148,8 +150,10 @@ public class LinePath  {
 	}
 	
 	/* Finds the param for the closest point on the segment vw given the point p */
-	private static float getParamForSegment(Vector3 p, Vector3 v, Vector3 w) {
+	private float getParamForSegment(Vector3 p, Vector3 v, Vector3 w, MovementAIRigidbody rb) {
 		Vector3 vw = w - v;
+
+        vw = rb.convertVector(vw);
 
 		float l2 = Vector3.Dot(vw, vw);
 		

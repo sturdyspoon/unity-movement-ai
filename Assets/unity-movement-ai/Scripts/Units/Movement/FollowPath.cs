@@ -53,14 +53,19 @@ public class FollowPath : MonoBehaviour {
             }
 			
 			/* Get the param for the closest position point on the path given the character's position */
-			float param = path.getParam(transform.position);
+			float param = path.getParam(transform.position, rb);
+
+            Debug.DrawLine(transform.position, path.getPosition(param, pathLoop), Color.red);
 			
 			/* Move down the path */
 			param += pathDirection * pathOffset;
 			
 			/* Set the target position */
 			targetPosition = path.getPosition(param, pathLoop);
-		}
+
+            Debug.DrawLine(transform.position, targetPosition, Color.red);
+
+        }
 
         return steeringBasics.arrive(targetPosition);
 	}
