@@ -107,11 +107,11 @@ public class MovementAIRigidbody : MonoBehaviour {
                 groundNormal = hitInfo.normal;
                 rb.useGravity = false;
             }
-            
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * barGroundCheckDistance), Color.white);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb.velocity.normalized*1.5f), Color.green);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow);
+
+            Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * barGroundCheckDistance), Color.white);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb.velocity.normalized * 1.5f), Color.green);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow);
         }
     }
 
