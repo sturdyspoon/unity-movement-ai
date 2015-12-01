@@ -109,7 +109,9 @@ public class MovementAIRigidbody : MonoBehaviour {
                 rb.useGravity = false;
             }
 
-            float foo = Vector3.Angle(Vector3.up, rb.velocity);
+            //float foo = Vector3.Angle(Vector3.up, rb.velocity);
+            Vector3 groundMovement = Vector3.ProjectOnPlane(rb.velocity, groundNormal);
+            float foo = Vector3.Angle(Vector3.up, groundMovement);
             if (foo < smallestAngle)
             {
                 smallestAngle = foo;
