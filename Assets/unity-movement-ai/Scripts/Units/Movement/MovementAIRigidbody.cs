@@ -87,8 +87,9 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    float smallestAngle = Mathf.Infinity;
+
+    void FixedUpdate()
     {
         /* If the character can't fly then find the current the ground normal */
         if(is3D && !fooCanFly)
@@ -106,6 +107,18 @@ public class MovementAIRigidbody : MonoBehaviour {
             {
                 groundNormal = hitInfo.normal;
                 rb.useGravity = false;
+            }
+
+            float foo = Vector3.Angle(Vector3.up, rb.velocity);
+            if (foo < smallestAngle)
+            {
+                smallestAngle = foo;
+                Debug.Log(foo);
+            }
+
+            if(foo < 10f)
+            {
+                rb.velocity = Vector3.zero;
             }
 
             Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * barGroundCheckDistance), Color.white);
