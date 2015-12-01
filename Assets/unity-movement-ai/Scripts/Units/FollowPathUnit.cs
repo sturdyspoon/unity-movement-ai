@@ -10,7 +10,6 @@ public class FollowPathUnit : MonoBehaviour {
     public LinePath path;
 
     private SteeringBasics steeringBasics;
-    private MovementAIRigidbody rb;
     private FollowPath followPath;
 
     // Use this for initialization
@@ -18,15 +17,13 @@ public class FollowPathUnit : MonoBehaviour {
         path.calcDistances();
 
         steeringBasics = GetComponent<SteeringBasics>();
-        rb = GetComponent<MovementAIRigidbody>();
         followPath = GetComponent<FollowPath>();
     }
 	
-	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         path.draw();
 
-        if (reversePath && isAtEndOfPath())
+        if (reversePath && followPath.isAtEndOfPath(path))
         {
             path.reversePath();
         }
@@ -35,11 +32,5 @@ public class FollowPathUnit : MonoBehaviour {
 
         steeringBasics.steer(accel);
         steeringBasics.lookWhereYoureGoing();
-    }
-
-    public bool isAtEndOfPath()
-    {
-        Vector3 end = rb.convertVector(path.endNode);
-        return Vector3.Distance(end, rb.position) < followPath.stopRadius;
     }
 }

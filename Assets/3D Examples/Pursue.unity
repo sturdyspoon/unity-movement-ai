@@ -214,6 +214,14 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 5eff0f9175d0e054290206daa1eef80e, type: 2}
+    - target: {fileID: 11408390, guid: 11eae3e40166fd0429da122769705e13, type: 2}
+      propertyPath: zarGroundCheckMask.m_Bits
+      value: 4294967291
+      objectReference: {fileID: 0}
+    - target: {fileID: 11408390, guid: 11eae3e40166fd0429da122769705e13, type: 2}
+      propertyPath: groundCheckMask.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 11eae3e40166fd0429da122769705e13, type: 2}
   m_IsPrefabParent: 0
@@ -366,6 +374,14 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 6f2d6f225d44e744dbbc449e44aa41fc, type: 2}
+    - target: {fileID: 11447074, guid: 877167d1f91274a4281ed4fe9864c393, type: 2}
+      propertyPath: zarGroundCheckMask.m_Bits
+      value: 4294967291
+      objectReference: {fileID: 0}
+    - target: {fileID: 11447074, guid: 877167d1f91274a4281ed4fe9864c393, type: 2}
+      propertyPath: groundCheckMask.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 877167d1f91274a4281ed4fe9864c393, type: 2}
   m_IsPrefabParent: 0

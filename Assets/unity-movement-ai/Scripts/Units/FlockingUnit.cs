@@ -27,8 +27,7 @@ public class FlockingUnit : MonoBehaviour
         sensor = transform.Find("Sensor").GetComponent<NearSensor>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 accel = Vector3.zero;
 

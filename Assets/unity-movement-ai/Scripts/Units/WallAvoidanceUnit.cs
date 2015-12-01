@@ -20,10 +20,9 @@ public class WallAvoidanceUnit: MonoBehaviour
         followPath = GetComponent<FollowPath>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (isAtEndOfPath())
+        if (followPath.isAtEndOfPath(path))
         {
             path.reversePath();
         }
@@ -39,10 +38,5 @@ public class WallAvoidanceUnit: MonoBehaviour
         steeringBasics.lookWhereYoureGoing();
 
         path.draw();
-    }
-
-    public bool isAtEndOfPath()
-    {
-        return Vector3.Distance(path.endNode, transform.position) < followPath.stopRadius;
     }
 }

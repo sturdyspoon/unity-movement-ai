@@ -13,13 +13,11 @@ public class Separation : MonoBehaviour {
      * So it should be: separation sensor radius + max target radius */
     public float maxSepDist = 1f;
 
-    private float boundingRadius;
+    private MovementAIRigidbody rb;
 
-    // Use this for initialization
-    void Start()
+    void Awake()
     {
-        MovementAIRigidbody rb = GetComponent<MovementAIRigidbody>();
-        boundingRadius = rb.boundingRadius;
+        rb = GetComponent<MovementAIRigidbody>();
     }
 
     public Vector3 getSteering(ICollection<MovementAIRigidbody> targets)
@@ -35,7 +33,7 @@ public class Separation : MonoBehaviour {
             if (dist < maxSepDist)
             {
                 /* Calculate the separation strength (can be changed to use inverse square law rather than linear) */
-                var strength = sepMaxAcceleration * (maxSepDist - dist) / (maxSepDist - boundingRadius - r.boundingRadius);
+                var strength = sepMaxAcceleration * (maxSepDist - dist) / (maxSepDist - rb.boundingRadius - r.boundingRadius);
 
                 /* Added separation acceleration to the existing steering */
                 direction.Normalize();

@@ -16,8 +16,7 @@ public class EvadeUnit : MonoBehaviour
         evade = GetComponent<Evade>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 accel = evade.getSteering(target);
 

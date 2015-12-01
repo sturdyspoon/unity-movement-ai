@@ -13,8 +13,7 @@ public class ArriveUnit : MonoBehaviour {
         steeringBasics = GetComponent<SteeringBasics>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 accel = steeringBasics.arrive(targetPosition);
 

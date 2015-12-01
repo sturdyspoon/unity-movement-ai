@@ -132,6 +132,10 @@ Prefab:
       propertyPath: m_Constraints
       value: 112
       objectReference: {fileID: 0}
+    - target: {fileID: 11428794, guid: 500699f3ba0b7f0438e50d52a0fb3691, type: 2}
+      propertyPath: groundCheckMask.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 500699f3ba0b7f0438e50d52a0fb3691, type: 2}
   m_IsPrefabParent: 0
@@ -259,6 +263,10 @@ Prefab:
     - target: {fileID: 486792, guid: 11eae3e40166fd0429da122769705e13, type: 2}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11408390, guid: 11eae3e40166fd0429da122769705e13, type: 2}
+      propertyPath: groundCheckMask.m_Bits
+      value: 512
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 11eae3e40166fd0429da122769705e13, type: 2}

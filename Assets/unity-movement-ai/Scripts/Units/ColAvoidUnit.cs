@@ -23,12 +23,11 @@ public class ColAvoidUnit : MonoBehaviour {
         colAvoidSensor = transform.Find("ColAvoidSensor").GetComponent<NearSensor>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         path.draw();
 
-        if (isAtEndOfPath())
+        if (followPath.isAtEndOfPath(path))
         {
             path.reversePath();
         }
@@ -42,10 +41,5 @@ public class ColAvoidUnit : MonoBehaviour {
 
         steeringBasics.steer(accel);
         steeringBasics.lookWhereYoureGoing();
-    }
-
-    public bool isAtEndOfPath()
-    {
-        return Vector3.Distance(path.endNode, transform.position) < followPath.stopRadius;
     }
 }

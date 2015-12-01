@@ -14,8 +14,7 @@ public class Wander2Unit : MonoBehaviour
         wander = GetComponent<Wander2>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 accel = wander.getSteering();
 

@@ -21,8 +21,8 @@ public class WallAvoidance : MonoBehaviour {
     private MovementAIRigidbody rb;
     private SteeringBasics steeringBasics;
 
-    // Use this for initialization
-    void Start () {
+    void Awake()
+    {
         rb = GetComponent<MovementAIRigidbody>();
         steeringBasics = GetComponent<SteeringBasics>();
     }

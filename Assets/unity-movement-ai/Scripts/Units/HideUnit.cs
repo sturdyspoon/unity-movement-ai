@@ -20,8 +20,7 @@ public class HideUnit : MonoBehaviour {
         wallAvoid = GetComponent<WallAvoidance>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 hidePosition;
         Vector3 hideAccel = hide.getSteering(target, obstacleSpawner.objs, out hidePosition);

@@ -21,7 +21,8 @@ public class Wander1 : MonoBehaviour {
 
     //private GameObject debugRing;
 
-    void Start() {
+    void Awake()
+    {
 		//		DebugDraw debugDraw = gameObject.GetComponent<DebugDraw> ();
 		//		debugRing = debugDraw.createRing (Vector3.zero, wanderRadius);
 		

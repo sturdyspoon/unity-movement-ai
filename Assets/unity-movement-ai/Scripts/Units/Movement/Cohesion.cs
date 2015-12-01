@@ -11,8 +11,7 @@ public class Cohesion : MonoBehaviour {
 
     private SteeringBasics steeringBasics;
 
-	// Use this for initialization
-	void Start () {
+	void Awake () {
         facingCosineVal = Mathf.Cos(facingCosine * Mathf.Deg2Rad);
         steeringBasics = GetComponent<SteeringBasics>();
 	}

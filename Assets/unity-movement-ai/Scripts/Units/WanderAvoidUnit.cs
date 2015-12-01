@@ -19,8 +19,7 @@ public class WanderAvoidUnit : MonoBehaviour {
         colAvoidSensor = transform.Find("ColAvoidSensor").GetComponent<NearSensor>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 accel = colAvoid.getSteering(colAvoidSensor.targets);
 

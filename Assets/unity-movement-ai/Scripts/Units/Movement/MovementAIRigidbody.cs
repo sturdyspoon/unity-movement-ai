@@ -5,16 +5,21 @@ using System.Collections;
 /// This is a wrapper class for either a Rigidbody or Rigidbody2D, so that either can be used with the Unity Movement AI code. 
 /// </summary>
 public class MovementAIRigidbody : MonoBehaviour {
-    [Header("3D Only Settings")]
+    [Header("3D Settings")]
 
     /* Determines if the character should follow the ground or can fly any where in 3D space */
-    public bool fooCanFly = false;
+    public bool canFly = false;
 
-    /* Controls how far a ray should try to reach to check for ground (for 3D characters only) */
-    public float barGroundCheckDistance = 0.01f;
+    [Header("3D Grounded Settings")]
+
+    /* Controls how far a ray should try to reach to check for ground */
+    public float groundCheckDistance = 0.01f;
 
     /* The sphere cast mask that determines what layers should be consider the ground */
-    public LayerMask zarGroundCheckMask = Physics.DefaultRaycastLayers;
+    public LayerMask groundCheckMask = Physics.DefaultRaycastLayers;
+
+    /* The maximum slope the character can climb in degrees */
+    public float slopeLimit = 80f;
 
 
     /// <summary>
@@ -87,12 +92,10 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
     }
 
-    float smallestAngle = Mathf.Infinity;
-
     void FixedUpdate()
     {
         /* If the character can't fly then find the current the ground normal */
-        if(is3D && !fooCanFly)
+        if(is3D && !canFly)
         {
             groundNormal = Vector3.up;
             rb.useGravity = true;
@@ -103,30 +106,29 @@ public class MovementAIRigidbody : MonoBehaviour {
             Start the ray with a small offset of 0.1f from inside the character. The
             transform.position of the characer is assumed to be at the base of the character.
              */
-            if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, (0.1f + barGroundCheckDistance), zarGroundCheckMask.value))
+            if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, (0.1f + groundCheckDistance), groundCheckMask.value))
             {
                 groundNormal = hitInfo.normal;
                 rb.useGravity = false;
             }
 
-            //float foo = Vector3.Angle(Vector3.up, rb.velocity);
-            Vector3 groundMovement = Vector3.ProjectOnPlane(rb.velocity, groundNormal);
-            float foo = Vector3.Angle(Vector3.up, groundMovement);
-            if (foo < smallestAngle)
-            {
-                smallestAngle = foo;
-                Debug.Log(foo);
-            }
+            limitSlopeMovement();
 
-            if(foo < 10f)
-            {
-                rb.velocity = Vector3.zero;
-            }
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * barGroundCheckDistance), Color.white);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb.velocity.normalized * 1.5f), Color.green);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow);
+        }
+    }
 
-            Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * barGroundCheckDistance), Color.white);
-            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
-            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb.velocity.normalized * 1.5f), Color.green);
-            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow);
+    private void limitSlopeMovement()
+    {
+        Vector3 groundMovement = Vector3.ProjectOnPlane(rb.velocity, groundNormal);
+        float angle = Vector3.Angle(Vector3.up, groundMovement);
+
+        if (angle < 90f - slopeLimit)
+        {
+            rb.velocity -= groundMovement;
         }
     }
 
@@ -136,7 +138,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         {
             if(is3D)
             {
-                if (fooCanFly)
+                if (canFly)
                 {
                     return rb.position;
                 } else
@@ -174,7 +176,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         {
             if (is3D)
             {
-                if(fooCanFly)
+                if(canFly)
                 {
                     return rb.velocity;
                 } else
@@ -192,13 +194,15 @@ public class MovementAIRigidbody : MonoBehaviour {
         {
             if (is3D)
             {
-                if(fooCanFly)
+                if(canFly)
                 {
                     rb.velocity = value;
                 } else
                 {
                     Vector3 nonGroundVel = rb.velocity - Vector3.ProjectOnPlane(rb.velocity, groundNormal);
                     rb.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, groundNormal) * value);
+
+                    limitSlopeMovement();
                 }
             }
             else
@@ -307,7 +311,7 @@ public class MovementAIRigidbody : MonoBehaviour {
             v.z = 0;
         }
         /* Else if the charater is a 3D character who can't fly then ignore the y component */
-        else if(!fooCanFly)
+        else if(!canFly)
         {
             v.y = 0;
         }

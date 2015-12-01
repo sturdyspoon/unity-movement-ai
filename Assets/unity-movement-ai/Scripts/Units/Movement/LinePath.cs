@@ -10,7 +10,8 @@ public class LinePath  {
     [System.NonSerialized]
 	public float maxDist;
 
-    private float[] distances;
+    [System.NonSerialized]
+    public float[] distances;
 
 	// Indexer declaration.
 	public Vector3 this[int i]

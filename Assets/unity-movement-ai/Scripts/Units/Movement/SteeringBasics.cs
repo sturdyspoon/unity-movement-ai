@@ -37,8 +37,7 @@ public class SteeringBasics : MonoBehaviour {
     private MovementAIRigidbody rb;
 
 
-    // Use this for initialization
-    void Start ()
+    void Awake()
     {
         rb = GetComponent<MovementAIRigidbody>();
     }
