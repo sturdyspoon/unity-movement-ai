@@ -10,8 +10,8 @@ public class Hide : MonoBehaviour {
     private SteeringBasics steeringBasics;
     private Evade evade;
 
-    // Use this for initialization
-    void Start () {
+    void Awake()
+    {
         steeringBasics = GetComponent<SteeringBasics>();
         evade = GetComponent<Evade>();
 	}

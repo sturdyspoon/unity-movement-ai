@@ -800,3 +800,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   perlinScale: 10
+  minHeight: 0
+  maxHeight: 10

@@ -15,9 +15,9 @@ public class Wander2 : MonoBehaviour {
 
     private SteeringBasics steeringBasics;
 
-    private bool is3D;
+    private MovementAIRigidbody rb;
 
-    void Start()
+    void Awake()
     {
         //stuff for the wander behavior
         float theta = Random.value * 2 * Mathf.PI;
@@ -27,7 +27,7 @@ public class Wander2 : MonoBehaviour {
 
         steeringBasics = GetComponent<SteeringBasics>();
 
-        is3D = GetComponent<MovementAIRigidbody>().is3D;
+        rb = GetComponent<MovementAIRigidbody>();
     }
 
     public Vector3 getSteering()
@@ -36,7 +36,7 @@ public class Wander2 : MonoBehaviour {
         float jitter = wanderJitter * Time.deltaTime;
 
         //add a small random vector to the target's position
-        if(is3D)
+        if(rb.is3D)
         {
             wanderTarget += new Vector3(Random.Range(-1f, 1f) * jitter, 0f, Random.Range(-1f, 1f) * jitter);
         } else

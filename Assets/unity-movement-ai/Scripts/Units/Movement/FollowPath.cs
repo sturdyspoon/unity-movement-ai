@@ -12,8 +12,8 @@ public class FollowPath : MonoBehaviour {
 	private SteeringBasics steeringBasics;
 	private MovementAIRigidbody rb;
 
-	// Use this for initialization
-	void Start () {
+    void Awake()
+    {
 		steeringBasics = GetComponent<SteeringBasics> ();
         rb = GetComponent<MovementAIRigidbody>();
 	}
@@ -35,15 +35,17 @@ public class FollowPath : MonoBehaviour {
 		}
 		// Else find the closest spot on the path to the character and go to that instead.
 		else {
+            /* Get the param for the closest position point on the path given the character's position */
+            float param = path.getParam(transform.position, rb);
+
+            //Debug.DrawLine(transform.position, path.getPosition(param, pathLoop), Color.red);
+
             if (!pathLoop)
             {
-                /* Find the final destination of the character on this path */
-                Vector3 finalDestination = (pathDirection > 0) ? path[path.Length - 1] : path[0];
-                finalDestination = rb.convertVector(finalDestination);
+                Vector3 finalDestination;
 
-                /* If we are close enough to the final destination then either stop moving or reverse if 
-                 * the character is set to loop on paths */
-                if (Vector3.Distance(rb.position, finalDestination) < stopRadius)
+                /* If we are close enough to the final destination then stop moving */
+                if (isAtEndOfPath(path, param, out finalDestination))
                 {
                     targetPosition = finalDestination;
 
@@ -52,21 +54,60 @@ public class FollowPath : MonoBehaviour {
                 }
             }
 			
-			/* Get the param for the closest position point on the path given the character's position */
-			float param = path.getParam(transform.position, rb);
-
-            Debug.DrawLine(transform.position, path.getPosition(param, pathLoop), Color.red);
-			
 			/* Move down the path */
 			param += pathDirection * pathOffset;
 			
 			/* Set the target position */
 			targetPosition = path.getPosition(param, pathLoop);
 
-            Debug.DrawLine(transform.position, targetPosition, Color.red);
-
+            //Debug.DrawLine(transform.position, targetPosition, Color.red);
         }
 
         return steeringBasics.arrive(targetPosition);
 	}
+
+    /// <summary> 
+    /// Will return true if the character is at the end of the given path 
+    /// </summary>
+    public bool isAtEndOfPath(LinePath path)
+    {
+        // If the path has only one node then just check the distance to that node
+        if (path.Length == 1)
+        {
+            Vector3 endPos = rb.convertVector(path[0]);
+            return Vector3.Distance(rb.position, endPos) < stopRadius;
+        }
+        // Else see if the character is at the end of the path
+        else
+        {
+            Vector3 finalDestination;
+
+            /* Get the param for the closest position point on the path given the character's position */
+            float param = path.getParam(transform.position, rb);
+
+            return isAtEndOfPath(path, param, out finalDestination);
+        }
+    }
+
+    private bool isAtEndOfPath(LinePath path, float param, out Vector3 finalDestination)
+    {
+        bool result;
+
+        /* Find the final destination of the character on this path */
+        finalDestination = (pathDirection > 0) ? path[path.Length - 1] : path[0];
+        finalDestination = rb.convertVector(finalDestination);
+
+        /* If the param is closest to the last segment then check if we are at the final destination */
+        if (param >= path.distances[path.Length - 2])
+        {
+            result = Vector3.Distance(rb.position, finalDestination) < stopRadius;
+        }
+        /* Else we are not at the end of the path */
+        else
+        {
+            result = false;
+        }
+
+        return result;
+    }
 }

@@ -11,9 +11,8 @@ public class SeekUnit : MonoBehaviour {
 	void Start () {
         steeringBasics = GetComponent<SteeringBasics>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    void FixedUpdate() {
         Vector3 accel = steeringBasics.seek(target.position);
 
         steeringBasics.steer(accel);

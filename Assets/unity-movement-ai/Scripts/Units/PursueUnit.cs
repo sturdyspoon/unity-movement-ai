@@ -13,9 +13,9 @@ public class PursueUnit : MonoBehaviour {
         steeringBasics = GetComponent<SteeringBasics>();
         pursue = GetComponent<Pursue>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    void FixedUpdate()
+    {
         Vector3 accel = pursue.getSteering(target);
 
         steeringBasics.steer(accel);

@@ -128,6 +128,10 @@ Prefab:
       propertyPath: m_Constraints
       value: 112
       objectReference: {fileID: 0}
+    - target: {fileID: 116958, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 61b087f5f78e8d649a464e6025f7abc1, type: 2}
   m_IsPrefabParent: 0
@@ -521,6 +525,10 @@ Prefab:
     - target: {fileID: 11436192, guid: d6f1274d3e6263641a5045bd41ecdb94, type: 2}
       propertyPath: path.nodes.Array.data[1].z
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 116958, guid: d6f1274d3e6263641a5045bd41ecdb94, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d6f1274d3e6263641a5045bd41ecdb94, type: 2}

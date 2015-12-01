@@ -9,8 +9,7 @@ public class Evade : MonoBehaviour
 
     private Flee flee;
 
-    // Use this for initialization
-    void Start()
+    void Awake()
     {
         flee = GetComponent<Flee>();
     }

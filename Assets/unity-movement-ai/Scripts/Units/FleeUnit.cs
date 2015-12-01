@@ -16,8 +16,7 @@ public class FleeUnit : MonoBehaviour
         flee = GetComponent<Flee>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 accel = flee.getSteering(target.position);
 

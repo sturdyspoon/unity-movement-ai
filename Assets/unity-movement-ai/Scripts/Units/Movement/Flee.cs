@@ -14,8 +14,8 @@ public class Flee : MonoBehaviour {
 
     private MovementAIRigidbody rb;
 
-    // Use this for initialization
-    void Start () {
+    void Awake()
+    {
         rb = GetComponent<MovementAIRigidbody>();
     }
 

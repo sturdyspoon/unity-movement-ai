@@ -14,8 +14,7 @@ public class InterposeUnit : MonoBehaviour {
         steeringBasics = GetComponent<SteeringBasics>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Vector3 accel = steeringBasics.interpose(target1, target2);
 
