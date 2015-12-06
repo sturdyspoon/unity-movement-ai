@@ -114,18 +114,22 @@ public class MovementAIRigidbody : MonoBehaviour {
 
             limitSlopeMovement();
 
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * barGroundCheckDistance), Color.white);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb.velocity.normalized * 1.5f), Color.green);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * groundCheckDistance), Color.white);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb.velocity.normalized * 1.5f), Color.green);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow);
         }
     }
 
     private void limitSlopeMovement()
     {
         Vector3 groundMovement = Vector3.ProjectOnPlane(rb.velocity, groundNormal);
-        float angle = Vector3.Angle(Vector3.up, groundMovement);
 
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundMovement.normalized), Color.blue);
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
+
+        float angle = Vector3.Angle(Vector3.up, groundMovement);
+        Debug.Log(angle + " " + groundMovement.ToString("F4"));
         if (angle < 90f - slopeLimit)
         {
             rb.velocity -= groundMovement;
