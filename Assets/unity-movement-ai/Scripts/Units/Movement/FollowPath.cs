@@ -49,7 +49,7 @@ public class FollowPath : MonoBehaviour {
                 {
                     targetPosition = finalDestination;
 
-                    rb.realVelocity = Vector3.zero;
+                    rb.velocity = Vector3.zero;
                     return Vector3.zero;
                 }
             }
