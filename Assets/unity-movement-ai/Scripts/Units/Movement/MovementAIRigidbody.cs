@@ -40,7 +40,7 @@ public class MovementAIRigidbody : MonoBehaviour {
     [System.NonSerialized]
     public Vector3 groundNormal = Vector3.up;
 
-    private Rigidbody rb;
+    private Rigidbody rb3D;
     private Rigidbody2D rb2D;
 
     void Awake()
@@ -53,7 +53,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
-            this.rb = rb;
+            this.rb3D = rb;
             is3D = true;
         }
         else
@@ -74,11 +74,11 @@ public class MovementAIRigidbody : MonoBehaviour {
     {
         if (is3D)
         {
-            SphereCollider col = rb.GetComponent<SphereCollider>();
+            SphereCollider col = rb3D.GetComponent<SphereCollider>();
 
             if (col != null)
             {
-                boundingRadius = Mathf.Max(rb.transform.localScale.x, rb.transform.localScale.y, rb.transform.localScale.z) * col.radius;
+                boundingRadius = Mathf.Max(rb3D.transform.localScale.x, rb3D.transform.localScale.y, rb3D.transform.localScale.z) * col.radius;
             }
         }
         else
@@ -98,7 +98,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         if(is3D && !canFly)
         {
             groundNormal = Vector3.up;
-            rb.useGravity = true;
+            rb3D.useGravity = true;
 
             RaycastHit hitInfo;
 
@@ -109,30 +109,40 @@ public class MovementAIRigidbody : MonoBehaviour {
             if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, (0.1f + groundCheckDistance), groundCheckMask.value))
             {
                 groundNormal = hitInfo.normal;
-                rb.useGravity = false;
+                rb3D.useGravity = false;
             }
 
             limitSlopeMovement();
 
             Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * groundCheckDistance), Color.white);
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
-            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb.velocity.normalized * 1.5f), Color.green);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green);
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow);
         }
     }
 
     private void limitSlopeMovement()
     {
-        Vector3 groundMovement = Vector3.ProjectOnPlane(rb.velocity, groundNormal);
+        float angle = Vector3.Angle(Vector3.up, groundNormal);
 
-        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundMovement.normalized), Color.blue);
-        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
-
-        float angle = Vector3.Angle(Vector3.up, groundMovement);
-        Debug.Log(angle + " " + groundMovement.ToString("F4"));
-        if (angle < 90f - slopeLimit)
+        if (angle > slopeLimit)
         {
-            rb.velocity -= groundMovement;
+            Vector3 groundMovement = Vector3.ProjectOnPlane(rb3D.velocity, groundNormal);
+            //Debug.Log(angle + " " + groundMovement.ToString("F4") + " " + Vector3.up.ToString("F4"));
+
+            /* Get vector pointing down the slope) */
+            Vector3 rightSlope = Vector3.Cross(groundNormal, Vector3.down);
+            Vector3 downSlope = Vector3.Cross(rightSlope, groundNormal);
+
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (downSlope), Color.blue);
+
+            if(Vector3.Angle(downSlope, groundMovement) > 90f)
+            {
+                rb3D.velocity -= groundMovement;
+            }
+
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundMovement.normalized), Color.magenta);
         }
     }
 
@@ -144,10 +154,10 @@ public class MovementAIRigidbody : MonoBehaviour {
             {
                 if (canFly)
                 {
-                    return rb.position;
+                    return rb3D.position;
                 } else
                 {
-                    return new Vector3(rb.position.x, 0, rb.position.z);
+                    return new Vector3(rb3D.position.x, 0, rb3D.position.z);
                 }
             } else
             {
@@ -161,14 +171,14 @@ public class MovementAIRigidbody : MonoBehaviour {
     private Vector3 lastVel = Vector3.zero;
     private Vector3 lastGroundNormal = Vector3.up;
 
-    private Vector3 getGroundedCharVel()
+    private Vector3 getGroundedVelocity()
     {
-        if (groundNormal != lastGroundNormal || lastVel != rb.velocity)
+        if (groundNormal != lastGroundNormal || lastVel != rb3D.velocity)
         {
-            groundedCharVel = Vector3.ProjectOnPlane(rb.velocity, groundNormal);
+            groundedCharVel = Vector3.ProjectOnPlane(rb3D.velocity, groundNormal);
             groundedCharVel = Quaternion.FromToRotation(groundNormal, Vector3.up) * groundedCharVel;
             lastGroundNormal = groundNormal;
-            lastVel = rb.velocity;
+            lastVel = rb3D.velocity;
         }
 
         return groundedCharVel;
@@ -182,10 +192,10 @@ public class MovementAIRigidbody : MonoBehaviour {
             {
                 if(canFly)
                 {
-                    return rb.velocity;
+                    return rb3D.velocity;
                 } else
                 {
-                    return getGroundedCharVel();
+                    return getGroundedVelocity();
                 }
             }
             else
@@ -200,41 +210,14 @@ public class MovementAIRigidbody : MonoBehaviour {
             {
                 if(canFly)
                 {
-                    rb.velocity = value;
+                    rb3D.velocity = value;
                 } else
                 {
-                    Vector3 nonGroundVel = rb.velocity - Vector3.ProjectOnPlane(rb.velocity, groundNormal);
-                    rb.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, groundNormal) * value);
+                    Vector3 nonGroundVel = rb3D.velocity - Vector3.ProjectOnPlane(rb3D.velocity, groundNormal);
+                    rb3D.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, groundNormal) * value);
 
                     limitSlopeMovement();
                 }
-            }
-            else
-            {
-                rb2D.velocity = value;
-            }
-        }
-    }
-
-    public Vector3 realVelocity
-    {
-        get
-        {
-            if (is3D)
-            {
-                return rb.velocity;
-            }
-            else
-            {
-                return rb2D.velocity;
-            }
-        }
-
-        set
-        {
-            if (is3D)
-            {
-                rb.velocity = value;
             }
             else
             {
@@ -249,7 +232,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         {
             if (is3D)
             {
-                return rb.transform;
+                return rb3D.transform;
             }
             else
             {
@@ -264,7 +247,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         {
             if (is3D)
             {
-                return rb.rotation;
+                return rb3D.rotation;
             }
             else
             {
@@ -281,7 +264,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         {
             if (is3D)
             {
-                return rb.rotation.eulerAngles.y * Mathf.Deg2Rad;
+                return rb3D.rotation.eulerAngles.y * Mathf.Deg2Rad;
             }
             else
             {
@@ -339,7 +322,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
 
         // Return true if the fields match:
-        return (rb == p.rb) && (rb2D == p.rb2D);
+        return (rb3D == p.rb3D) && (rb2D == p.rb2D);
     }
 
     public bool Equals(MovementAIRigidbody p)
@@ -351,14 +334,14 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
 
         // Return true if the fields match:
-        return (rb == p.rb) && (rb2D == p.rb2D);
+        return (rb3D == p.rb3D) && (rb2D == p.rb2D);
     }
 
     public override int GetHashCode()
     {
         if(is3D)
         {
-            return rb.GetHashCode();
+            return rb3D.GetHashCode();
         } else
         {
             return rb2D.GetHashCode();
@@ -380,7 +363,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
 
         // Return true if the fields match:
-        return a.rb == b.rb && a.rb2D == b.rb2D;
+        return a.rb3D == b.rb3D && a.rb2D == b.rb2D;
     }
 
     public static bool operator !=(MovementAIRigidbody a, MovementAIRigidbody b)

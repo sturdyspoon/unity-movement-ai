@@ -157,7 +157,7 @@ public class SteeringBasics : MonoBehaviour {
 
         /* If we are within the stopping radius then stop */
         if (dist < targetRadius) {
-            rb.realVelocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
 			return Vector3.zero;
 		}
 		
