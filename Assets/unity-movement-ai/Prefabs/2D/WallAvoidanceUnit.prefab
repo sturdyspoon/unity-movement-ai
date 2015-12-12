@@ -42,9 +42,10 @@ Rigidbody2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 187300}
+  m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: .0500000007
+  m_AngularDrag: 0.05
   m_GravityScale: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -58,12 +59,13 @@ CircleCollider2D:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 187300}
   m_Enabled: 1
+  m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: .300000012
+  m_Radius: 0.3
 --- !u!114 &11451566
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -78,13 +80,11 @@ MonoBehaviour:
   maxVelocity: 3.5
   maxAcceleration: 10
   turnSpeed: 20
-  targetRadius: .00499999989
+  targetRadius: 0.005
   slowRadius: 1
-  timeToTarget: .100000001
+  timeToTarget: 0.1
   smoothing: 1
   numSamplesForSmoothing: 5
-  fooCanFly: 0
-  fooGroundCheckDistance: 1
 --- !u!114 &11462136
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -96,6 +96,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canFly: 0
+  groundCheckDistance: 0.01
+  stayGrounded: 1
+  groundFollowDistance: 0.3
+  groundFollowGravityMult: 4
+  groundCheckMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  slopeLimit: 80
 --- !u!114 &11463772
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -109,7 +118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   path:
     nodes:
-    - {x: 3, y: .5, z: 0}
+    - {x: 3, y: 0.5, z: 0}
     - {x: -5, y: 3.5, z: 0}
 --- !u!114 &11478702
 MonoBehaviour:
@@ -122,14 +131,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e008bb997f9e8cc42a7861ed1e5b45ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainWhiskerLen: 1.25
-  wallAvoidDistance: .5
-  sideWhiskerLen: .700999975
-  sideWhiskerAngle: 45
   maxAcceleration: 40
-  raycastMask:
+  wallDetection: 1
+  castMask:
     serializedVersion: 2
-    m_Bits: 4294966523
+    m_Bits: 4294967035
+  wallAvoidDistance: 0.5
+  mainWhiskerLen: 1.25
+  sideWhiskerLen: 0.701
+  sideWhiskerAngle: 45
 --- !u!114 &11496692
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -141,8 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 049423ef460e2524186c56ba0e274368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stopRadius: .00499999989
-  pathOffset: .709999979
+  stopRadius: 0.005
+  pathOffset: 0.71
   pathDirection: 1
 --- !u!212 &21290088
 SpriteRenderer:
@@ -162,14 +172,18 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f86036af4b9862940b330425ab36597f, type: 3}
-  m_Color: {r: .631372571, g: .643137276, b: .662745118, a: 1}
+  m_Color: {r: 0.6313726, g: 0.6431373, b: 0.6627451, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -180,6 +194,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: raycastMask.m_Bits
       value: 4294966523
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: castMask.m_Bits
+      value: 4294967035
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

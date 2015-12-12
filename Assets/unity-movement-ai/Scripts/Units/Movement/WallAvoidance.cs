@@ -4,19 +4,24 @@ using System.Collections;
 [RequireComponent(typeof(SteeringBasics))]
 public class WallAvoidance : MonoBehaviour {
 
-    /* How far ahead the ray should extend */
-    public float mainWhiskerLen = 1.25f;
+    public float maxAcceleration = 40f;
+
+    public enum WallDetection { Raycast, Spherecast }
+
+    public WallDetection wallDetection = WallDetection.Spherecast;
+
+    public LayerMask castMask = Physics.DefaultRaycastLayers;
 
     /* The distance away from the collision that we wish go */
     public float wallAvoidDistance = 0.5f;
+
+    /* How far ahead the ray should extend */
+    public float mainWhiskerLen = 1.25f;
 
     public float sideWhiskerLen = 0.701f;
 
     public float sideWhiskerAngle = 45f;
 
-    public float maxAcceleration = 40f;
-
-    public LayerMask raycastMask = Physics.DefaultRaycastLayers;
 
     private MovementAIRigidbody rb;
     private SteeringBasics steeringBasics;
@@ -42,21 +47,10 @@ public class WallAvoidance : MonoBehaviour {
     {
         Vector3 acceleration = Vector3.zero;
 
-        facingDir.Normalize();
-
-        /* Creates the ray direction vector */
-        Vector3[] rayDirs = new Vector3[3];
-        rayDirs[0] = facingDir;
-
-        float orientation = SteeringBasics.vectorToOrientation(facingDir, rb.is3D);
-
-        rayDirs[1] = SteeringBasics.orientationToVector(orientation + sideWhiskerAngle * Mathf.Deg2Rad, rb.is3D);
-        rayDirs[2] = SteeringBasics.orientationToVector(orientation - sideWhiskerAngle * Mathf.Deg2Rad, rb.is3D);
-
-        GenericRayHit hit;
+        GenericCastHit hit;
 
         /* If no collision do nothing */
-        if (!findObstacle(rayDirs, out hit))
+        if (!findObstacle(facingDir, out hit))
         {
             return acceleration;
         }
@@ -66,8 +60,8 @@ public class WallAvoidance : MonoBehaviour {
 
         /* If velocity and the collision normal are parallel then move the target a bit to
          the left or right of the normal */
-        Vector3 cross = Vector3.Cross(rb.velocity, hit.normal);
-        if (cross.magnitude < 0.005f)
+        float angle = Vector3.Angle(rb.velocity, hit.normal);
+        if(angle > 165f)
         {
             Vector3 perp;
 
@@ -79,26 +73,44 @@ public class WallAvoidance : MonoBehaviour {
                 perp = new Vector3(-hit.normal.y, hit.normal.x, hit.normal.z);
             }
 
-            targetPostition = targetPostition + perp;
+            /* Add some perp displacement to the target position propotional to the angle between the wall normal
+             * and facing dir and propotional to the wall avoidance distance (with 2f being a magic constant that
+             * feels good) */
+            targetPostition = targetPostition + (perp * Mathf.Sin((angle - 165f) * Mathf.Deg2Rad) * 2f * wallAvoidDistance);
         }
 
-        SteeringBasics.debugCross(targetPostition, 0.5f, new Color(0.612f, 0.153f, 0.69f), 0.5f);
+        //SteeringBasics.debugCross(targetPostition, 0.5f, new Color(0.612f, 0.153f, 0.69f), 0.5f, false);
 
         return steeringBasics.seek(targetPostition, maxAcceleration);
     }
 
-    private bool findObstacle(Vector3[] rayDirs, out GenericRayHit firstHit)
+    private bool findObstacle(Vector3 facingDir, out GenericCastHit firstHit)
     {
-        firstHit = new GenericRayHit();
+        facingDir = rb.convertVector(facingDir).normalized;
+
+        /* Create the direction vectors */
+        Vector3[] dirs = new Vector3[3];
+        dirs[0] = facingDir;
+
+        float orientation = SteeringBasics.vectorToOrientation(facingDir, rb.is3D);
+
+        dirs[1] = SteeringBasics.orientationToVector(orientation + sideWhiskerAngle * Mathf.Deg2Rad, rb.is3D);
+        dirs[2] = SteeringBasics.orientationToVector(orientation - sideWhiskerAngle * Mathf.Deg2Rad, rb.is3D);
+
+        return castWhiskers(dirs, out firstHit);
+    }
+
+    private bool castWhiskers(Vector3[] dirs, out GenericCastHit firstHit) {
+        firstHit = new GenericCastHit();
         bool foundObs = false;
 
-        for (int i = 0; i < rayDirs.Length; i++)
+        for (int i = 0; i < dirs.Length; i++)
         {
-            float rayDist = (i == 0) ? mainWhiskerLen : sideWhiskerLen;
+            float dist = (i == 0) ? mainWhiskerLen : sideWhiskerLen;
 
-            GenericRayHit hit;
+            GenericCastHit hit;
 
-            if (genericRaycast(rayDirs[i], out hit, rayDist))
+            if (genericCast(dirs[i], out hit, dist))
             {
                 foundObs = true;
                 firstHit = hit;
@@ -109,18 +121,27 @@ public class WallAvoidance : MonoBehaviour {
         return foundObs;
     }
 
-    private bool genericRaycast(Vector3 direction, out GenericRayHit hit, float distance = Mathf.Infinity)
+    private bool genericCast(Vector3 direction, out GenericCastHit hit, float distance = Mathf.Infinity)
     {
         bool result = false;
         Vector3 origin = transform.position;
 
         if (rb.is3D)
         {
-            origin += Vector3.up * (rb.boundingRadius/2f);
-
             RaycastHit h;
-            result = Physics.Raycast(origin, direction, out h, distance, raycastMask.value);
-            hit = new GenericRayHit(h);
+
+            if(wallDetection == WallDetection.Raycast)
+            {
+                origin += Vector3.up * (rb.boundingRadius / 2f);
+                result = Physics.Raycast(origin, direction, out h, distance, castMask.value);
+            }
+            else
+            {
+                origin += Vector3.up * rb.boundingRadius;
+                result = Physics.SphereCast(origin, (rb.boundingRadius * 0.5f), direction, out h, distance, castMask.value);
+            }
+
+            hit = new GenericCastHit(h);
 
             /* If the character is grounded and we have a result check that we've hit a wall */
             if(!rb.canFly && result)
@@ -137,28 +158,36 @@ public class WallAvoidance : MonoBehaviour {
         }
         else
         {
-            RaycastHit2D h = Physics2D.Raycast(origin, direction, distance, raycastMask.value);
+            RaycastHit2D h; 
+
+            if (wallDetection == WallDetection.Raycast)
+            {
+                h = Physics2D.Raycast(origin, direction, distance, castMask.value);
+            } else {
+                h = Physics2D.CircleCast(origin, (rb.boundingRadius / 2f), direction, distance, castMask.value);
+            }
+
             result = (h.collider != null); //RaycastHit2D auto evaluates to true or false evidently
-            hit = new GenericRayHit(h);
+            hit = new GenericCastHit(h);
         }
 
-        Debug.DrawLine(origin, origin + direction * distance, Color.cyan, 0f, false);
+        //Debug.DrawLine(origin, origin + direction * distance, Color.cyan, 0f, false);
 
         return result;
     }
 
-    private struct GenericRayHit
+    private struct GenericCastHit
     {
         public Vector3 point;
         public Vector3 normal;
 
-        public GenericRayHit(RaycastHit h)
+        public GenericCastHit(RaycastHit h)
         {
             this.point = h.point;
             this.normal = h.normal;
         }
 
-        public GenericRayHit(RaycastHit2D h)
+        public GenericCastHit(RaycastHit2D h)
         {
             this.point = h.point;
             this.normal = h.normal;
