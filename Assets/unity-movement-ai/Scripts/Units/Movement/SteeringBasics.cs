@@ -55,7 +55,7 @@ public class SteeringBasics : MonoBehaviour {
     /* A seek steering behavior. Will return the steering for the current game object to seek a given position */
     public Vector3 seek(Vector3 targetPosition, float maxSeekAccel) {
 		//Get the direction
-		Vector3 acceleration = targetPosition - transform.position;
+		Vector3 acceleration = rb.convertVector(targetPosition - transform.position);
 		
 		acceleration.Normalize ();
 		
@@ -271,5 +271,24 @@ public class SteeringBasics : MonoBehaviour {
         {
             return Mathf.Atan2(direction.y, direction.x);
         }
+    }
+
+    /// <summary>
+    /// Creates a debug cross at the given position in the scene view to help with debugging.
+    /// </summary>
+    public static void debugCross(Vector3 position, float size = 0.5f, Color color = default(Color), float duration = 0f, bool depthTest = true)
+    {
+        Vector3 xStart = position + Vector3.right * size * 0.5f;
+        Vector3 xEnd = position - Vector3.right * size * 0.5f;
+
+        Vector3 yStart = position + Vector3.up * size * 0.5f;
+        Vector3 yEnd = position - Vector3.up * size * 0.5f;
+
+        Vector3 zStart = position + Vector3.forward * size * 0.5f;
+        Vector3 zEnd = position - Vector3.forward * size * 0.5f;
+
+        Debug.DrawLine(xStart, xEnd, color, duration, depthTest);
+        Debug.DrawLine(yStart, yEnd, color, duration, depthTest);
+        Debug.DrawLine(zStart, zEnd, color, duration, depthTest);
     }
 }

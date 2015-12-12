@@ -82,6 +82,8 @@ public class WallAvoidance : MonoBehaviour {
             targetPostition = targetPostition + perp;
         }
 
+        //SteeringBasics.debugCross(targetPostition, 0.5f, new Color(0.612f, 0.153f, 0.69f), 0.5f);
+
         return steeringBasics.seek(targetPostition, maxAcceleration);
     }
 
@@ -96,28 +98,42 @@ public class WallAvoidance : MonoBehaviour {
 
             GenericRayHit hit;
 
-            if (genericRaycast(transform.position, rayDirs[i], out hit, rayDist))
+            if (genericRaycast(rayDirs[i], out hit, rayDist))
             {
                 foundObs = true;
                 firstHit = hit;
                 break;
             }
-
-            //Debug.DrawLine(transform.position, transform.position + rayDirs[i] * rayDist);
         }
 
         return foundObs;
     }
 
-    private bool genericRaycast(Vector3 origin, Vector3 direction, out GenericRayHit hit, float distance = Mathf.Infinity)
+    private bool genericRaycast(Vector3 direction, out GenericRayHit hit, float distance = Mathf.Infinity)
     {
         bool result = false;
+        Vector3 origin = transform.position;
 
         if (rb.is3D)
         {
+            origin += Vector3.up * (rb.boundingRadius/2f);
+
             RaycastHit h;
             result = Physics.Raycast(origin, direction, out h, distance, raycastMask.value);
             hit = new GenericRayHit(h);
+
+            /* If the character is grounded and we have a result check that we've hit a wall */
+            if(!rb.canFly && result)
+            {
+                /* If the normal is less than our slope limit then we've hit the ground and not a wall */
+                float angle = Vector3.Angle(Vector3.up, hit.normal);
+
+                if (angle < rb.slopeLimit)
+                {
+                    hit.normal = rb.convertVector(hit.normal);
+                    result = false;
+                }
+            }
         }
         else
         {
@@ -125,6 +141,8 @@ public class WallAvoidance : MonoBehaviour {
             result = (h.collider != null); //RaycastHit2D auto evaluates to true or false evidently
             hit = new GenericRayHit(h);
         }
+
+        Debug.DrawLine(origin, origin + direction * distance, Color.cyan);
 
         return result;
     }

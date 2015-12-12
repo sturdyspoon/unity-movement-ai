@@ -170,7 +170,8 @@ public class LinePath  {
 			t = 1;
 		}
 		
-		return t * Mathf.Sqrt(l2);
+        /* Multiple by (v - w).magnitude instead of Sqrt(l2) because we want the magnitude of the full 3D line segment */
+		return t * (v - w).magnitude;
 	}
 
 	public void removeNode(int i ) {
