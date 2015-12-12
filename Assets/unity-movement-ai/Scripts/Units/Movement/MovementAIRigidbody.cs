@@ -108,11 +108,17 @@ public class MovementAIRigidbody : MonoBehaviour {
              */
             if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, (0.1f + groundCheckDistance), groundCheckMask.value))
             {
-                groundNormal = hitInfo.normal;
-                rb3D.useGravity = false;
+                /* Only use hit normal if the slope is less then our slope limit */
+                float angle = Vector3.Angle(Vector3.up, hitInfo.normal);
+
+                if (angle < slopeLimit)
+                {
+                    groundNormal = hitInfo.normal;
+                    rb3D.useGravity = false;
+                }
             }
 
-            limitSlopeMovement();
+            //limitSlopeMovement();
 
             Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * groundCheckDistance), Color.white);
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
@@ -216,7 +222,7 @@ public class MovementAIRigidbody : MonoBehaviour {
                     Vector3 nonGroundVel = rb3D.velocity - Vector3.ProjectOnPlane(rb3D.velocity, groundNormal);
                     rb3D.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, groundNormal) * value);
 
-                    limitSlopeMovement();
+                    //limitSlopeMovement();
                 }
             }
             else
