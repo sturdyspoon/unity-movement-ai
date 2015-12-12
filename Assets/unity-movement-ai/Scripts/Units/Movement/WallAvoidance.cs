@@ -82,7 +82,7 @@ public class WallAvoidance : MonoBehaviour {
             targetPostition = targetPostition + perp;
         }
 
-        //SteeringBasics.debugCross(targetPostition, 0.5f, new Color(0.612f, 0.153f, 0.69f), 0.5f);
+        SteeringBasics.debugCross(targetPostition, 0.5f, new Color(0.612f, 0.153f, 0.69f), 0.5f);
 
         return steeringBasics.seek(targetPostition, maxAcceleration);
     }
@@ -142,7 +142,7 @@ public class WallAvoidance : MonoBehaviour {
             hit = new GenericRayHit(h);
         }
 
-        Debug.DrawLine(origin, origin + direction * distance, Color.cyan);
+        Debug.DrawLine(origin, origin + direction * distance, Color.cyan, 0f, false);
 
         return result;
     }

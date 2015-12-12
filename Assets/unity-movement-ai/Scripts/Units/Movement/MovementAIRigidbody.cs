@@ -12,8 +12,16 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     [Header("3D Grounded Settings")]
 
-    /* Controls how far a ray should try to reach to check for ground */
+    /* Controls how close the ground can be before the character is considered to be on it */
     public float groundCheckDistance = 0.01f;
+
+    /* If the character should try to stay grounded */
+    public bool stayGrounded = true;
+
+    /* How far the character should look below him for ground to stay grounded to */
+    public float groundFollowDistance = 0.3f;
+
+    public float groundFollowGravityMult = 4f;
 
     /* The sphere cast mask that determines what layers should be consider the ground */
     public LayerMask groundCheckMask = Physics.DefaultRaycastLayers;
@@ -102,25 +110,45 @@ public class MovementAIRigidbody : MonoBehaviour {
 
             RaycastHit hitInfo;
 
+            /* Make the sphere cast max distance equal to the ground check distance or the ground follow distance if the character is trying to stay grounded */
+            float maxOnGroundDist = (0.1f + groundCheckDistance);
+
+            float maxDist = maxOnGroundDist;
+
+            if(stayGrounded && groundCheckDistance < groundFollowDistance)
+            {
+                maxDist = (0.1f + groundFollowDistance);
+            }
+
             /* 
             Start the ray with a small offset of 0.1f from inside the character. The
             transform.position of the characer is assumed to be at the base of the character.
              */
-            if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, (0.1f + groundCheckDistance), groundCheckMask.value))
+            if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, maxDist, groundCheckMask.value))
             {
-                /* Only use hit normal if the slope is less then our slope limit */
+                /* If the hit normal of the slope is less then our slope limit then we've found ground */
                 float angle = Vector3.Angle(Vector3.up, hitInfo.normal);
 
                 if (angle < slopeLimit)
                 {
                     groundNormal = hitInfo.normal;
-                    rb3D.useGravity = false;
+
+                    /* If we are close enough to the hit to be touching it then turn off the gravity */
+                    if (hitInfo.distance <= maxOnGroundDist)
+                    {
+                        rb3D.useGravity = false;
+                    }
+                    /* Else we are close enough to see ground that we want to follow but not close enough to be on it so apply an acceleration force downwards */
+                    else
+                    {
+                        rb3D.velocity += Physics.gravity * groundFollowGravityMult * Time.deltaTime;
+                    }
                 }
             }
 
             //limitSlopeMovement();
 
-            Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * groundCheckDistance), Color.white);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white);
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green);
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow);
