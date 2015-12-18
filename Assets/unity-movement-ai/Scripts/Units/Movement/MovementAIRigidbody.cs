@@ -152,14 +152,34 @@ public class MovementAIRigidbody : MonoBehaviour {
                         rb3D.velocity += Physics.gravity * groundFollowGravityMult * Time.deltaTime;
                     }
                 }
+                else
+                {
+                    Vector3 groundMovement = Vector3.ProjectOnPlane(rb3D.velocity, groundNormal);
+                    //Debug.Log(angle + " " + groundMovement.ToString("F4") + " " + Vector3.up.ToString("F4"));
+
+                    /* Get vector pointing down the slope) */
+                    Vector3 rightSlope = Vector3.Cross(groundNormal, Vector3.down);
+                    Vector3 downSlope = Vector3.Cross(rightSlope, groundNormal);
+
+                    //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (downSlope), Color.blue);
+
+                    if (Vector3.Angle(downSlope, groundMovement) > 90f)
+                    {
+                        //rb3D.velocity -= groundMovement;
+                        rb3D.velocity = (rb3D.velocity - groundMovement) + Vector3.Project(groundMovement, rightSlope);
+                    }
+
+                    //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
+                    //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundMovement.normalized), Color.magenta);
+                }
             }
 
             //limitSlopeMovement();
 
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white, 0f, false);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green, 0f, false);
+            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow, 0f, false);
         }
     }
 
