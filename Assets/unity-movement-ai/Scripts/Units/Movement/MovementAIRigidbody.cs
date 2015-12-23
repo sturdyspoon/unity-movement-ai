@@ -46,7 +46,16 @@ public class MovementAIRigidbody : MonoBehaviour {
     /// characters who cannot fly.
     /// </summary>
     [System.NonSerialized]
-    public Vector3 groundNormal = Vector3.up;
+    public Vector3 groundNormal = Vector3.zero;
+
+    private bool isOnWall = false;
+
+    /// <summary>
+    /// Holds the current movement plane normal for this character. This value is only
+    /// used by 3D characters who cannot fly.
+    /// </summary>
+    [System.NonSerialized]
+    public Vector3 movementNormal = Vector3.up;
 
     private Rigidbody rb3D;
     private Rigidbody2D rb2D;
@@ -113,7 +122,6 @@ public class MovementAIRigidbody : MonoBehaviour {
         /* If the character can't fly then find the current the ground normal */
         if(is3D && !canFly)
         {
-            groundNormal = Vector3.up;
             rb3D.useGravity = true;
 
             RaycastHit hitInfo;
@@ -134,13 +142,13 @@ public class MovementAIRigidbody : MonoBehaviour {
              */
             if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, maxDist, groundCheckMask.value))
             {
-                /* If the hit normal of the slope is less then our slope limit then we've found ground */
-                float angle = Vector3.Angle(Vector3.up, hitInfo.normal);
+                groundNormal = hitInfo.normal;
+                isOnWall = isWall(groundNormal);
+                movementNormal = (isOnWall) ? Vector3.up : groundNormal;
 
-                if (angle < slopeLimit)
+                /* If we've found walkable ground */
+                if(!isOnWall)
                 {
-                    groundNormal = hitInfo.normal;
-
                     /* If we are close enough to the hit to be touching it then turn off the gravity */
                     if (hitInfo.distance <= maxOnGroundDist)
                     {
@@ -152,29 +160,14 @@ public class MovementAIRigidbody : MonoBehaviour {
                         rb3D.velocity += Physics.gravity * groundFollowGravityMult * Time.deltaTime;
                     }
                 }
-                else
-                {
-                    Vector3 groundMovement = Vector3.ProjectOnPlane(rb3D.velocity, groundNormal);
-                    //Debug.Log(angle + " " + groundMovement.ToString("F4") + " " + Vector3.up.ToString("F4"));
-
-                    /* Get vector pointing down the slope) */
-                    Vector3 rightSlope = Vector3.Cross(groundNormal, Vector3.down);
-                    Vector3 downSlope = Vector3.Cross(rightSlope, groundNormal);
-
-                    //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (downSlope), Color.blue);
-
-                    if (Vector3.Angle(downSlope, groundMovement) > 90f)
-                    {
-                        //rb3D.velocity -= groundMovement;
-                        rb3D.velocity = (rb3D.velocity - groundMovement) + Vector3.Project(groundMovement, rightSlope);
-                    }
-
-                    //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
-                    //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundMovement.normalized), Color.magenta);
-                }
+            } else
+            {
+                groundNormal = Vector3.zero;
+                isOnWall = false;
+                movementNormal = Vector3.up;
             }
 
-            //limitSlopeMovement();
+            limitSlopeMovement();
 
             Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white, 0f, false);
             Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
@@ -183,28 +176,39 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
     }
 
+    private bool isWall(Vector3 surfNormal)
+    {
+        /* If the normal of the surface is greater then our slope limit then its a wall */
+        return Vector3.Angle(Vector3.up, surfNormal) > slopeLimit;
+    }
+
     private void limitSlopeMovement()
     {
-        float angle = Vector3.Angle(Vector3.up, groundNormal);
-
-        if (angle > slopeLimit)
+        /* Only limit the slope if we are on a wall */
+        if(isOnWall)
         {
-            Vector3 groundMovement = Vector3.ProjectOnPlane(rb3D.velocity, groundNormal);
-            //Debug.Log(angle + " " + groundMovement.ToString("F4") + " " + Vector3.up.ToString("F4"));
+            float angle = Vector3.Angle(rb3D.velocity, groundNormal);
 
-            /* Get vector pointing down the slope) */
-            Vector3 rightSlope = Vector3.Cross(groundNormal, Vector3.down);
-            Vector3 downSlope = Vector3.Cross(rightSlope, groundNormal);
-
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (downSlope), Color.blue);
-
-            if(Vector3.Angle(downSlope, groundMovement) > 90f)
+            if (angle > 90f)
             {
-                rb3D.velocity -= groundMovement;
-            }
+                Vector3 groundMovement = Vector3.ProjectOnPlane(rb3D.velocity, groundNormal);
+                //Debug.Log(angle + " " + groundMovement.ToString("F4") + " " + Vector3.up.ToString("F4"));
 
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundMovement.normalized), Color.magenta);
+                /* Get vector pointing down the slope) */
+                Vector3 rightSlope = Vector3.Cross(groundNormal, Vector3.down);
+                Vector3 downSlope = Vector3.Cross(rightSlope, groundNormal);
+
+                //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (downSlope), Color.blue);
+
+                if (Vector3.Angle(downSlope, groundMovement) > 90f)
+                {
+                    //rb3D.velocity -= groundMovement;
+                    rb3D.velocity = (rb3D.velocity - groundMovement) + Vector3.Project(groundMovement, rightSlope);
+                }
+
+                //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
+                //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundMovement.normalized), Color.magenta);
+            }
         }
     }
 
@@ -235,11 +239,11 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     private Vector3 getGroundedVelocity()
     {
-        if (groundNormal != lastGroundNormal || lastVel != rb3D.velocity)
+        if (movementNormal != lastGroundNormal || lastVel != rb3D.velocity)
         {
-            groundedCharVel = Vector3.ProjectOnPlane(rb3D.velocity, groundNormal);
-            groundedCharVel = Quaternion.FromToRotation(groundNormal, Vector3.up) * groundedCharVel;
-            lastGroundNormal = groundNormal;
+            groundedCharVel = Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
+            groundedCharVel = Quaternion.FromToRotation(movementNormal, Vector3.up) * groundedCharVel;
+            lastGroundNormal = movementNormal;
             lastVel = rb3D.velocity;
         }
 
@@ -275,10 +279,10 @@ public class MovementAIRigidbody : MonoBehaviour {
                     rb3D.velocity = value;
                 } else
                 {
-                    Vector3 nonGroundVel = rb3D.velocity - Vector3.ProjectOnPlane(rb3D.velocity, groundNormal);
-                    rb3D.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, groundNormal) * value);
+                    Vector3 nonGroundVel = rb3D.velocity - Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
+                    rb3D.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, movementNormal) * value);
 
-                    //limitSlopeMovement();
+                    limitSlopeMovement();
                 }
             }
             else
