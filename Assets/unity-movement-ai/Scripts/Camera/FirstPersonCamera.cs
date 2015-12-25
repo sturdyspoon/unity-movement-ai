@@ -88,10 +88,8 @@ public class FirstPersonCamera : MonoBehaviour
     private void moveCamera()
     {
         float vertKey = Input.GetAxisRaw("Vertical");
-        vertKey = (vertKey == 0) ? 0 : vertKey;
 
         float horKey = Input.GetAxisRaw("Horizontal");
-        horKey = (horKey == 0) ? 0 : horKey;
 
         Vector3 moveDir = transform.right * horKey + transform.forward * vertKey;
 
