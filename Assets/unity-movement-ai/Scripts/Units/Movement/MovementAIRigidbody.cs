@@ -122,6 +122,10 @@ public class MovementAIRigidbody : MonoBehaviour {
         /* If the character can't fly then find the current the ground normal */
         if(is3D && !canFly)
         {
+            /* Reset to default values */
+            groundNormal = Vector3.zero;
+            isOnWall = false;
+            movementNormal = Vector3.up;
             rb3D.useGravity = true;
 
             RaycastHit hitInfo;
@@ -142,29 +146,32 @@ public class MovementAIRigidbody : MonoBehaviour {
              */
             if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, maxDist, groundCheckMask.value))
             {
-                groundNormal = hitInfo.normal;
-                isOnWall = isWall(groundNormal);
-                movementNormal = (isOnWall) ? Vector3.up : groundNormal;
-
-                /* If we've found walkable ground */
-                if(!isOnWall)
+                if(isWall(hitInfo.normal))
                 {
+                    /* If we are close enough to the hit to be touching it then we are on the wall */
+                    if (hitInfo.distance <= maxOnGroundDist)
+                    {
+                        groundNormal = hitInfo.normal;
+                        isOnWall = true;
+                    }
+                }
+                /* Else we've found walkable ground */
+                else
+                {
+                    groundNormal = hitInfo.normal;
+                    movementNormal = groundNormal;
+
                     /* If we are close enough to the hit to be touching it then turn off the gravity */
                     if (hitInfo.distance <= maxOnGroundDist)
                     {
                         rb3D.useGravity = false;
                     }
-                    /* Else we are close enough to see ground that we want to follow but not close enough to be on it so apply an acceleration force downwards */
+                    /* Else we are close enough to see ground that we want to follow but not as close as we want, so apply an acceleration force downwards */
                     else
                     {
                         rb3D.velocity += Physics.gravity * groundFollowGravityMult * Time.deltaTime;
                     }
                 }
-            } else
-            {
-                groundNormal = Vector3.zero;
-                isOnWall = false;
-                movementNormal = Vector3.up;
             }
 
             limitMovementOnSteepSlopes();
@@ -184,11 +191,15 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     private void limitMovementOnSteepSlopes()
     {
+        //string str = isOnWall + " " + rb3D.velocity.ToString("F4") + " ";
+
         /* If we are currently on a wall then limit our movement */
         if (isOnWall)
         {
-            limitMovementOnPlane(groundNormal);
+            limitMovementUpPlane(groundNormal);
         }
+
+        //str += rb3D.velocity.ToString("F4") + " ";
 
         /* Check if we are moving into a wall */
 
@@ -200,14 +211,39 @@ public class MovementAIRigidbody : MonoBehaviour {
 
         if (Physics.SphereCast(origin, boundingRadius, direction, out hitInfo, dist, groundCheckMask.value))
         {
-            if(isWall(hitInfo.normal))
+            //str += hitInfo.normal.ToString("F4") + " ";
+
+            if (isWall(hitInfo.normal))
             {
-                limitMovementOnPlane(hitInfo.normal);
+                //str += "true ";
+                /* I'm limiting the char movement up the wall we are going to collide with, but really I should be doing the following:
+                 *   If the character is touching/on a surface (aka if(isOnWall || !rb3D.gravity))
+                 *     then project the char movement onto the ground plane/wall intersecting line (to avoid losing valid up wall movement)
+                 *     If the char is on a wall then make sure we limit our upward movement on the intersecting line (I think a char will 
+                 *   Else
+                 *     Limiting the up movement of the char on the upcoming wall
+                 *
+                 * Note we can't just assume its ok to move up a wall if we are currently on a walkable surface because the interesting
+                 * line dictates how much we can go up the surface and if we ignore it then we can end up going up the wall off the ground.
+                 */
+                limitMovementUpPlane(hitInfo.normal);
             }
+            //else
+            //{
+            //    str += "false ";
+            //}
         }
+        //else
+        //{
+        //    str += "false ";
+        //}
+
+        //str += rb3D.velocity.ToString("F4") + " ";
+
+        //Debug.Log(str);
     }
 
-    private void limitMovementOnPlane(Vector3 planeNormal)
+    private void limitMovementUpPlane(Vector3 planeNormal)
     {
         float angle = Vector3.Angle(rb3D.velocity, planeNormal);
 
@@ -255,15 +291,15 @@ public class MovementAIRigidbody : MonoBehaviour {
     /* The following are only used for non flying 3D characters */
     private Vector3 groundedCharVel = Vector3.zero;
     private Vector3 lastVel = Vector3.zero;
-    private Vector3 lastGroundNormal = Vector3.up;
+    private Vector3 lastMovementNormal = Vector3.up;
 
     private Vector3 getGroundedVelocity()
     {
-        if (movementNormal != lastGroundNormal || lastVel != rb3D.velocity)
+        if (movementNormal != lastMovementNormal || lastVel != rb3D.velocity)
         {
             groundedCharVel = Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
             groundedCharVel = Quaternion.FromToRotation(movementNormal, Vector3.up) * groundedCharVel;
-            lastGroundNormal = movementNormal;
+            lastMovementNormal = movementNormal;
             lastVel = rb3D.velocity;
         }
 
@@ -341,6 +377,23 @@ public class MovementAIRigidbody : MonoBehaviour {
                 r.eulerAngles = new Vector3(0, 0, rb2D.rotation);
                 return r;
             }
+        }
+    }
+
+    /// <summary>
+    /// Rotates the rigidbody to angle (given in degrees)
+    /// </summary>
+    /// <param name="angle"></param>
+    public void MoveRotation(float angle)
+    {
+        if (is3D)
+        {
+            Quaternion rot = Quaternion.Euler((new Vector3(0f, angle, 0f)));
+            rb3D.MoveRotation(rot);
+        }
+        else
+        {
+            rb2D.MoveRotation(angle);
         }
     }
 

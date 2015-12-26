@@ -1112,7 +1112,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 165344, guid: 1c3b01984c06a8a4789f8458da3c2a37, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11439398, guid: 1c3b01984c06a8a4789f8458da3c2a37, type: 2}
       propertyPath: targetPosition.x
@@ -2915,7 +2915,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 199308, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11431932, guid: 4b8141dc3c6e4cb49b4cf7b795ca5d74, type: 2}
       propertyPath: slopeLimit
@@ -3400,7 +3400,7 @@ MonoBehaviour:
   groundCheckDistance: 0.01
   stayGrounded: 1
   groundFollowDistance: 0.3
-  groundFollowGravityMult: 4
+  groundFollowGravityMult: 8
   groundCheckMask:
     serializedVersion: 2
     m_Bits: 4294967291
