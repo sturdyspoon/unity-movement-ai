@@ -216,15 +216,16 @@ public class MovementAIRigidbody : MonoBehaviour {
             if (isWall(hitInfo.normal))
             {
                 //str += "true ";
-                /* I'm limiting the char movement up the wall we are going to collide with, but really I should be doing the following:
+                /* I'm limiting the char movement up the wall that we are going to collide with, but really I should be doing the following:
                  *   If the character is touching/on a surface (aka if(isOnWall || !rb3D.gravity))
                  *     then project the char movement onto the ground plane/wall intersecting line (to avoid losing valid up wall movement)
                  *     If the char is on a wall then make sure we limit our upward movement on the intersecting line (I think a char will 
                  *   Else
                  *     Limiting the up movement of the char on the upcoming wall
                  *
-                 * Note we can't just assume its ok to move up a wall if we are currently on a walkable surface because the interesting
-                 * line dictates how much we can go up the surface and if we ignore it then we can end up going up the wall off the ground.
+                 * Note the reason why we can't just assume its ok to move up a wall if we are currently on a walkable surface is because
+                 * the intersectng line dictates how much we can go up the surface and if we ignore it then we can end up going up the
+                 * wall off the ground.
                  */
                 limitMovementUpPlane(hitInfo.normal);
             }
