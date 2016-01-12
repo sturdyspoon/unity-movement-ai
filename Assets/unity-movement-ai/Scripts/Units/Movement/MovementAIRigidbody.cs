@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Text;
+using System.Collections.Generic;
 
 /// <summary>
 /// This is a wrapper class for either a Rigidbody or Rigidbody2D, so that either can be used with the Unity Movement AI code. 
@@ -84,7 +86,26 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     void Start()
     {
+        StartCoroutine(debugDraw());
+
         setBoundingRadius();
+
+        /* Call fixed update for 3D grounded characters to make sure they get proper 
+         * ground / movement normals before their velocity is set */
+        FixedUpdate();
+    }
+
+    private IEnumerator debugDraw()
+    {
+        yield return new WaitForFixedUpdate();
+
+        //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white, 0f, false);
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green, 0f, false);
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow, 0f, false);
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (movementNormal), Color.yellow, 0f, false);
+
+        StartCoroutine(debugDraw());
     }
 
     private void setBoundingRadius()
@@ -120,8 +141,11 @@ public class MovementAIRigidbody : MonoBehaviour {
     void FixedUpdate()
     {
         /* If the character can't fly then find the current the ground normal */
-        if(is3D && !canFly)
+        if (is3D && !canFly)
         {
+            StringBuilder sb = new StringBuilder("fixed update ");
+            sb.Append(rb3D.velocity.ToString("F4"));
+
             /* Reset to default values */
             groundNormal = Vector3.zero;
             isOnWall = false;
@@ -135,7 +159,7 @@ public class MovementAIRigidbody : MonoBehaviour {
 
             float maxDist = maxOnGroundDist;
 
-            if(stayGrounded && groundCheckDistance < groundFollowDistance)
+            if (stayGrounded && groundCheckDistance < groundFollowDistance)
             {
                 maxDist = (0.1f + groundFollowDistance);
             }
@@ -146,8 +170,20 @@ public class MovementAIRigidbody : MonoBehaviour {
              */
             if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, maxDist, groundCheckMask.value))
             {
-                if(isWall(hitInfo.normal))
+                if (isWall(hitInfo.normal))
                 {
+                    /* Get vector pointing down the wall */
+                    Vector3 rightSlope = Vector3.Cross(hitInfo.normal, Vector3.down);
+                    Vector3 downSlope = Vector3.Cross(rightSlope, hitInfo.normal);
+
+                    RaycastHit rayHitInfo;
+
+                    /* If we found ground that we would have hit if not for the wall then follow it */
+                    if (Physics.Raycast(hitInfo.point, downSlope, out rayHitInfo))
+                    {
+                        SteeringBasics.debugCross(rayHitInfo.point, 0.5f, Color.magenta);
+                    }
+
                     /* If we are close enough to the hit to be touching it then we are on the wall */
                     if (hitInfo.distance <= maxOnGroundDist)
                     {
@@ -176,10 +212,17 @@ public class MovementAIRigidbody : MonoBehaviour {
 
             limitMovementOnSteepSlopes();
 
-            Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white, 0f, false);
-            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
-            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green, 0f, false);
-            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow, 0f, false);
+            sb.Append(" ");
+            sb.Append(rb3D.velocity.ToString("F4"));
+            sb.Append(" ").Append(Time.time);
+
+            //Debug.Log(sb);
+
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white, 0f, false);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green, 0f, false);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow, 0f, false);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (movementNormal), Color.yellow, 0f, false);
         }
     }
 
@@ -191,65 +234,80 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     private void limitMovementOnSteepSlopes()
     {
-        //string str = isOnWall + " " + rb3D.velocity.ToString("F4") + " ";
+        HashSet<Vector3> wallNormals = new HashSet<Vector3>();
 
         /* If we are currently on a wall then limit our movement */
         if (isOnWall)
         {
             limitMovementUpPlane(groundNormal);
+            wallNormals.Add(groundNormal);
         }
-
-        //str += rb3D.velocity.ToString("F4") + " ";
 
         /* Check if we are moving into a wall */
-
         Vector3 direction = rb3D.velocity.normalized;
-        Vector3 origin = transform.position + (Vector3.up * boundingRadius) + (direction * -0.1f);
-        float dist = 0.1f + rb3D.velocity.magnitude * Time.deltaTime;
 
-        RaycastHit hitInfo;
-
-        if (Physics.SphereCast(origin, boundingRadius, direction, out hitInfo, dist, groundCheckMask.value))
+        for (int i = 0; i < 3; i++)
         {
-            //str += hitInfo.normal.ToString("F4") + " ";
+            Vector3 origin = transform.position + (Vector3.up * boundingRadius) + (direction * -0.1f);
+            float dist = 0.1f + rb3D.velocity.magnitude * Time.deltaTime;
 
-            if (isWall(hitInfo.normal))
+            RaycastHit hitInfo;
+
+            if (Physics.SphereCast(origin, boundingRadius, direction, out hitInfo, dist, groundCheckMask.value) && isWall(hitInfo.normal))
             {
-                //str += "true ";
-                /* I'm limiting the char movement up the wall that we are going to collide with, but really I should be doing the following:
-                 *   If the character is touching/on a surface (aka if(isOnWall || !rb3D.gravity))
-                 *     then project the char movement onto the ground plane/wall intersecting line (to avoid losing valid up wall movement)
-                 *     If the char is on a wall then make sure we limit our upward movement on the intersecting line (I think a char will 
-                 *   Else
-                 *     Limiting the up movement of the char on the upcoming wall
-                 *
-                 * Note the reason why we can't just assume its ok to move up a wall if we are currently on a walkable surface is because
-                 * the intersectng line dictates how much we can go up the surface and if we ignore it then we can end up going up the
-                 * wall off the ground.
-                 */
-                limitMovementUpPlane(hitInfo.normal);
+                if(wallNormals.Contains(hitInfo.normal))
+                {
+                    Vector3 vel = rb3D.velocity;
+                    vel.x = 0;
+                    vel.z = 0;
+                    rb3D.velocity = vel;
+
+                    break;
+                } else
+                {
+                    /* I'm limiting the char movement up the wall that we are going to collide with, but really I should be doing the following:
+                     *   If the character is touching/on a surface (aka if(isOnWall || !rb3D.gravity))
+                     *     then project the char movement onto the ground plane/wall intersecting line (to avoid losing valid up wall movement)
+                     *     If the char is on a wall then make sure we limit our upward movement on the intersecting line (I think a char will 
+                     *   Else
+                     *     Limiting the up movement of the char on the upcoming wall
+                     *
+                     * Note the reason why we can't just assume its ok to move up a wall if we are currently on a walkable surface is because
+                     * the intersectng line dictates how much we can go up the surface and if we ignore it then we can end up going up the
+                     * wall off the ground.
+                     */
+                    
+                    /* Move up to the on coming wall */
+                    float moveUpDist = Mathf.Max(0, hitInfo.distance - 0.1f);
+                    rb3D.position = rb3D.position + (direction * moveUpDist);
+
+                    limitMovementUpPlane(hitInfo.normal);
+
+                    wallNormals.Add(hitInfo.normal);
+
+                    direction = Vector3.ProjectOnPlane(rb3D.velocity.normalized, hitInfo.normal);
+
+
+                }
+            } else
+            {
+                break;
             }
-            //else
-            //{
-            //    str += "false ";
-            //}
         }
-        //else
-        //{
-        //    str += "false ";
-        //}
-
-        //str += rb3D.velocity.ToString("F4") + " ";
-
-        //Debug.Log(str);
     }
 
     private void limitMovementUpPlane(Vector3 planeNormal)
     {
+        StringBuilder sb = new StringBuilder("limit movement up plane plane normal: ");
+        sb.Append(planeNormal.ToString("F4"));
+        sb.Append(" ");
+
         float angle = Vector3.Angle(rb3D.velocity, planeNormal);
 
         if (angle > 90f)
         {
+            sb.Append("moving into plane ");
+
             Vector3 planeMovement = Vector3.ProjectOnPlane(rb3D.velocity, planeNormal);
             //Debug.Log(angle + " " + planeMovement.ToString("F4") + " " + Vector3.up.ToString("F4"));
 
@@ -259,14 +317,37 @@ public class MovementAIRigidbody : MonoBehaviour {
 
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (downSlope), Color.blue);
 
+
+            sb.Append("and moving up the plane");
+
+            //rb3D.velocity = (rb3D.velocity - planeMovement) + Vector3.Project(planeMovement, rightSlope);
+            //rb3D.velocity = Vector3.Project(planeMovement, rightSlope);
+
+            /* Keep any downward movement (like gravity) */
+            float yComponent = Mathf.Min(0f, rb3D.velocity.y);
+
+            /* Project the remaining movement on left/right direction of the wall and add back in the downward movement */
+            Vector3 newVel = rb3D.velocity;
+            newVel.y = 0;
+
+            ///* Treat the plane like a vertical wall now */
+            //planeNormal.y = 0;
+            newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
+
             if (Vector3.Angle(downSlope, planeMovement) > 90f)
             {
-                rb3D.velocity = (rb3D.velocity - planeMovement) + Vector3.Project(planeMovement, rightSlope);
+                newVel = Vector3.Project(newVel, rightSlope);
             }
+
+            newVel.y = yComponent;
+
+            rb3D.velocity = newVel;
 
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (planeMovement.normalized), Color.magenta);
         }
+
+        //Debug.Log(sb);
     }
 
     public Vector3 position
@@ -336,10 +417,18 @@ public class MovementAIRigidbody : MonoBehaviour {
                     rb3D.velocity = value;
                 } else
                 {
+                    StringBuilder sb = new StringBuilder("set velocity ");
+                    sb.Append(rb3D.velocity.ToString("F4"));
+                    sb.Append(" ");
+
                     Vector3 nonGroundVel = rb3D.velocity - Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
                     rb3D.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, movementNormal) * value);
 
                     limitMovementOnSteepSlopes();
+
+                    sb.Append(rb3D.velocity.ToString("F4"));
+                    sb.Append(" ").Append(groundNormal.ToString("F4")).Append(" ").Append(rb3D.velocity.normalized.ToString("F4")); ;
+                    //Debug.Log(sb);
                 }
             }
             else

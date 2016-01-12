@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(MovementAIRigidbody))]
+[RequireComponent(typeof(Camera))]
 public class ThirdPersonUnit : MonoBehaviour {
 
     public float speed = 5;
@@ -11,6 +13,7 @@ public class ThirdPersonUnit : MonoBehaviour {
 
     private float horAxis = 0f;
     private float vertAxis = 0f;
+    private float sideStepDir = 0f;
 
     private Transform cam;
 
@@ -33,6 +36,17 @@ public class ThirdPersonUnit : MonoBehaviour {
 
         horAxis = Input.GetAxisRaw("Horizontal");
         vertAxis = Input.GetAxisRaw("Vertical");
+
+        if (Input.GetKey(KeyCode.Q))
+        {
+            sideStepDir = 1f;
+        } else if (Input.GetKey(KeyCode.E))
+        {
+            sideStepDir = -1f;
+        } else
+        {
+            sideStepDir = 0f;
+        }
     }
 
     private void rotateCamera()
@@ -66,7 +80,8 @@ public class ThirdPersonUnit : MonoBehaviour {
 
     private void moveChar()
     {
-        Vector3 vel = transform.right * vertAxis * speed;
+        Vector3 vel = (transform.right * vertAxis) + (transform.forward * sideStepDir);
+        vel = vel.normalized * speed;
         rb.velocity = vel;
     }
 
