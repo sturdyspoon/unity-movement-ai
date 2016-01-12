@@ -147,6 +147,8 @@ public class SteeringBasics : MonoBehaviour {
 
     /* Returns the steering for a character so it arrives at the target */
     public Vector3 arrive(Vector3 targetPosition) {
+        Debug.DrawLine(transform.position, targetPosition, Color.cyan, 0f, false);
+
         targetPosition = rb.convertVector(targetPosition);
 
         /* Get the right direction for the linear acceleration */
