@@ -140,6 +140,7 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     void FixedUpdate()
     {
+        Debug.Log("fixed");
         /* If the character can't fly then find the current the ground normal */
         if (is3D && !canFly)
         {
@@ -244,6 +245,11 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
 
         /* Check if we are moving into a wall */
+        
+        /* Subtract a small amount from the bounding radius to help avoid floating point errors that would cause the 
+         * spherecast to incorrectly hit a plane that the spherecast is already moving on */
+        float radius = boundingRadius - 0.0001f;
+
         Vector3 direction = rb3D.velocity.normalized;
 
         for (int i = 0; i < 3; i++)
@@ -253,7 +259,7 @@ public class MovementAIRigidbody : MonoBehaviour {
 
             RaycastHit hitInfo;
 
-            if (Physics.SphereCast(origin, boundingRadius, direction, out hitInfo, dist, groundCheckMask.value) && isWall(hitInfo.normal))
+            if (Physics.SphereCast(origin, radius, direction, out hitInfo, dist, groundCheckMask.value) && isWall(hitInfo.normal))
             {
                 if(wallNormals.Contains(hitInfo.normal))
                 {
@@ -320,9 +326,6 @@ public class MovementAIRigidbody : MonoBehaviour {
 
             sb.Append("and moving up the plane");
 
-            //rb3D.velocity = (rb3D.velocity - planeMovement) + Vector3.Project(planeMovement, rightSlope);
-            //rb3D.velocity = Vector3.Project(planeMovement, rightSlope);
-
             /* Keep any downward movement (like gravity) */
             float yComponent = Mathf.Min(0f, rb3D.velocity.y);
 
@@ -388,6 +391,8 @@ public class MovementAIRigidbody : MonoBehaviour {
         return groundedCharVel;
     }
 
+    private int count = 0; 
+
     public Vector3 velocity
     {
         get
@@ -417,6 +422,14 @@ public class MovementAIRigidbody : MonoBehaviour {
                     rb3D.velocity = value;
                 } else
                 {
+                    count++;
+                    Debug.Log(count);
+
+                    if(count >= 17)
+                    {
+                        Debug.Log("HEYOO");
+                    }
+
                     StringBuilder sb = new StringBuilder("set velocity ");
                     sb.Append(rb3D.velocity.ToString("F4"));
                     sb.Append(" ");
