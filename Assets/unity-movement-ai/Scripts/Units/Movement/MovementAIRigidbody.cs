@@ -140,13 +140,10 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     void FixedUpdate()
     {
-        Debug.Log("fixed");
+        //Debug.Log("fixed");
         /* If the character can't fly then find the current the ground normal */
         if (is3D && !canFly)
         {
-            StringBuilder sb = new StringBuilder("fixed update ");
-            sb.Append(rb3D.velocity.ToString("F4"));
-
             /* Reset to default values */
             groundNormal = Vector3.zero;
             isOnWall = false;
@@ -212,12 +209,6 @@ public class MovementAIRigidbody : MonoBehaviour {
             }
 
             limitMovementOnSteepSlopes();
-
-            sb.Append(" ");
-            sb.Append(rb3D.velocity.ToString("F4"));
-            sb.Append(" ").Append(Time.time);
-
-            //Debug.Log(sb);
 
             //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white, 0f, false);
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
@@ -304,53 +295,40 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     private void limitMovementUpPlane(Vector3 planeNormal)
     {
-        StringBuilder sb = new StringBuilder("limit movement up plane plane normal: ");
-        sb.Append(planeNormal.ToString("F4"));
-        sb.Append(" ");
-
         float angle = Vector3.Angle(rb3D.velocity, planeNormal);
-
+        
+        /* If we are moving into the plane */
         if (angle > 90f)
         {
-            sb.Append("moving into plane ");
-
-            Vector3 planeMovement = Vector3.ProjectOnPlane(rb3D.velocity, planeNormal);
-            //Debug.Log(angle + " " + planeMovement.ToString("F4") + " " + Vector3.up.ToString("F4"));
-
             /* Get vector pointing down the slope) */
             Vector3 rightSlope = Vector3.Cross(planeNormal, Vector3.down);
             Vector3 downSlope = Vector3.Cross(rightSlope, planeNormal);
 
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (downSlope), Color.blue);
-
-
-            sb.Append("and moving up the plane");
-
             /* Keep any downward movement (like gravity) */
             float yComponent = Mathf.Min(0f, rb3D.velocity.y);
 
-            /* Project the remaining movement on left/right direction of the wall and add back in the downward movement */
+            /* Project the remaining movement on to the wall */
             Vector3 newVel = rb3D.velocity;
             newVel.y = 0;
-
-            ///* Treat the plane like a vertical wall now */
-            //planeNormal.y = 0;
             newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
 
-            if (Vector3.Angle(downSlope, planeMovement) > 90f)
+            /* If the remaining movement is moving up the wall then make it only go left/right.
+             * I believe this will be true for all  ramp walls but false for all ceiling walls */
+            if (Vector3.Angle(downSlope, newVel) > 90f)
             {
                 newVel = Vector3.Project(newVel, rightSlope);
             }
 
+            /* Add the downward movement back in and make sure we are still moving along the wall
+             * so future sphere casts won't hit this wall */
             newVel.y = yComponent;
+            newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
 
             rb3D.velocity = newVel;
 
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (planeMovement.normalized), Color.magenta);
         }
-
-        //Debug.Log(sb);
     }
 
     public Vector3 position
@@ -423,25 +401,17 @@ public class MovementAIRigidbody : MonoBehaviour {
                 } else
                 {
                     count++;
-                    Debug.Log(count);
+                    //Debug.Log(count);
 
                     if(count >= 17)
                     {
-                        Debug.Log("HEYOO");
+                        //Debug.Log("HEYOO");
                     }
-
-                    StringBuilder sb = new StringBuilder("set velocity ");
-                    sb.Append(rb3D.velocity.ToString("F4"));
-                    sb.Append(" ");
 
                     Vector3 nonGroundVel = rb3D.velocity - Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
                     rb3D.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, movementNormal) * value);
 
                     limitMovementOnSteepSlopes();
-
-                    sb.Append(rb3D.velocity.ToString("F4"));
-                    sb.Append(" ").Append(groundNormal.ToString("F4")).Append(" ").Append(rb3D.velocity.normalized.ToString("F4")); ;
-                    //Debug.Log(sb);
                 }
             }
             else
