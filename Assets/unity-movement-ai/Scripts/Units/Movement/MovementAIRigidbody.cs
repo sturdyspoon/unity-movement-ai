@@ -270,26 +270,16 @@ public class MovementAIRigidbody : MonoBehaviour {
             {
                 if(wallNormals.Contains(hitInfo.normal))
                 {
-                    Vector3 vel = rb3D.velocity;
-                    vel.x = 0;
-                    vel.z = 0;
+                    Vector3 vel = Vector3.zero;
+                    if(rb3D.useGravity)
+                    {
+                        vel.y = rb3D.velocity.y;
+                    }
                     rb3D.velocity = vel;
 
                     break;
                 } else
-                {
-                    /* I'm limiting the char movement up the wall that we are going to collide with, but really I should be doing the following:
-                     *   If the character is touching/on a surface (aka if(isOnWall || !rb3D.gravity))
-                     *     then project the char movement onto the ground plane/wall intersecting line (to avoid losing valid up wall movement)
-                     *     If the char is on a wall then make sure we limit our upward movement on the intersecting line (I think a char will 
-                     *   Else
-                     *     Limiting the up movement of the char on the upcoming wall
-                     *
-                     * Note the reason why we can't just assume its ok to move up a wall if we are currently on a walkable surface is because
-                     * the intersectng line dictates how much we can go up the surface and if we ignore it then we can end up going up the
-                     * wall off the ground.
-                     */
-                    
+                {   
                     /* Move up to the on coming wall */
                     float moveUpDist = Mathf.Max(0, hitInfo.distance - 0.1f);
                     rb3D.position = rb3D.position + (direction * moveUpDist);
@@ -298,7 +288,6 @@ public class MovementAIRigidbody : MonoBehaviour {
 
                     wallNormals.Add(hitInfo.normal);
 
-                    //direction = Vector3.ProjectOnPlane(rb3D.velocity.normalized, hitInfo.normal);   //TODO understand why I need this
                     direction = rb3D.velocity.normalized;
                 }
             } else
