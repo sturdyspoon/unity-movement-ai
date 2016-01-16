@@ -48,9 +48,7 @@ public class MovementAIRigidbody : MonoBehaviour {
     /// characters who cannot fly.
     /// </summary>
     [System.NonSerialized]
-    public Vector3 groundNormal = Vector3.zero;
-
-    private bool isOnWall = false;
+    public Vector3 wallNormal = Vector3.zero;
 
     /// <summary>
     /// Holds the current movement plane normal for this character. This value is only
@@ -102,9 +100,13 @@ public class MovementAIRigidbody : MonoBehaviour {
         //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white, 0f, false);
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green, 0f, false);
-        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow, 0f, false);
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (wallNormal), Color.yellow, 0f, false);
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (movementNormal), Color.yellow, 0f, false);
 
+        Vector3 contactPointOnChar = (transform.position + (Vector3.up * boundingRadius)) - (wallNormal * boundingRadius);
+
+        SteeringBasics.debugCross(contactPointOnChar, 0.5f, Color.red);
+        //Debug.Log("waitforfixedupdate " + transform.position.ToString("f4"));
         StartCoroutine(debugDraw());
     }
 
@@ -140,13 +142,12 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     void FixedUpdate()
     {
-        //Debug.Log("fixed");
+        //Debug.Log("fixed " + transform.position.ToString("f4"));
         /* If the character can't fly then find the current the ground normal */
         if (is3D && !canFly)
         {
             /* Reset to default values */
-            groundNormal = Vector3.zero;
-            isOnWall = false;
+            wallNormal = Vector3.zero;
             movementNormal = Vector3.up;
             rb3D.useGravity = true;
 
@@ -177,34 +178,38 @@ public class MovementAIRigidbody : MonoBehaviour {
                     RaycastHit rayHitInfo;
 
                     /* If we found ground that we would have hit if not for the wall then follow it */
-                    if (Physics.Raycast(hitInfo.point, downSlope, out rayHitInfo))
+                    if (Physics.Raycast(hitInfo.point, downSlope, out rayHitInfo) && !isWall(rayHitInfo.normal))
                     {
-                        SteeringBasics.debugCross(rayHitInfo.point, 0.5f, Color.magenta);
+                        //SteeringBasics.debugCross(rayHitInfo.point, 0.5f, Color.magenta);
+
+                        Vector3 contactPointOnChar = (transform.position + (Vector3.up * boundingRadius)) - (rayHitInfo.normal * boundingRadius);
+
+                        //SteeringBasics.debugCross(contactPointOnChar, 0.5f, Color.magenta);
+
+                        float distToPlane = Vector3.Dot((contactPointOnChar - rayHitInfo.point), rayHitInfo.normal);
+
+                        float downwardDistToPlane = Mathf.Abs(distToPlane / Vector3.Dot(rayHitInfo.normal, Vector3.down));
+
+                        //Debug.Log("Dist to ground " + downwardDistToPlane + " there is a wall");
+
+                        if(downwardDistToPlane + hitInfo.distance < maxDist)
+                        {
+                            foundGround(rayHitInfo.normal, downwardDistToPlane + hitInfo.distance <= maxOnGroundDist);
+                        }
                     }
 
                     /* If we are close enough to the hit to be touching it then we are on the wall */
                     if (hitInfo.distance <= maxOnGroundDist)
                     {
-                        groundNormal = hitInfo.normal;
-                        isOnWall = true;
+                        wallNormal = hitInfo.normal;
                     }
                 }
                 /* Else we've found walkable ground */
                 else
                 {
-                    groundNormal = hitInfo.normal;
-                    movementNormal = groundNormal;
+                    //Debug.Log("Dist to ground " + (hitInfo.distance-0.1f) + " no wall");
 
-                    /* If we are close enough to the hit to be touching it then turn off the gravity */
-                    if (hitInfo.distance <= maxOnGroundDist)
-                    {
-                        rb3D.useGravity = false;
-                    }
-                    /* Else we are close enough to see ground that we want to follow but not as close as we want, so apply an acceleration force downwards */
-                    else
-                    {
-                        rb3D.velocity += Physics.gravity * groundFollowGravityMult * Time.deltaTime;
-                    }
+                    foundGround(hitInfo.normal, hitInfo.distance <= maxOnGroundDist);
                 }
             }
 
@@ -213,8 +218,24 @@ public class MovementAIRigidbody : MonoBehaviour {
             //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white, 0f, false);
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green, 0f, false);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (groundNormal), Color.yellow, 0f, false);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (wallNormal), Color.yellow, 0f, false);
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (movementNormal), Color.yellow, 0f, false);
+        }
+    }
+
+    private void foundGround(Vector3 normal, bool isCloseEnough)
+    {
+        movementNormal = normal;
+
+        /* If we are close enough to the hit to be touching it then turn off the gravity */
+        if (isCloseEnough)
+        {
+            rb3D.useGravity = false;
+        }
+        /* Else we are close enough to see ground that we want to follow but not as close as we want, so apply an acceleration force downwards */
+        else
+        {
+            rb3D.velocity += Physics.gravity * groundFollowGravityMult * Time.deltaTime;
         }
     }
 
@@ -229,18 +250,13 @@ public class MovementAIRigidbody : MonoBehaviour {
         HashSet<Vector3> wallNormals = new HashSet<Vector3>();
 
         /* If we are currently on a wall then limit our movement */
-        if (isOnWall)
+        if (wallNormal != Vector3.zero)
         {
-            limitMovementUpPlane(groundNormal);
-            wallNormals.Add(groundNormal);
+            limitMovementUpPlane(wallNormal);
+            wallNormals.Add(wallNormal);
         }
 
         /* Check if we are moving into a wall */
-        
-        /* Subtract a small amount from the bounding radius to help avoid floating point errors that would cause the 
-         * spherecast to incorrectly hit a plane that the spherecast is already moving on */
-        float radius = boundingRadius - 0.0001f;
-
         Vector3 direction = rb3D.velocity.normalized;
 
         for (int i = 0; i < 3; i++)
@@ -250,7 +266,7 @@ public class MovementAIRigidbody : MonoBehaviour {
 
             RaycastHit hitInfo;
 
-            if (Physics.SphereCast(origin, radius, direction, out hitInfo, dist, groundCheckMask.value) && isWall(hitInfo.normal))
+            if (Physics.SphereCast(origin, boundingRadius, direction, out hitInfo, dist, groundCheckMask.value) && isWall(hitInfo.normal))
             {
                 if(wallNormals.Contains(hitInfo.normal))
                 {
@@ -282,9 +298,8 @@ public class MovementAIRigidbody : MonoBehaviour {
 
                     wallNormals.Add(hitInfo.normal);
 
-                    direction = Vector3.ProjectOnPlane(rb3D.velocity.normalized, hitInfo.normal);
-
-
+                    //direction = Vector3.ProjectOnPlane(rb3D.velocity.normalized, hitInfo.normal);   //TODO understand why I need this
+                    direction = rb3D.velocity.normalized;
                 }
             } else
             {
@@ -300,34 +315,42 @@ public class MovementAIRigidbody : MonoBehaviour {
         /* If we are moving into the plane */
         if (angle > 90f)
         {
-            /* Get vector pointing down the slope) */
-            Vector3 rightSlope = Vector3.Cross(planeNormal, Vector3.down);
-            Vector3 downSlope = Vector3.Cross(rightSlope, planeNormal);
-
-            /* Keep any downward movement (like gravity) */
-            float yComponent = Mathf.Min(0f, rb3D.velocity.y);
-
-            /* Project the remaining movement on to the wall */
-            Vector3 newVel = rb3D.velocity;
-            newVel.y = 0;
-            newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
-
-            /* If the remaining movement is moving up the wall then make it only go left/right.
-             * I believe this will be true for all  ramp walls but false for all ceiling walls */
-            if (Vector3.Angle(downSlope, newVel) > 90f)
+            if(!rb3D.useGravity)
             {
-                newVel = Vector3.Project(newVel, rightSlope);
+                Vector3 groundPlaneIntersection = Vector3.Cross(movementNormal, planeNormal);
+
+                rb3D.velocity = Vector3.Project(rb3D.velocity, groundPlaneIntersection);
+            } else
+            {
+                /* Get vector pointing down the slope) */
+                Vector3 rightSlope = Vector3.Cross(planeNormal, Vector3.down);
+                Vector3 downSlope = Vector3.Cross(rightSlope, planeNormal);
+
+                /* Keep any downward movement (like gravity) */
+                float yComponent = Mathf.Min(0f, rb3D.velocity.y);
+
+                /* Project the remaining movement on to the wall */
+                Vector3 newVel = rb3D.velocity;
+                newVel.y = 0;
+                newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
+
+                /* If the remaining movement is moving up the wall then make it only go left/right.
+                 * I believe this will be true for all  ramp walls but false for all ceiling walls */
+                if (Vector3.Angle(downSlope, newVel) > 90f)
+                {
+                    newVel = Vector3.Project(newVel, rightSlope);
+                }
+
+                /* Add the downward movement back in and make sure we are still moving along the wall
+                 * so future sphere casts won't hit this wall */
+                newVel.y = yComponent;
+                newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
+
+                rb3D.velocity = newVel;
+
+                //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
+                //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (planeMovement.normalized), Color.magenta);
             }
-
-            /* Add the downward movement back in and make sure we are still moving along the wall
-             * so future sphere casts won't hit this wall */
-            newVel.y = yComponent;
-            newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
-
-            rb3D.velocity = newVel;
-
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (planeMovement.normalized), Color.magenta);
         }
     }
 
@@ -400,10 +423,11 @@ public class MovementAIRigidbody : MonoBehaviour {
                     rb3D.velocity = value;
                 } else
                 {
+                    //Debug.Log("setvelocity " + transform.position.ToString("f4"));
                     count++;
                     //Debug.Log(count);
 
-                    if(count >= 17)
+                    if(count >= 16)
                     {
                         //Debug.Log("HEYOO");
                     }
