@@ -97,15 +97,11 @@ public class MovementAIRigidbody : MonoBehaviour {
     {
         yield return new WaitForFixedUpdate();
 
-        //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white, 0f, false);
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green, 0f, false);
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (wallNormal), Color.yellow, 0f, false);
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (movementNormal), Color.yellow, 0f, false);
 
-        Vector3 contactPointOnChar = (transform.position + (Vector3.up * boundingRadius)) - (wallNormal * boundingRadius);
-
-        SteeringBasics.debugCross(contactPointOnChar, 0.5f, Color.red);
         //Debug.Log("waitforfixedupdate " + transform.position.ToString("f4"));
         StartCoroutine(debugDraw());
     }
@@ -190,8 +186,6 @@ public class MovementAIRigidbody : MonoBehaviour {
 
                         float downwardDistToPlane = Mathf.Abs(distToPlane / Vector3.Dot(rayHitInfo.normal, Vector3.down));
 
-                        //Debug.Log("Dist to ground " + downwardDistToPlane + " there is a wall");
-
                         if(downwardDistToPlane + hitInfo.distance < maxDist)
                         {
                             foundGround(rayHitInfo.normal, downwardDistToPlane + hitInfo.distance <= maxOnGroundDist);
@@ -207,19 +201,11 @@ public class MovementAIRigidbody : MonoBehaviour {
                 /* Else we've found walkable ground */
                 else
                 {
-                    //Debug.Log("Dist to ground " + (hitInfo.distance-0.1f) + " no wall");
-
                     foundGround(hitInfo.normal, hitInfo.distance <= maxOnGroundDist);
                 }
             }
 
             limitMovementOnSteepSlopes();
-
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.down * (maxDist - 0.1f)), Color.white, 0f, false);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green, 0f, false);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (wallNormal), Color.yellow, 0f, false);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (movementNormal), Color.yellow, 0f, false);
         }
     }
 
@@ -261,7 +247,7 @@ public class MovementAIRigidbody : MonoBehaviour {
 
         for (int i = 0; i < 3; i++)
         {
-            Vector3 origin = transform.position + (Vector3.up * boundingRadius) + (direction * -0.1f);
+            Vector3 origin = rb3D.position + (Vector3.up * boundingRadius) + (direction * -0.1f);
             float dist = 0.1f + rb3D.velocity.magnitude * Time.deltaTime;
 
             RaycastHit hitInfo;
@@ -282,7 +268,7 @@ public class MovementAIRigidbody : MonoBehaviour {
                 {   
                     /* Move up to the on coming wall */
                     float moveUpDist = Mathf.Max(0, hitInfo.distance - 0.1f);
-                    rb3D.position = rb3D.position + (direction * moveUpDist);
+                    rb3D.MovePosition(rb3D.position + (direction * moveUpDist));
 
                     limitMovementUpPlane(hitInfo.normal);
 
@@ -414,12 +400,7 @@ public class MovementAIRigidbody : MonoBehaviour {
                 {
                     //Debug.Log("setvelocity " + transform.position.ToString("f4"));
                     count++;
-                    //Debug.Log(count);
-
-                    if(count >= 16)
-                    {
-                        //Debug.Log("HEYOO");
-                    }
+                    //Debug.Log(count + " " + rb3D.velocity.ToString("f4"));
 
                     Vector3 nonGroundVel = rb3D.velocity - Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
                     rb3D.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, movementNormal) * value);
