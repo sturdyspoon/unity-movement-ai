@@ -236,23 +236,26 @@ public class MovementAIRigidbody : MonoBehaviour {
         HashSet<Vector3> wallNormals = new HashSet<Vector3>();
 
         /* If we are currently on a wall then limit our movement */
-        if (wallNormal != Vector3.zero)
+        if (wallNormal != Vector3.zero && isMovingInto(rb3D.velocity, wallNormal))
         {
             limitMovementUpPlane(wallNormal);
             wallNormals.Add(wallNormal);
         }
 
         /* Check if we are moving into a wall */
-        Vector3 direction = rb3D.velocity.normalized;
-
         for (int i = 0; i < 3; i++)
         {
+            Vector3 direction = rb3D.velocity.normalized;
             Vector3 origin = rb3D.position + (Vector3.up * boundingRadius) + (direction * -0.1f);
             float dist = 0.1f + rb3D.velocity.magnitude * Time.deltaTime;
 
             RaycastHit hitInfo;
 
-            if (Physics.SphereCast(origin, boundingRadius, direction, out hitInfo, dist, groundCheckMask.value) && isWall(hitInfo.normal))
+            /* Spherecast in the direction we are moving and check if we will hit a wall. Also check that we are
+             * in fact moving into the wall (it seems that it is possible to clip the corner of a wall even 
+             * though the char/spherecast is moving away from the wall) */
+            if (Physics.SphereCast(origin, boundingRadius, direction, out hitInfo, dist, groundCheckMask.value) 
+                && isWall(hitInfo.normal) && isMovingInto(direction, hitInfo.normal))
             {
                 if(wallNormals.Contains(hitInfo.normal))
                 {
@@ -273,8 +276,6 @@ public class MovementAIRigidbody : MonoBehaviour {
                     limitMovementUpPlane(hitInfo.normal);
 
                     wallNormals.Add(hitInfo.normal);
-
-                    direction = rb3D.velocity.normalized;
                 }
             } else
             {
@@ -283,49 +284,48 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
     }
 
+    private bool isMovingInto(Vector3 dir, Vector3 normal)
+    {
+        return Vector3.Angle(dir, normal) > 90f;
+    }
+
     private void limitMovementUpPlane(Vector3 planeNormal)
     {
-        float angle = Vector3.Angle(rb3D.velocity, planeNormal);
-        
-        /* If we are moving into the plane */
-        if (angle > 90f)
+        if(!rb3D.useGravity)
         {
-            if(!rb3D.useGravity)
+            Vector3 groundPlaneIntersection = Vector3.Cross(movementNormal, planeNormal);
+
+            rb3D.velocity = Vector3.Project(rb3D.velocity, groundPlaneIntersection);
+        } else
+        {
+            /* Get vector pointing down the slope) */
+            Vector3 rightSlope = Vector3.Cross(planeNormal, Vector3.down);
+            Vector3 downSlope = Vector3.Cross(rightSlope, planeNormal);
+
+            /* Keep any downward movement (like gravity) */
+            float yComponent = Mathf.Min(0f, rb3D.velocity.y);
+
+            /* Project the remaining movement on to the wall */
+            Vector3 newVel = rb3D.velocity;
+            newVel.y = 0;
+            newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
+
+            /* If the remaining movement is moving up the wall then make it only go left/right.
+                * I believe this will be true for all  ramp walls but false for all ceiling walls */
+            if (Vector3.Angle(downSlope, newVel) > 90f)
             {
-                Vector3 groundPlaneIntersection = Vector3.Cross(movementNormal, planeNormal);
-
-                rb3D.velocity = Vector3.Project(rb3D.velocity, groundPlaneIntersection);
-            } else
-            {
-                /* Get vector pointing down the slope) */
-                Vector3 rightSlope = Vector3.Cross(planeNormal, Vector3.down);
-                Vector3 downSlope = Vector3.Cross(rightSlope, planeNormal);
-
-                /* Keep any downward movement (like gravity) */
-                float yComponent = Mathf.Min(0f, rb3D.velocity.y);
-
-                /* Project the remaining movement on to the wall */
-                Vector3 newVel = rb3D.velocity;
-                newVel.y = 0;
-                newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
-
-                /* If the remaining movement is moving up the wall then make it only go left/right.
-                 * I believe this will be true for all  ramp walls but false for all ceiling walls */
-                if (Vector3.Angle(downSlope, newVel) > 90f)
-                {
-                    newVel = Vector3.Project(newVel, rightSlope);
-                }
-
-                /* Add the downward movement back in and make sure we are still moving along the wall
-                 * so future sphere casts won't hit this wall */
-                newVel.y = yComponent;
-                newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
-
-                rb3D.velocity = newVel;
-
-                //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
-                //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (planeMovement.normalized), Color.magenta);
+                newVel = Vector3.Project(newVel, rightSlope);
             }
+
+            /* Add the downward movement back in and make sure we are still moving along the wall
+                * so future sphere casts won't hit this wall */
+            newVel.y = yComponent;
+            newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
+
+            rb3D.velocity = newVel;
+
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
+            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (planeMovement.normalized), Color.magenta);
         }
     }
 

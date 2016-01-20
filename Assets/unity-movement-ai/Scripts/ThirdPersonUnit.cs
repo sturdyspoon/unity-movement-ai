@@ -36,6 +36,7 @@ public class ThirdPersonUnit : MonoBehaviour {
 
         horAxis = Input.GetAxisRaw("Horizontal");
         vertAxis = Input.GetAxisRaw("Vertical");
+        //vertAxis = 1f;
 
         if (Input.GetKey(KeyCode.Q))
         {
