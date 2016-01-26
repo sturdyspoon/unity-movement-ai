@@ -153,6 +153,7 @@ public class SteeringBasics : MonoBehaviour {
 
         /* Get the right direction for the linear acceleration */
         Vector3 targetVelocity = targetPosition - rb.position;
+        //Debug.Log("Displacement " + targetVelocity.ToString("f4"));
 		
 		/* Get the distance to the target */
 		float dist = targetVelocity.magnitude;
@@ -189,7 +190,7 @@ public class SteeringBasics : MonoBehaviour {
 			acceleration.Normalize();
 			acceleration *= maxAcceleration;
 		}
-
+        //Debug.Log("Accel " + acceleration.ToString("f4"));
 		return acceleration;
 	}
 

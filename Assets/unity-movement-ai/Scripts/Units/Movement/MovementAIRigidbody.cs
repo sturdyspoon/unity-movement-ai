@@ -14,16 +14,11 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     [Header("3D Grounded Settings")]
 
-    /* Controls how close the ground can be before the character is considered to be on it */
-    public float groundCheckDistance = 0.01f;
-
     /* If the character should try to stay grounded */
     public bool stayGrounded = true;
 
     /* How far the character should look below him for ground to stay grounded to */
-    public float groundFollowDistance = 0.3f;
-
-    public float groundFollowGravityMult = 4f;
+    public float fooGroundFollowDistance = 0.1f;
 
     /* The sphere cast mask that determines what layers should be consider the ground */
     public LayerMask groundCheckMask = Physics.DefaultRaycastLayers;
@@ -147,61 +142,49 @@ public class MovementAIRigidbody : MonoBehaviour {
             movementNormal = Vector3.up;
             rb3D.useGravity = true;
 
-            RaycastHit hitInfo;
-
-            /* Make the sphere cast max distance equal to the ground check distance or the ground follow distance if the character is trying to stay grounded */
-            float maxOnGroundDist = (0.1f + groundCheckDistance);
-
-            float maxDist = maxOnGroundDist;
-
-            if (stayGrounded && groundCheckDistance < groundFollowDistance)
-            {
-                maxDist = (0.1f + groundFollowDistance);
-            }
+            RaycastHit downHit;
 
             /* 
             Start the ray with a small offset of 0.1f from inside the character. The
             transform.position of the characer is assumed to be at the base of the character.
              */
-            if (Physics.SphereCast(transform.position + (Vector3.up * (0.1f + boundingRadius)), boundingRadius, Vector3.down, out hitInfo, maxDist, groundCheckMask.value))
+            if (sphereCast(Vector3.down, out downHit, fooGroundFollowDistance))
             {
-                if (isWall(hitInfo.normal))
+                if (isWall(downHit.normal))
                 {
                     /* Get vector pointing down the wall */
-                    Vector3 rightSlope = Vector3.Cross(hitInfo.normal, Vector3.down);
-                    Vector3 downSlope = Vector3.Cross(rightSlope, hitInfo.normal);
+                    Vector3 rightSlope = Vector3.Cross(downHit.normal, Vector3.down);
+                    Vector3 downSlope = Vector3.Cross(rightSlope, downHit.normal);
 
-                    RaycastHit rayHitInfo;
+                    /* Raise the origin a tiny amount above the wall to avoid problems when the downSlope
+                     * is just barely moving into the wall rather than being completely inside the wall
+                     * plane (this occurs due to floating point inaccuracies with the cross products) */
+                    //Vector3 origin = hitInfo.point;
+                    //Vector3 raycastOrigin = hitInfo.point + (hitInfo.normal * 0.001f);
+                    float remainingDist = fooGroundFollowDistance - downHit.distance;
+
+                    RaycastHit downWallHit;
 
                     /* If we found ground that we would have hit if not for the wall then follow it */
-                    if (Physics.Raycast(hitInfo.point, downSlope, out rayHitInfo) && !isWall(rayHitInfo.normal))
+                    if (remainingDist > 0 && sphereCast(downSlope, out downWallHit, remainingDist) && !isWall(downWallHit.normal))
                     {
-                        //SteeringBasics.debugCross(rayHitInfo.point, 0.5f, Color.magenta);
-
-                        Vector3 contactPointOnChar = (transform.position + (Vector3.up * boundingRadius)) - (rayHitInfo.normal * boundingRadius);
-
-                        //SteeringBasics.debugCross(contactPointOnChar, 0.5f, Color.magenta);
-
-                        float distToPlane = Vector3.Dot((contactPointOnChar - rayHitInfo.point), rayHitInfo.normal);
-
-                        float downwardDistToPlane = Mathf.Abs(distToPlane / Vector3.Dot(rayHitInfo.normal, Vector3.down));
-
-                        if(downwardDistToPlane + hitInfo.distance < maxDist)
-                        {
-                            foundGround(rayHitInfo.normal, downwardDistToPlane + hitInfo.distance <= maxOnGroundDist);
-                        }
+                        Vector3 newPos = rb3D.position + (Vector3.down * downHit.distance) + (downSlope.normalized * downWallHit.distance);
+                        foundGround(downWallHit.normal, newPos);
                     }
 
                     /* If we are close enough to the hit to be touching it then we are on the wall */
-                    if (hitInfo.distance <= maxOnGroundDist)
+                    if (downHit.distance <= 0.11f)
                     {
-                        wallNormal = hitInfo.normal;
+                        wallNormal = downHit.normal;
+                        //Debug.DrawRay(hitInfo.point, hitInfo.normal, new Color(1f, 0.38823f, 0.27843f), 1f, false);
                     }
                 }
                 /* Else we've found walkable ground */
                 else
                 {
-                    foundGround(hitInfo.normal, hitInfo.distance <= maxOnGroundDist);
+                    Vector3 newPos = rb3D.position + (Vector3.down * downHit.distance);
+                    foundGround(downHit.normal, newPos);
+                    //SteeringBasics.debugCross(hitInfo.point + Vector3.up * (hitInfo.distance - 0.1f), 0.5f, Color.red, 0, false);
                 }
             }
 
@@ -209,20 +192,35 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
     }
 
-    private void foundGround(Vector3 normal, bool isCloseEnough)
+    private bool sphereCast(Vector3 dir, out RaycastHit hitInfo, float dist)
+    {
+        /* The position of the characer is assumed to be at the base of the character,
+         * so make sure the sphere origin is truly in the middle of the character sphere. */
+        Vector3 origin = rb3D.position + (Vector3.up * boundingRadius);
+
+        /* Start the ray with a small offset of 0.1f from inside the character, so
+         * it will hit any colliders that the character is touching. */
+        origin += -0.1f * dir;
+
+        float maxDist = (0.1f + dist);
+
+        if(Physics.SphereCast(origin, boundingRadius, dir, out hitInfo, maxDist, groundCheckMask.value))
+        {
+            /* Remove the small offset from the distance before returning*/
+            hitInfo.distance -= 0.1f;
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
+
+    private void foundGround(Vector3 normal, Vector3 newPos)
     {
         movementNormal = normal;
-
-        /* If we are close enough to the hit to be touching it then turn off the gravity */
-        if (isCloseEnough)
-        {
-            rb3D.useGravity = false;
-        }
-        /* Else we are close enough to see ground that we want to follow but not as close as we want, so apply an acceleration force downwards */
-        else
-        {
-            rb3D.velocity += Physics.gravity * groundFollowGravityMult * Time.deltaTime;
-        }
+        rb3D.useGravity = false;
+        rb3D.MovePosition(newPos);
+        rb3D.velocity = Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
     }
 
     private bool isWall(Vector3 surfNormal)
@@ -276,6 +274,7 @@ public class MovementAIRigidbody : MonoBehaviour {
                     limitMovementUpPlane(hitInfo.normal);
 
                     wallNormals.Add(hitInfo.normal);
+                    //Debug.DrawRay(hitInfo.point, hitInfo.normal, new Color(1f, 0.6471f, 0), 1, false);
                 }
             } else
             {
@@ -296,6 +295,16 @@ public class MovementAIRigidbody : MonoBehaviour {
             Vector3 groundPlaneIntersection = Vector3.Cross(movementNormal, planeNormal);
 
             rb3D.velocity = Vector3.Project(rb3D.velocity, groundPlaneIntersection);
+
+            if(Vector3.Angle(rb3D.velocity, Vector3.up) < 90f - slopeLimit)
+            {
+                                    Vector3 vel = Vector3.zero;
+                    if(rb3D.useGravity)
+                    {
+                        vel.y = rb3D.velocity.y;
+                    }
+                    rb3D.velocity = vel;
+            }
         } else
         {
             /* Get vector pointing down the slope) */
@@ -402,8 +411,16 @@ public class MovementAIRigidbody : MonoBehaviour {
                     count++;
                     //Debug.Log(count + " " + rb3D.velocity.ToString("f4"));
 
-                    Vector3 nonGroundVel = rb3D.velocity - Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
-                    rb3D.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, movementNormal) * value);
+                    if(rb3D.useGravity)
+                    {
+                        Vector3 nonGroundVel = rb3D.velocity - Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
+                        rb3D.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, movementNormal) * value);
+                    } else
+                    {
+                        rb3D.velocity = (Quaternion.FromToRotation(Vector3.up, movementNormal) * value);
+                    }
+
+                    //Debug.Log("Value Vel " + value.ToString("f4"));
 
                     limitMovementOnSteepSlopes();
                 }
