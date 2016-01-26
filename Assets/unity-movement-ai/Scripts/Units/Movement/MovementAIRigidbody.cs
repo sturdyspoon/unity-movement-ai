@@ -98,6 +98,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (movementNormal), Color.yellow, 0f, false);
 
         //Debug.Log("waitforfixedupdate " + transform.position.ToString("f4"));
+        //Debug.Log(rb3D.velocity.magnitude);
         StartCoroutine(debugDraw());
     }
 
@@ -198,16 +199,16 @@ public class MovementAIRigidbody : MonoBehaviour {
          * so make sure the sphere origin is truly in the middle of the character sphere. */
         Vector3 origin = rb3D.position + (Vector3.up * boundingRadius);
 
-        /* Start the ray with a small offset of 0.1f from inside the character, so
+        /* Start the ray with a small offset of 0.01f from inside the character, so
          * it will hit any colliders that the character is touching. */
-        origin += -0.1f * dir;
+        origin += -0.01f * dir;
 
-        float maxDist = (0.1f + dist);
+        float maxDist = (0.01f + dist);
 
         if(Physics.SphereCast(origin, boundingRadius, dir, out hitInfo, maxDist, groundCheckMask.value))
         {
             /* Remove the small offset from the distance before returning*/
-            hitInfo.distance -= 0.1f;
+            hitInfo.distance -= 0.01f;
             return true;
         } else
         {
