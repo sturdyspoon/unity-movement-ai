@@ -157,17 +157,12 @@ public class MovementAIRigidbody : MonoBehaviour {
                     Vector3 rightSlope = Vector3.Cross(downHit.normal, Vector3.down);
                     Vector3 downSlope = Vector3.Cross(rightSlope, downHit.normal);
 
-                    /* Raise the origin a tiny amount above the wall to avoid problems when the downSlope
-                     * is just barely moving into the wall rather than being completely inside the wall
-                     * plane (this occurs due to floating point inaccuracies with the cross products) */
-                    //Vector3 origin = hitInfo.point;
-                    //Vector3 raycastOrigin = hitInfo.point + (hitInfo.normal * 0.001f);
                     float remainingDist = fooGroundFollowDistance - downHit.distance;
 
                     RaycastHit downWallHit;
 
                     /* If we found ground that we would have hit if not for the wall then follow it */
-                    if (remainingDist > 0 && sphereCast(downSlope, out downWallHit, remainingDist) && !isWall(downWallHit.normal))
+                    if (remainingDist > 0 && sphereCast(downSlope, out downWallHit, remainingDist, downHit.normal) && !isWall(downWallHit.normal))
                     {
                         Vector3 newPos = rb3D.position + (Vector3.down * downHit.distance) + (downSlope.normalized * downWallHit.distance);
                         foundGround(downWallHit.normal, newPos);
@@ -193,11 +188,16 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
     }
 
-    private bool sphereCast(Vector3 dir, out RaycastHit hitInfo, float dist)
+    private bool sphereCast(Vector3 dir, out RaycastHit hitInfo, float dist, Vector3 planeNormal = default(Vector3))
     {
         /* The position of the characer is assumed to be at the base of the character,
-         * so make sure the sphere origin is truly in the middle of the character sphere. */
-        Vector3 origin = rb3D.position + (Vector3.up * boundingRadius);
+         * so make sure the sphere origin is truly in the middle of the character sphere.
+         *
+         * Also if we are given a planeNormal then raise the origin a tiny amount away
+         * from the plane to avoid problems when the given dir is just barely moving  
+         * into the plane (this occurs due to floating point inaccuracies when the dir
+         * is calculated with cross products) */
+        Vector3 origin = rb3D.position + (Vector3.up * boundingRadius) + (planeNormal * 0.001f);
 
         /* Start the ray with a small offset of 0.01f from inside the character, so
          * it will hit any colliders that the character is touching. */
@@ -297,14 +297,10 @@ public class MovementAIRigidbody : MonoBehaviour {
 
             rb3D.velocity = Vector3.Project(rb3D.velocity, groundPlaneIntersection);
 
+            /* Don't move up the intersecting line if it is greater than our slope limit */
             if(Vector3.Angle(rb3D.velocity, Vector3.up) < 90f - slopeLimit)
             {
-                                    Vector3 vel = Vector3.zero;
-                    if(rb3D.useGravity)
-                    {
-                        vel.y = rb3D.velocity.y;
-                    }
-                    rb3D.velocity = vel;
+                rb3D.velocity = Vector3.zero;
             }
         } else
         {
@@ -412,12 +408,18 @@ public class MovementAIRigidbody : MonoBehaviour {
                     count++;
                     //Debug.Log(count + " " + rb3D.velocity.ToString("f4"));
 
-                    if(rb3D.useGravity)
+                    /* If the char is not on the ground then then we will move along the x/z
+                     * plane and keep any y movement we already have */
+                    if (rb3D.useGravity)
                     {
-                        Vector3 nonGroundVel = rb3D.velocity - Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
-                        rb3D.velocity = nonGroundVel + (Quaternion.FromToRotation(Vector3.up, movementNormal) * value);
-                    } else
+                        value.y = rb3D.velocity.y;
+                        rb3D.velocity = value;
+                    }
+                    /* Else only move along the ground plane */
+                    else
                     {
+                        /* Assume the value is given as a vector on the x/z plane and rotate it to be
+                         * on the ground plane */
                         rb3D.velocity = (Quaternion.FromToRotation(Vector3.up, movementNormal) * value);
                     }
 
