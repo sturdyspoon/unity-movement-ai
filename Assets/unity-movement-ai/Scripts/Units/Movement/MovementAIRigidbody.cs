@@ -169,7 +169,7 @@ public class MovementAIRigidbody : MonoBehaviour {
                     }
 
                     /* If we are close enough to the hit to be touching it then we are on the wall */
-                    if (downHit.distance <= 0.11f)
+                    if (downHit.distance <= 0.01f)
                     {
                         wallNormal = downHit.normal;
                         //Debug.DrawRay(hitInfo.point, hitInfo.normal, new Color(1f, 0.38823f, 0.27843f), 1f, false);
@@ -188,6 +188,14 @@ public class MovementAIRigidbody : MonoBehaviour {
         }
     }
 
+    /* Make the spherecast offset slightly bigger than the max allowed collider overlap. This was
+     * known as Physics.minPenetrationForPenalty and had a default value of 0.05f, but has since
+     * been removed and supposedly replaced by Physics.defaultContactOffset/Collider.contactOffset.
+     * My tests show that as of Unity 5.3.0f4 this is not %100 true and Unity still seems to be 
+     * allowing overlaps of 0.05f somewhere internally. So I'm setting my spherecast offset to be
+     * slightly bigger than 0.05f */
+    private float spherecastOffset = 0.051f;
+
     private bool sphereCast(Vector3 dir, out RaycastHit hitInfo, float dist, Vector3 planeNormal = default(Vector3))
     {
         /* The position of the characer is assumed to be at the base of the character,
@@ -199,16 +207,16 @@ public class MovementAIRigidbody : MonoBehaviour {
          * is calculated with cross products) */
         Vector3 origin = rb3D.position + (Vector3.up * boundingRadius) + (planeNormal * 0.001f);
 
-        /* Start the ray with a small offset of 0.01f from inside the character, so
-         * it will hit any colliders that the character is touching. */
-        origin += -0.01f * dir;
+        /* Start the ray with a small offset from inside the character, so it will
+         * hit any colliders that the character is already touching. */
+        origin += -spherecastOffset * dir;
 
-        float maxDist = (0.01f + dist);
+        float maxDist = (spherecastOffset + dist);
 
         if(Physics.SphereCast(origin, boundingRadius, dir, out hitInfo, maxDist, groundCheckMask.value))
         {
             /* Remove the small offset from the distance before returning*/
-            hitInfo.distance -= 0.01f;
+            hitInfo.distance -= spherecastOffset;
             return true;
         } else
         {
