@@ -88,6 +88,8 @@ public class MovementAIRigidbody : MonoBehaviour {
         FixedUpdate();
     }
 
+    private int countDebug = 0;
+
     private IEnumerator debugDraw()
     {
         yield return new WaitForFixedUpdate();
@@ -99,6 +101,8 @@ public class MovementAIRigidbody : MonoBehaviour {
 
         //Debug.Log("waitforfixedupdate " + transform.position.ToString("f4"));
         //Debug.Log(rb3D.velocity.magnitude);
+
+        countDebug = 0;
         StartCoroutine(debugDraw());
     }
 
@@ -253,8 +257,23 @@ public class MovementAIRigidbody : MonoBehaviour {
         for (int i = 0; i < 3; i++)
         {
             Vector3 direction = rb3D.velocity.normalized;
-            Vector3 origin = rb3D.position + (Vector3.up * boundingRadius) + (direction * -0.1f);
-            float dist = 0.1f + rb3D.velocity.magnitude * Time.deltaTime;
+            Vector3 origin = rb3D.position + (Vector3.up * boundingRadius) + (direction * -spherecastOffset);
+            float dist = spherecastOffset + rb3D.velocity.magnitude * Time.deltaTime;
+
+            countDebug++;
+
+            if(i == 0)
+            {
+                Debug.DrawRay(origin + Vector3.up * 0.05f * countDebug, direction, new Color(0.953f, 0.898f, 0.961f), 0f, false);
+            }
+            else if(i == 1)
+            {
+                Debug.DrawRay(origin + Vector3.up * 0.05f * countDebug, direction, new Color(0.612f, 0.153f, 0.69f), 0f, false);
+            }
+            else
+            {
+                Debug.DrawRay(origin + Vector3.up * 0.05f * countDebug, direction, new Color(0.29f, 0.078f, 0.549f), 0f, false);
+            }
 
             RaycastHit hitInfo;
 
@@ -277,7 +296,7 @@ public class MovementAIRigidbody : MonoBehaviour {
                 } else
                 {   
                     /* Move up to the on coming wall */
-                    float moveUpDist = Mathf.Max(0, hitInfo.distance - 0.1f);
+                    float moveUpDist = Mathf.Max(0, hitInfo.distance - spherecastOffset);
                     rb3D.MovePosition(rb3D.position + (direction * moveUpDist));
 
                     limitMovementUpPlane(hitInfo.normal);
