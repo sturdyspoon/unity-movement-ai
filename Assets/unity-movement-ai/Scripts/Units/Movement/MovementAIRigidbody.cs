@@ -495,6 +495,36 @@ public class MovementAIRigidbody : MonoBehaviour {
     }
 
     /// <summary>
+    /// The angularVelocity for the rigidbody. If its a 3D rigidbody underneath then the angularVelocity is for the y axis only (setting the angular velocity will clear out the x/z angular velocities).
+    /// </summary>
+    public float angularVelocity
+    {
+        get
+        {
+            if (is3D)
+            {
+                return rb3D.angularVelocity.y;
+            }
+            else
+            {
+                return rb2D.angularVelocity;
+            }
+        }
+
+        set
+        {
+            if (is3D)
+            {
+                rb3D.angularVelocity = new Vector3(0, value, 0);
+            }
+            else
+            {
+                rb2D.angularVelocity = value;
+            }
+        }
+    }
+
+    /// <summary>
     /// Rotates the rigidbody to angle (given in degrees)
     /// </summary>
     /// <param name="angle"></param>
