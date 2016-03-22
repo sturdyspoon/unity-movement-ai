@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Text;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(MovementAIRigidbody))]
 [RequireComponent(typeof(Camera))]
@@ -88,7 +90,6 @@ public class ThirdPersonUnit : MonoBehaviour {
 
     private void rotateChar()
     {
-        float yRot = horAxis * turnSpeed * Time.deltaTime;
-        rb.MoveRotation(transform.eulerAngles.y + yRot);
+        rb.angularVelocity = horAxis * turnSpeed * Mathf.Deg2Rad;
     }
 }
