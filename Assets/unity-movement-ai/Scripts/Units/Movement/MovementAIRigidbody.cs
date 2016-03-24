@@ -657,6 +657,7 @@ public class MovementAIRigidbody : MonoBehaviour {
     /* This function is here to ensure we have a rigidbody (2D or 3D) */
 
     //Since we use editor calls we omit this function on build time
+    #if UNITY_EDITOR
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
     public void Reset()
     {
@@ -675,4 +676,5 @@ public class MovementAIRigidbody : MonoBehaviour {
             }
         }
     }
+    #endif
 }
