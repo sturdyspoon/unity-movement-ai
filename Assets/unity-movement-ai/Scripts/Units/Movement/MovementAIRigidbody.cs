@@ -172,7 +172,7 @@ public class MovementAIRigidbody : MonoBehaviour
                     /* If we found ground that we would have hit if not for the wall then follow it */
                     if (remainingDist > 0 && sphereCast(downSlope, out downWallHit, remainingDist, groundCheckMask.value, downHit.normal) && !isWall(downWallHit.normal))
                     {
-                        Vector3 newPos = rb3D.position + (Vector3.down * downHit.distance) + (downSlope.normalized * downWallHit.distance);
+                        Vector3 newPos = rb3D.position + (downSlope.normalized * downWallHit.distance);
                         foundGround(downWallHit.normal, newPos);
                     }
 
