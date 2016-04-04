@@ -6,7 +6,8 @@ using System.Collections.Generic;
 /// <summary>
 /// This is a wrapper class for either a Rigidbody or Rigidbody2D, so that either can be used with the Unity Movement AI code. 
 /// </summary>
-public class MovementAIRigidbody : MonoBehaviour {
+public class MovementAIRigidbody : MonoBehaviour
+{
     [Header("3D Settings")]
 
     /* Determines if the character should follow the ground or can fly any where in 3D space */
@@ -86,6 +87,8 @@ public class MovementAIRigidbody : MonoBehaviour {
         /* Call fixed update for 3D grounded characters to make sure they get proper 
          * ground / movement normals before their velocity is set */
         FixedUpdate();
+
+        Debug.Log(Vector3.Angle(Vector3.up, Vector3.zero));
     }
 
     private int countDebug = 0;
@@ -115,11 +118,12 @@ public class MovementAIRigidbody : MonoBehaviour {
             if (col != null)
             {
                 boundingRadius = Mathf.Max(rb3D.transform.localScale.x, rb3D.transform.localScale.y, rb3D.transform.localScale.z) * col.radius;
-            } else
+            }
+            else
             {
                 CapsuleCollider capCol = rb3D.GetComponent<CapsuleCollider>();
 
-                if(capCol != null)
+                if (capCol != null)
                 {
                     boundingRadius = Mathf.Max(rb3D.transform.localScale.x, rb3D.transform.localScale.z) * capCol.radius;
                 }
@@ -153,7 +157,7 @@ public class MovementAIRigidbody : MonoBehaviour {
             Start the ray with a small offset of 0.1f from inside the character. The
             transform.position of the characer is assumed to be at the base of the character.
              */
-            if (sphereCast(Vector3.down, out downHit, fooGroundFollowDistance))
+            if (sphereCast(Vector3.down, out downHit, fooGroundFollowDistance, groundCheckMask.value))
             {
                 if (isWall(downHit.normal))
                 {
@@ -166,7 +170,7 @@ public class MovementAIRigidbody : MonoBehaviour {
                     RaycastHit downWallHit;
 
                     /* If we found ground that we would have hit if not for the wall then follow it */
-                    if (remainingDist > 0 && sphereCast(downSlope, out downWallHit, remainingDist, downHit.normal) && !isWall(downWallHit.normal))
+                    if (remainingDist > 0 && sphereCast(downSlope, out downWallHit, remainingDist, groundCheckMask.value, downHit.normal) && !isWall(downWallHit.normal))
                     {
                         Vector3 newPos = rb3D.position + (Vector3.down * downHit.distance) + (downSlope.normalized * downWallHit.distance);
                         foundGround(downWallHit.normal, newPos);
@@ -200,7 +204,7 @@ public class MovementAIRigidbody : MonoBehaviour {
      * slightly bigger than 0.05f */
     private float spherecastOffset = 0.051f;
 
-    private bool sphereCast(Vector3 dir, out RaycastHit hitInfo, float dist, Vector3 planeNormal = default(Vector3))
+    private bool sphereCast(Vector3 dir, out RaycastHit hitInfo, float dist, int layerMask, Vector3 planeNormal = default(Vector3))
     {
         /* The position of the characer is assumed to be at the base of the character,
          * so make sure the sphere origin is truly in the middle of the character sphere.
@@ -217,12 +221,13 @@ public class MovementAIRigidbody : MonoBehaviour {
 
         float maxDist = (spherecastOffset + dist);
 
-        if(Physics.SphereCast(origin, boundingRadius, dir, out hitInfo, maxDist, groundCheckMask.value))
+        if (Physics.SphereCast(origin, boundingRadius, dir, out hitInfo, maxDist, layerMask))
         {
             /* Remove the small offset from the distance before returning*/
             hitInfo.distance -= spherecastOffset;
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -244,29 +249,33 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     private void limitMovementOnSteepSlopes()
     {
-        HashSet<Vector3> wallNormals = new HashSet<Vector3>();
+        Vector3 startVelocity = rb3D.velocity;
 
         /* If we are currently on a wall then limit our movement */
         if (wallNormal != Vector3.zero && isMovingInto(rb3D.velocity, wallNormal))
         {
-            limitMovementUpPlane(wallNormal);
-            wallNormals.Add(wallNormal);
+            rb3D.velocity = limitVelocityOnWall(rb3D.velocity, wallNormal);
+        }
+        /* Else we have no wall or we are moving away from the wall so we will no longer be touching it */
+        else
+        {
+            wallNormal = Vector3.zero;
         }
 
         /* Check if we are moving into a wall */
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 2; i++)
         {
             Vector3 direction = rb3D.velocity.normalized;
-            Vector3 origin = rb3D.position + (Vector3.up * boundingRadius) + (direction * -spherecastOffset);
-            float dist = spherecastOffset + rb3D.velocity.magnitude * Time.deltaTime;
+            float dist = rb3D.velocity.magnitude * Time.deltaTime;
 
+            Vector3 origin = rb3D.position + (Vector3.up * boundingRadius);
             countDebug++;
 
-            if(i == 0)
+            if (i == 0)
             {
                 Debug.DrawRay(origin + Vector3.up * 0.05f * countDebug, direction, new Color(0.953f, 0.898f, 0.961f), 0f, false);
             }
-            else if(i == 1)
+            else if (i == 1)
             {
                 Debug.DrawRay(origin + Vector3.up * 0.05f * countDebug, direction, new Color(0.612f, 0.153f, 0.69f), 0f, false);
             }
@@ -280,31 +289,41 @@ public class MovementAIRigidbody : MonoBehaviour {
             /* Spherecast in the direction we are moving and check if we will hit a wall. Also check that we are
              * in fact moving into the wall (it seems that it is possible to clip the corner of a wall even 
              * though the char/spherecast is moving away from the wall) */
-            if (Physics.SphereCast(origin, boundingRadius, direction, out hitInfo, dist, groundCheckMask.value) 
-                && isWall(hitInfo.normal) && isMovingInto(direction, hitInfo.normal))
+            if (sphereCast(direction, out hitInfo, dist, groundCheckMask.value) && isWall(hitInfo.normal)
+                && isMovingInto(direction, hitInfo.normal))
             {
-                if(wallNormals.Contains(hitInfo.normal))
+                Vector3 projectedVel = limitVelocityOnWall(rb3D.velocity, hitInfo.normal);
+                Vector3 projectedStartVel = limitVelocityOnWall(startVelocity, hitInfo.normal);
+
+                /* If we have a previous wall. And if the latest velocity is moving into the previous wall or if 
+                 * our starting velocity projected onto this new wall is moving into the previous wall then stop
+                 * movement */
+                if (wallNormal != Vector3.zero && (isMovingInto(projectedVel, wallNormal) || isMovingInto(projectedStartVel, wallNormal)))
                 {
                     Vector3 vel = Vector3.zero;
-                    if(rb3D.useGravity)
+                    if (rb3D.useGravity)
                     {
                         vel.y = rb3D.velocity.y;
                     }
                     rb3D.velocity = vel;
 
                     break;
-                } else
-                {   
+                }
+                /* Else move along the wall */
+                else
+                {
                     /* Move up to the on coming wall */
-                    float moveUpDist = Mathf.Max(0, hitInfo.distance - spherecastOffset);
+                    float moveUpDist = Mathf.Max(0, hitInfo.distance);
                     rb3D.MovePosition(rb3D.position + (direction * moveUpDist));
 
-                    limitMovementUpPlane(hitInfo.normal);
+                    rb3D.velocity = projectedVel;
 
-                    wallNormals.Add(hitInfo.normal);
+                    /* Make this wall the previous wall */
+                    wallNormal = hitInfo.normal;
                     //Debug.DrawRay(hitInfo.point, hitInfo.normal, new Color(1f, 0.6471f, 0), 1, false);
                 }
-            } else
+            }
+            else
             {
                 break;
             }
@@ -316,20 +335,21 @@ public class MovementAIRigidbody : MonoBehaviour {
         return Vector3.Angle(dir, normal) > 90f;
     }
 
-    private void limitMovementUpPlane(Vector3 planeNormal)
+    private Vector3 limitVelocityOnWall(Vector3 velocity, Vector3 planeNormal)
     {
-        if(!rb3D.useGravity)
+        if (!rb3D.useGravity)
         {
             Vector3 groundPlaneIntersection = Vector3.Cross(movementNormal, planeNormal);
 
-            rb3D.velocity = Vector3.Project(rb3D.velocity, groundPlaneIntersection);
+            velocity = Vector3.Project(velocity, groundPlaneIntersection);
 
             /* Don't move up the intersecting line if it is greater than our slope limit */
-            if(Vector3.Angle(rb3D.velocity, Vector3.up) < 90f - slopeLimit)
+            if (Vector3.Angle(velocity, Vector3.up) < 90f - slopeLimit)
             {
-                rb3D.velocity = Vector3.zero;
+                velocity = Vector3.zero;
             }
-        } else
+        }
+        else
         {
             /* Get vector pointing down the slope) */
             Vector3 rightSlope = Vector3.Cross(planeNormal, Vector3.down);
@@ -355,27 +375,31 @@ public class MovementAIRigidbody : MonoBehaviour {
             newVel.y = yComponent;
             newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
 
-            rb3D.velocity = newVel;
+            velocity = newVel;
 
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
             //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (planeMovement.normalized), Color.magenta);
         }
+
+        return velocity;
     }
 
     public Vector3 position
     {
         get
         {
-            if(is3D)
+            if (is3D)
             {
                 if (canFly)
                 {
                     return rb3D.position;
-                } else
+                }
+                else
                 {
                     return new Vector3(rb3D.position.x, 0, rb3D.position.z);
                 }
-            } else
+            }
+            else
             {
                 return rb2D.position;
             }
@@ -400,7 +424,7 @@ public class MovementAIRigidbody : MonoBehaviour {
         return groundedCharVel;
     }
 
-    private int count = 0; 
+    private int count = 0;
 
     public Vector3 velocity
     {
@@ -408,10 +432,11 @@ public class MovementAIRigidbody : MonoBehaviour {
         {
             if (is3D)
             {
-                if(canFly)
+                if (canFly)
                 {
                     return rb3D.velocity;
-                } else
+                }
+                else
                 {
                     return getGroundedVelocity();
                 }
@@ -426,10 +451,11 @@ public class MovementAIRigidbody : MonoBehaviour {
         {
             if (is3D)
             {
-                if(canFly)
+                if (canFly)
                 {
                     rb3D.velocity = value;
-                } else
+                }
+                else
                 {
                     //Debug.Log("setvelocity " + transform.position.ToString("f4"));
                     count++;
@@ -581,7 +607,7 @@ public class MovementAIRigidbody : MonoBehaviour {
             v.z = 0;
         }
         /* Else if the charater is a 3D character who can't fly then ignore the y component */
-        else if(!canFly)
+        else if (!canFly)
         {
             v.y = 0;
         }
@@ -622,10 +648,11 @@ public class MovementAIRigidbody : MonoBehaviour {
 
     public override int GetHashCode()
     {
-        if(is3D)
+        if (is3D)
         {
             return rb3D.GetHashCode();
-        } else
+        }
+        else
         {
             return rb2D.GetHashCode();
         }
