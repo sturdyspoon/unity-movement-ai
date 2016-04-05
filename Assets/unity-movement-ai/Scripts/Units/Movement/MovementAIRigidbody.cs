@@ -98,6 +98,7 @@ public class MovementAIRigidbody : MonoBehaviour
         yield return new WaitForFixedUpdate();
 
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
+        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.ProjectOnPlane(velocity, movementNormal).normalized), Color.magenta, 0f, false);
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green, 0f, false);
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (wallNormal), Color.yellow, 0f, false);
         Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (movementNormal), Color.yellow, 0f, false);
@@ -516,6 +517,17 @@ public class MovementAIRigidbody : MonoBehaviour
                 Quaternion r = Quaternion.identity;
                 r.eulerAngles = new Vector3(0, 0, rb2D.rotation);
                 return r;
+            }
+        }
+
+        set
+        {
+            if(is3D)
+            {
+                rb3D.rotation = value;
+            } else
+            {
+                rb2D.rotation = value.eulerAngles.z;
             }
         }
     }

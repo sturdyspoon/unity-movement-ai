@@ -91,5 +91,7 @@ public class ThirdPersonUnit : MonoBehaviour {
     private void rotateChar()
     {
         rb.angularVelocity = horAxis * turnSpeed * Mathf.Deg2Rad;
+        // Clear out any x/z orientation
+        rb.rotation = Quaternion.Euler(0, rb.rotation.eulerAngles.y, 0);
     }
 }
