@@ -239,7 +239,8 @@ public class MovementAIRigidbody : MonoBehaviour
         movementNormal = normal;
         rb3D.useGravity = false;
         rb3D.MovePosition(newPos);
-        rb3D.velocity = Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
+        /* Reproject the velocity onto the ground plane in case the ground plane has changed this frame */
+        rb3D.velocity = projectOnPlane(rb3D.velocity, movementNormal);
     }
 
     private bool isWall(Vector3 surfNormal)
@@ -365,14 +366,14 @@ public class MovementAIRigidbody : MonoBehaviour
             newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
 
             /* If the remaining movement is moving up the wall then make it only go left/right.
-                * I believe this will be true for all  ramp walls but false for all ceiling walls */
+             * I believe this will be true for all  ramp walls but false for all ceiling walls */
             if (Vector3.Angle(downSlope, newVel) > 90f)
             {
                 newVel = Vector3.Project(newVel, rightSlope);
             }
 
             /* Add the downward movement back in and make sure we are still moving along the wall
-                * so future sphere casts won't hit this wall */
+             * so future sphere casts won't hit this wall */
             newVel.y = yComponent;
             newVel = Vector3.ProjectOnPlane(newVel, planeNormal);
 
@@ -407,24 +408,6 @@ public class MovementAIRigidbody : MonoBehaviour
         }
     }
 
-    /* The following are only used for non flying 3D characters */
-    private Vector3 groundedCharVel = Vector3.zero;
-    private Vector3 lastVel = Vector3.zero;
-    private Vector3 lastMovementNormal = Vector3.up;
-
-    private Vector3 getGroundedVelocity()
-    {
-        if (movementNormal != lastMovementNormal || lastVel != rb3D.velocity)
-        {
-            groundedCharVel = Vector3.ProjectOnPlane(rb3D.velocity, movementNormal);
-            groundedCharVel = Quaternion.FromToRotation(movementNormal, Vector3.up) * groundedCharVel;
-            lastMovementNormal = movementNormal;
-            lastVel = rb3D.velocity;
-        }
-
-        return groundedCharVel;
-    }
-
     private int count = 0;
 
     public Vector3 velocity
@@ -439,7 +422,9 @@ public class MovementAIRigidbody : MonoBehaviour
                 }
                 else
                 {
-                    return getGroundedVelocity();
+                    Vector3 ret = rb3D.velocity;
+                    ret.y = 0;
+                    return ret.normalized * rb3D.velocity.magnitude;
                 }
             }
             else
@@ -456,6 +441,7 @@ public class MovementAIRigidbody : MonoBehaviour
                 {
                     rb3D.velocity = value;
                 }
+                /* Assume the value is given as a vector on the x/z plane for grounded chars*/
                 else
                 {
                     //Debug.Log("setvelocity " + transform.position.ToString("f4"));
@@ -472,9 +458,7 @@ public class MovementAIRigidbody : MonoBehaviour
                     /* Else only move along the ground plane */
                     else
                     {
-                        /* Assume the value is given as a vector on the x/z plane and rotate it to be
-                         * on the ground plane */
-                        rb3D.velocity = (Quaternion.FromToRotation(Vector3.up, movementNormal) * value);
+                        rb3D.velocity = projectOnPlane(value, movementNormal);
                     }
 
                     //Debug.Log("Value Vel " + value.ToString("f4"));
@@ -487,6 +471,16 @@ public class MovementAIRigidbody : MonoBehaviour
                 rb2D.velocity = value;
             }
         }
+    }
+
+    /// <summary>
+    /// Projects the given vector onto the plane, but makes sure to maintain the vector's x/z direction in the process.
+    /// </summary>
+    private Vector3 projectOnPlane(Vector3 vector, Vector3 planeNormal)
+    {
+        Vector3 newVel = vector;
+        newVel.y = (-planeNormal.x * vector.x - planeNormal.z * vector.z) / planeNormal.y;
+        return newVel.normalized * vector.magnitude;
     }
 
     public new Transform transform
