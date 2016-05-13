@@ -105,6 +105,8 @@ public class MovementAIRigidbody : MonoBehaviour
 
         //Debug.Log("waitforfixedupdate " + transform.position.ToString("f4"));
         //Debug.Log(rb3D.velocity.magnitude);
+        //Debug.Log(movementNormal.ToString("f4"));
+        //Debug.Log("--------------------------------------------------------------------------------");
 
         countDebug = 0;
         StartCoroutine(debugDraw());
@@ -143,7 +145,7 @@ public class MovementAIRigidbody : MonoBehaviour
 
     void FixedUpdate()
     {
-        //Debug.Log("fixed " + transform.position.ToString("f4"));
+        //Debug.Log("fixed " + count);
         /* If the character can't fly then find the current the ground normal */
         if (is3D && !canFly)
         {
@@ -239,8 +241,12 @@ public class MovementAIRigidbody : MonoBehaviour
         movementNormal = normal;
         rb3D.useGravity = false;
         rb3D.MovePosition(newPos);
-        /* Reproject the velocity onto the ground plane in case the ground plane has changed this frame */
-        rb3D.velocity = projectOnPlane(rb3D.velocity, movementNormal);
+        /* Reproject the velocity onto the ground plane in case the ground plane has changed this frame.
+         * Make sure to multiple by the movement velocity's magnitude, rather than the actual velocity
+         * since we could have been falling and now found ground so all the downward y velocity is not
+         * part of our movement speed. Technically I am projecting the actual velocity onto the ground
+         * plane rather than finding the real movement velocity's speed.*/
+        rb3D.velocity = dirOnPlane(rb3D.velocity, movementNormal) * velocity.magnitude;
     }
 
     private bool isWall(Vector3 surfNormal)
@@ -422,9 +428,12 @@ public class MovementAIRigidbody : MonoBehaviour
                 }
                 else
                 {
-                    Vector3 ret = rb3D.velocity;
-                    ret.y = 0;
-                    return ret.normalized * rb3D.velocity.magnitude;
+                    Vector3 dir = rb3D.velocity;
+                    dir.y = 0;
+
+                    float mag = Vector3.ProjectOnPlane(rb3D.velocity, movementNormal).magnitude;
+
+                    return dir.normalized * mag;
                 }
             }
             else
@@ -458,7 +467,7 @@ public class MovementAIRigidbody : MonoBehaviour
                     /* Else only move along the ground plane */
                     else
                     {
-                        rb3D.velocity = projectOnPlane(value, movementNormal);
+                        rb3D.velocity = dirOnPlane(value, movementNormal) * value.magnitude;
                     }
 
                     //Debug.Log("Value Vel " + value.ToString("f4"));
@@ -474,13 +483,13 @@ public class MovementAIRigidbody : MonoBehaviour
     }
 
     /// <summary>
-    /// Projects the given vector onto the plane, but makes sure to maintain the vector's x/z direction in the process.
+    /// Creates a vector that maintains x/z direction but lies on the plane.
     /// </summary>
-    private Vector3 projectOnPlane(Vector3 vector, Vector3 planeNormal)
+    private Vector3 dirOnPlane(Vector3 vector, Vector3 planeNormal)
     {
         Vector3 newVel = vector;
         newVel.y = (-planeNormal.x * vector.x - planeNormal.z * vector.z) / planeNormal.y;
-        return newVel.normalized * vector.magnitude;
+        return newVel.normalized;
     }
 
     public new Transform transform
