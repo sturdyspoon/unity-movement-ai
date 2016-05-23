@@ -19,15 +19,26 @@ public class Wander2 : MonoBehaviour {
 
     void Awake()
     {
-        //stuff for the wander behavior
-        float theta = Random.value * 2 * Mathf.PI;
-
-        //create a vector to a target position on the wander circle
-        wanderTarget = new Vector3(wanderRadius * Mathf.Cos(theta), wanderRadius * Mathf.Sin(theta), 0f);
-
         steeringBasics = GetComponent<SteeringBasics>();
 
         rb = GetComponent<MovementAIRigidbody>();
+    }
+
+    void Start()
+    {
+        /* Set up the wander target. Doing this in Start() because the MovementAIRigidbody
+         * sets itself up in Awake(). */
+        float theta = Random.value * 2 * Mathf.PI;
+
+        //create a vector to a target position on the wander circle
+        if (rb.is3D)
+        {
+            wanderTarget = new Vector3(wanderRadius * Mathf.Cos(theta), 0f, wanderRadius * Mathf.Sin(theta));
+        }
+        else
+        {
+            wanderTarget = new Vector3(wanderRadius * Mathf.Cos(theta), wanderRadius * Mathf.Sin(theta), 0f);
+        }
     }
 
     public Vector3 getSteering()
