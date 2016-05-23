@@ -19,7 +19,7 @@ GameObject:
   - 114: {fileID: 11422126}
   - 114: {fileID: 11468830}
   - 114: {fileID: 11480672}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: HideUnit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -141,13 +141,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canFly: 0
-  groundCheckDistance: 0.01
   stayGrounded: 1
-  groundFollowDistance: 0.3
-  groundFollowGravityMult: 4
+  fooGroundFollowDistance: 0.1
   groundCheckMask:
     serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 4294967035
   slopeLimit: 80
 --- !u!114 &11460090
 MonoBehaviour:
@@ -243,6 +241,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: castMask.m_Bits
       value: 4294967035
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: groundCheckMask.m_Bits
+      value: 4294967035
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

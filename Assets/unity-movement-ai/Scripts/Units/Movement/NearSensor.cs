@@ -6,21 +6,39 @@ public class NearSensor : MonoBehaviour {
 
 	public HashSet<MovementAIRigidbody> targets = new HashSet<MovementAIRigidbody>();
 
-	void OnTriggerEnter(Collider other) {
-		targets.Add (other.GetComponent<MovementAIRigidbody>());
+    private void tryToAdd(Component other)
+    {
+        MovementAIRigidbody rb = other.GetComponent<MovementAIRigidbody>();
+        if(rb != null)
+        {
+            targets.Add(rb);
+        }
+    }
+
+    private void tryToRemove(Component other)
+    {
+        MovementAIRigidbody rb = other.GetComponent<MovementAIRigidbody>();
+        if (rb != null)
+        {
+            targets.Remove(rb);
+        }
+    }
+
+    void OnTriggerEnter(Collider other) {
+        tryToAdd(other);
 	}
 	
 	void OnTriggerExit(Collider other) {
-		targets.Remove (other.GetComponent<MovementAIRigidbody>());
+        tryToRemove(other);
 	}
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        targets.Add(other.GetComponent<MovementAIRigidbody>());
+        tryToAdd(other);
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        targets.Remove(other.GetComponent<MovementAIRigidbody>());
+        tryToRemove(other);
     }
 }
