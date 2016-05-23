@@ -17,7 +17,7 @@ GameObject:
   - 114: {fileID: 11461840}
   - 114: {fileID: 11416706}
   - 114: {fileID: 11437948}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: WallAvoidanceUnit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,13 +164,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canFly: 0
-  groundCheckDistance: 0.01
   stayGrounded: 1
-  groundFollowDistance: 0.3
-  groundFollowGravityMult: 4
+  fooGroundFollowDistance: 0.1
   groundCheckMask:
     serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 4294967035
   slopeLimit: 80
 --- !u!135 &13547376
 SphereCollider:
@@ -231,6 +229,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: castMask.m_Bits
       value: 4294967035
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: groundCheckMask.m_Bits
+      value: 4294967035
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
