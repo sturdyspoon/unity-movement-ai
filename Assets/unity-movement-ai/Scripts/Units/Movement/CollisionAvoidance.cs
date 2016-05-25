@@ -27,15 +27,14 @@ public class CollisionAvoidance : MonoBehaviour {
         /* The first target that will collide and other data that
 		 * we will need and can avoid recalculating */
         MovementAIRigidbody firstTarget = null;
-        //float firstMinSeparation = 0, firstDistance = 0;
         float firstMinSeparation = 0, firstDistance = 0, firstRadius = 0;
         Vector3 firstRelativePos = Vector3.zero, firstRelativeVel = Vector3.zero;
 
         foreach (MovementAIRigidbody r in targets)
         {
             /* Calculate the time to collision */
-            Vector3 relativePos = transform.position - r.position;
-            Vector3 relativeVel = rb.velocity - r.velocity;
+            Vector3 relativePos = rb.realPosition - r.realPosition;
+            Vector3 relativeVel = rb.realVelocity - r.realVelocity;
             float distance = relativePos.magnitude;
             float relativeSpeed = relativeVel.magnitude;
 
@@ -53,7 +52,6 @@ public class CollisionAvoidance : MonoBehaviour {
             float targetRadius = r.boundingRadius;
 
             if (minSeparation > rb.boundingRadius + targetRadius)
-            //if (minSeparation > 2 * agentRadius)
             {
                 continue;
             }
@@ -82,9 +80,8 @@ public class CollisionAvoidance : MonoBehaviour {
         /* If we are going to collide with no separation or if we are already colliding then 
 		 * steer based on current position */
         if (firstMinSeparation <= 0 || firstDistance < rb.boundingRadius + firstRadius)
-        //if (firstMinSeparation <= 0 || firstDistance < 2 * agentRadius)
         {
-            acceleration = transform.position - firstTarget.position;
+            acceleration = rb.realPosition - firstTarget.realPosition;
         }
         /* Else calculate the future relative position */
         else
@@ -93,6 +90,7 @@ public class CollisionAvoidance : MonoBehaviour {
         }
 
         /* Avoid the target */
+        acceleration = rb.convertVector(acceleration);
         acceleration.Normalize();
         acceleration *= maxAcceleration;
 

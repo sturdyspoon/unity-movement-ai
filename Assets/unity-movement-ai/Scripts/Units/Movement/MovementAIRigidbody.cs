@@ -393,6 +393,11 @@ public class MovementAIRigidbody : MonoBehaviour
         return velocity;
     }
 
+    /// <summary>
+    /// The position that should be used for most movement AI code. For 2D chars the position will 
+    /// be on the X/Y plane. For 3D grounded characters the position is on the X/Z plane. For 3D
+    /// flying characters the position is in full 3D (X/Y/Z).
+    /// </summary>
     public Vector3 position
     {
         get
@@ -415,8 +420,36 @@ public class MovementAIRigidbody : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// The actual position of the underlying unity rigidbody.
+    /// </summary>
+    public Vector3 realPosition
+    {
+        get
+        {
+            return (is3D) ? rb3D.position : (Vector3) rb2D.position;
+        }
+        set
+        {
+            if (is3D)
+            {
+                rb3D.position = value;
+            }
+            else
+            {
+                rb2D.position = value;
+            }
+        }
+    }
+
     private int count = 0;
 
+    /// <summary>
+    /// The velocity that should be used for movement AI code. For 2D chars this velocity will be on 
+    /// the X/Y plane. For 3D grounded characters this velocity will be on the X/Z plane but will be
+    /// applied on whatever plane the character is currently moving on. For 3D flying characters the
+    /// velocity will be in full 3D (X/Y/Z).
+    /// </summary>
     public Vector3 velocity
     {
         get
@@ -475,6 +508,28 @@ public class MovementAIRigidbody : MonoBehaviour
 
                     limitMovementOnSteepSlopes();
                 }
+            }
+            else
+            {
+                rb2D.velocity = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// The actual velocity of the underlying unity rigidbody.
+    /// </summary>
+    public Vector3 realVelocity
+    {
+        get
+        {
+            return (is3D) ? rb3D.velocity : (Vector3) rb2D.velocity;
+        }
+        set
+        {
+            if(is3D)
+            {
+                rb3D.velocity = value;
             }
             else
             {
@@ -607,11 +662,10 @@ public class MovementAIRigidbody : MonoBehaviour
     }
 
     /// <summary>
-    /// Converts the given vector to a vector that is appropriate for the kind of 
-    /// character this rigidbody is on. If the character is a 2D character then
-    /// the z component will be zeroed out. If the character is a grounded 3D 
-    /// character then the y component will be zeroed out. And if the character is 
-    /// flying 3D character no changes will be made to the vector.
+    /// Converts the vector based what kind of character the rigidbody is on. 
+    /// If it is a 2D character then the Z component will be zeroed out. If it
+    /// is a grounded 3D character then the Y component will be zeroed out. 
+    /// And if it is flying 3D character no changes will be made to the vector.
     /// </summary>
     /// <param name="v"></param>
     /// <returns></returns>
