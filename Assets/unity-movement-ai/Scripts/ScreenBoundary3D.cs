@@ -20,6 +20,16 @@ public class ScreenBoundary3D : MonoBehaviour {
 
     void OnTriggerStay(Collider other)
     {
+        keepInBounds(other);
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        keepInBounds(other);
+    }
+
+    private void keepInBounds(Collider other)
+    {
         Transform t = other.transform;
 
         if (t.position.x < bottomLeft.x)
