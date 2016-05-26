@@ -153,6 +153,7 @@ public class MovementAIRigidbody : MonoBehaviour
         //Debug.Log(rb3D.velocity.magnitude);
         //Debug.Log(movementNormal.ToString("f4"));
         //Debug.Log("--------------------------------------------------------------------------------");
+        //SteeringBasics.debugCross(colliderPosition, 0.5f, Color.red, 0, false);
 
         countDebug = 0;
         StartCoroutine(debugDraw());
@@ -462,11 +463,11 @@ public class MovementAIRigidbody : MonoBehaviour
         {
             if (is3D)
             {
-                return rb3D.position + Vector3.Scale(col3D.center, transform.localScale);
+                return transform.TransformPoint(col3D.center);
             }
             else
             {
-                return rb2D.position + Vector2.Scale(col2D.offset, transform.localScale);
+                return transform.TransformPoint(col2D.offset);
             }
         }
     }
