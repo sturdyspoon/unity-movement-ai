@@ -21,6 +21,16 @@ public class ScreenBoundary2D : MonoBehaviour {
 
     void OnTriggerStay2D(Collider2D other)
     {
+        keepInBounds(other);
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        keepInBounds(other);
+    }
+
+    private void keepInBounds(Collider2D other)
+    {
         Transform t = other.transform;
 
         if (t.position.x < bottomLeft.x)
