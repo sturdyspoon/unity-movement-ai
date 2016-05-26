@@ -93,9 +93,7 @@ public class Spawner : MonoBehaviour {
                 transform.eulerAngles = euler;
             }
 
-            MovementAIRigidbody rb = t.GetComponent<MovementAIRigidbody>();
-            rb.setUp(); //Run setUp() again now that we've changed its scale
-            objs.Add(rb);
+            objs.Add(t.GetComponent<MovementAIRigidbody>());
 
             return true;
         }
