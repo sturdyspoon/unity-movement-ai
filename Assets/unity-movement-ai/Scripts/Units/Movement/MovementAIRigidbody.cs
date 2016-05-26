@@ -123,15 +123,6 @@ public class MovementAIRigidbody : MonoBehaviour
             {
                 boundingRadius = Mathf.Max(rb3D.transform.localScale.x, rb3D.transform.localScale.y, rb3D.transform.localScale.z) * col.radius;
             }
-            else
-            {
-                CapsuleCollider capCol = rb3D.GetComponent<CapsuleCollider>();
-
-                if (capCol != null)
-                {
-                    boundingRadius = Mathf.Max(rb3D.transform.localScale.x, rb3D.transform.localScale.z) * capCol.radius;
-                }
-            }
         }
         else
         {
