@@ -72,7 +72,7 @@ public class ThirdPersonUnit : MonoBehaviour {
 
     private void lookAtChar()
     {
-        cam.LookAt(transform.position + (rb.boundingRadius * Vector3.up));
+        cam.LookAt(transform.position + (rb.radius * Vector3.up));
     }
 
     void FixedUpdate()

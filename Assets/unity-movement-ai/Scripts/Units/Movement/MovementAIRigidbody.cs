@@ -29,25 +29,25 @@ public class MovementAIRigidbody : MonoBehaviour
 
 
     /// <summary>
-    /// This holds the bounding radius for the current game object (either the radius of a sphere
-    /// or circle collider). If the game object does not have a sphere or circle collider this 
+    /// The radius for the current game object (either the radius of a sphere or circle
+    /// collider). If the game object does not have a sphere or circle collider this 
     /// will be set to -1.
     /// </summary>
     [System.NonSerialized]
-    public float boundingRadius = -1f;
+    public float radius = -1f;
 
     [System.NonSerialized]
     public bool is3D;
 
     /// <summary>
-    /// Holds the current ground normal for this character. This value is only used by 3D 
+    /// The current ground normal for this character. This value is only used by 3D 
     /// characters who cannot fly.
     /// </summary>
     [System.NonSerialized]
     public Vector3 wallNormal = Vector3.zero;
 
     /// <summary>
-    /// Holds the current movement plane normal for this character. This value is only
+    /// The current movement plane normal for this character. This value is only
     /// used by 3D characters who cannot fly.
     /// </summary>
     [System.NonSerialized]
@@ -75,14 +75,14 @@ public class MovementAIRigidbody : MonoBehaviour
             is3D = false;
         }
 
-        setBoundingRadius();
+        determineRadius();
     }
 
     void Start()
     {
         StartCoroutine(debugDraw());
 
-        setBoundingRadius();
+        determineRadius();
 
         /* Call fixed update for 3D grounded characters to make sure they get proper 
          * ground / movement normals before their velocity is set */
@@ -113,7 +113,7 @@ public class MovementAIRigidbody : MonoBehaviour
         StartCoroutine(debugDraw());
     }
 
-    private void setBoundingRadius()
+    private void determineRadius()
     {
         if (is3D)
         {
@@ -121,7 +121,7 @@ public class MovementAIRigidbody : MonoBehaviour
 
             if (col != null)
             {
-                boundingRadius = Mathf.Max(rb3D.transform.localScale.x, rb3D.transform.localScale.y, rb3D.transform.localScale.z) * col.radius;
+                radius = Mathf.Max(rb3D.transform.localScale.x, rb3D.transform.localScale.y, rb3D.transform.localScale.z) * col.radius;
             }
         }
         else
@@ -130,7 +130,7 @@ public class MovementAIRigidbody : MonoBehaviour
 
             if (col != null)
             {
-                boundingRadius = Mathf.Max(rb2D.transform.localScale.x, rb2D.transform.localScale.y) * col.radius;
+                radius = Mathf.Max(rb2D.transform.localScale.x, rb2D.transform.localScale.y) * col.radius;
             }
         }
     }
@@ -208,7 +208,7 @@ public class MovementAIRigidbody : MonoBehaviour
          * from the plane to avoid problems when the given dir is just barely moving  
          * into the plane (this occurs due to floating point inaccuracies when the dir
          * is calculated with cross products) */
-        Vector3 origin = rb3D.position + (Vector3.up * boundingRadius) + (planeNormal * 0.001f);
+        Vector3 origin = rb3D.position + (Vector3.up * radius) + (planeNormal * 0.001f);
 
         /* Start the ray with a small offset from inside the character, so it will
          * hit any colliders that the character is already touching. */
@@ -216,7 +216,7 @@ public class MovementAIRigidbody : MonoBehaviour
 
         float maxDist = (spherecastOffset + dist);
 
-        if (Physics.SphereCast(origin, boundingRadius, dir, out hitInfo, maxDist, layerMask))
+        if (Physics.SphereCast(origin, radius, dir, out hitInfo, maxDist, layerMask))
         {
             /* Remove the small offset from the distance before returning*/
             hitInfo.distance -= spherecastOffset;
@@ -268,7 +268,7 @@ public class MovementAIRigidbody : MonoBehaviour
             Vector3 direction = rb3D.velocity.normalized;
             float dist = rb3D.velocity.magnitude * Time.deltaTime;
 
-            Vector3 origin = rb3D.position + (Vector3.up * boundingRadius);
+            Vector3 origin = rb3D.position + (Vector3.up * radius);
             countDebug++;
 
             if (i == 0)
