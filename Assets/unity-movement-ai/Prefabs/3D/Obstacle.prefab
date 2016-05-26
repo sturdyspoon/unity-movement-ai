@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 415264}
   - 33: {fileID: 3353948}
   - 23: {fileID: 2308278}
+  - 135: {fileID: 13512294}
   - 136: {fileID: 13601276}
   - 114: {fileID: 11454690}
   - 54: {fileID: 5419392}
@@ -98,6 +99,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967035
   slopeLimit: 80
+--- !u!135 &13512294
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 161660}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &13601276
 CapsuleCollider:
   m_ObjectHideFlags: 1
