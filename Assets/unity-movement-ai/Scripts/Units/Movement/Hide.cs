@@ -54,7 +54,7 @@ public class Hide : MonoBehaviour {
 
     private Vector3 getHidingPosition(MovementAIRigidbody obstacle, MovementAIRigidbody target)
     {
-        float distAway = obstacle.boundingRadius + distanceFromBoundary;
+        float distAway = obstacle.radius + distanceFromBoundary;
 
         Vector3 dir = obstacle.position - target.position;
         dir.Normalize();

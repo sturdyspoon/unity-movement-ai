@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class DebugSphereCast : MonoBehaviour {
-    public float boundingRadius;
+    public float radius;
     public Vector3 hitPosition;
     public Vector3 hitSphereCenter;
     public float slopeLimit = 80f;
@@ -10,7 +10,7 @@ public class DebugSphereCast : MonoBehaviour {
     // Use this for initialization
     void Start() {
         SphereCollider col = GetComponent<SphereCollider>();
-        boundingRadius = Mathf.Max(transform.localScale.x, transform.localScale.y, transform.localScale.z) * col.radius;
+        radius = Mathf.Max(transform.localScale.x, transform.localScale.y, transform.localScale.z) * col.radius;
     }
 	
 	// Update is called once per frame
@@ -19,10 +19,10 @@ public class DebugSphereCast : MonoBehaviour {
         hitSphereCenter = Vector3.zero;
 
         RaycastHit hitInfo;
-	    if(Physics.SphereCast(transform.position, boundingRadius, Vector3.down, out hitInfo))
+	    if(Physics.SphereCast(transform.position, radius, Vector3.down, out hitInfo))
         {
             hitPosition = hitInfo.point;
-            hitSphereCenter = transform.position + (Vector3.down * (hitInfo.distance + boundingRadius));
+            hitSphereCenter = transform.position + (Vector3.down * (hitInfo.distance + radius));
 
             SteeringBasics.debugCross(hitPosition, 0.5f, Color.yellow);
             SteeringBasics.debugCross(hitSphereCenter, 0.5f, Color.red);

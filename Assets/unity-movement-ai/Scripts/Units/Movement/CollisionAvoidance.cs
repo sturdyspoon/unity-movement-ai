@@ -49,9 +49,9 @@ public class CollisionAvoidance : MonoBehaviour {
             Vector3 separation = relativePos + relativeVel * timeToCollision;
             float minSeparation = separation.magnitude;
 
-            float targetRadius = r.boundingRadius;
+            float targetRadius = r.radius;
 
-            if (minSeparation > rb.boundingRadius + targetRadius)
+            if (minSeparation > rb.radius + targetRadius)
             {
                 continue;
             }
@@ -79,7 +79,7 @@ public class CollisionAvoidance : MonoBehaviour {
 
         /* If we are going to collide with no separation or if we are already colliding then 
 		 * steer based on current position */
-        if (firstMinSeparation <= 0 || firstDistance < rb.boundingRadius + firstRadius)
+        if (firstMinSeparation <= 0 || firstDistance < rb.radius + firstRadius)
         {
             acceleration = rb.realPosition - firstTarget.realPosition;
         }

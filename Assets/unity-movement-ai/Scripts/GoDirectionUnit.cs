@@ -21,7 +21,7 @@ public class GoDirectionUnit : MonoBehaviour {
 
         steeringBasics.lookWhereYoureGoing();
 
-        Vector3 start = transform.position + (Vector3.up * rb.boundingRadius);
+        Vector3 start = transform.position + (Vector3.up * rb.radius);
         Debug.DrawLine(start, start + (direction.normalized), Color.cyan, 0f, false);
 	}
 }

@@ -33,7 +33,7 @@ public class Separation : MonoBehaviour {
             if (dist < maxSepDist)
             {
                 /* Calculate the separation strength (can be changed to use inverse square law rather than linear) */
-                var strength = sepMaxAcceleration * (maxSepDist - dist) / (maxSepDist - rb.boundingRadius - r.boundingRadius);
+                var strength = sepMaxAcceleration * (maxSepDist - dist) / (maxSepDist - rb.radius - r.radius);
 
                 /* Added separation acceleration to the existing steering */
                 direction.Normalize();
