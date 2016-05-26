@@ -27,14 +27,32 @@ public class MovementAIRigidbody : MonoBehaviour
     /* The maximum slope the character can climb in degrees */
     public float slopeLimit = 80f;
 
+    private SphereCollider col3D;
+    private CircleCollider2D col2D;
 
     /// <summary>
     /// The radius for the current game object (either the radius of a sphere or circle
     /// collider). If the game object does not have a sphere or circle collider this 
-    /// will be set to -1.
+    /// will return -1.
     /// </summary>
-    [System.NonSerialized]
-    public float radius = -1f;
+    public float radius
+    {
+        get
+        {
+            if(col3D != null)
+            {
+                return Mathf.Max(rb3D.transform.localScale.x, rb3D.transform.localScale.y, rb3D.transform.localScale.z) * col3D.radius;
+            }
+            else if(col2D != null)
+            {
+                return Mathf.Max(rb2D.transform.localScale.x, rb2D.transform.localScale.y) * col2D.radius;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+    }
 
     [System.NonSerialized]
     public bool is3D;
@@ -61,7 +79,16 @@ public class MovementAIRigidbody : MonoBehaviour
         setUp();
     }
 
+    /// <summary>
+    /// Sets up the MovementAIRigidbody so it knows about its underlying collider and rigidbody.
+    /// </summary>
     public void setUp()
+    {
+        setUpRigidbody();
+        setUpCollider();
+    }
+
+    private void setUpRigidbody()
     {
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
@@ -74,15 +101,33 @@ public class MovementAIRigidbody : MonoBehaviour
             this.rb2D = GetComponent<Rigidbody2D>();
             is3D = false;
         }
+    }
 
-        determineRadius();
+    private void setUpCollider()
+    {
+        if (is3D)
+        {
+            SphereCollider col = rb3D.GetComponent<SphereCollider>();
+
+            if (col != null)
+            {
+                col3D = col;
+            }
+        }
+        else
+        {
+            CircleCollider2D col = rb2D.GetComponent<CircleCollider2D>();
+
+            if (col != null)
+            {
+                col2D = col;
+            }
+        }
     }
 
     void Start()
     {
         StartCoroutine(debugDraw());
-
-        determineRadius();
 
         /* Call fixed update for 3D grounded characters to make sure they get proper 
          * ground / movement normals before their velocity is set */
@@ -111,28 +156,6 @@ public class MovementAIRigidbody : MonoBehaviour
 
         countDebug = 0;
         StartCoroutine(debugDraw());
-    }
-
-    private void determineRadius()
-    {
-        if (is3D)
-        {
-            SphereCollider col = rb3D.GetComponent<SphereCollider>();
-
-            if (col != null)
-            {
-                radius = Mathf.Max(rb3D.transform.localScale.x, rb3D.transform.localScale.y, rb3D.transform.localScale.z) * col.radius;
-            }
-        }
-        else
-        {
-            CircleCollider2D col = rb2D.GetComponent<CircleCollider2D>();
-
-            if (col != null)
-            {
-                radius = Mathf.Max(rb2D.transform.localScale.x, rb2D.transform.localScale.y) * col.radius;
-            }
-        }
     }
 
     void FixedUpdate()
@@ -429,6 +452,21 @@ public class MovementAIRigidbody : MonoBehaviour
             else
             {
                 rb2D.position = value;
+            }
+        }
+    }
+
+    public Vector3 colliderPosition
+    {
+        get
+        {
+            if (is3D)
+            {
+                return rb3D.position + Vector3.Scale(col3D.center, transform.localScale);
+            }
+            else
+            {
+                return rb2D.position + Vector2.Scale(col2D.offset, transform.localScale);
             }
         }
     }
@@ -742,9 +780,7 @@ public class MovementAIRigidbody : MonoBehaviour
         return !(a == b);
     }
 
-    /* This function is here to ensure we have a rigidbody (2D or 3D) */
-
-    //Since we use editor calls we omit this function on build time
+    /* This function is here to ensure we have a rigidbody (2D or 3D). */
     #if UNITY_EDITOR
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
     public void Reset()
