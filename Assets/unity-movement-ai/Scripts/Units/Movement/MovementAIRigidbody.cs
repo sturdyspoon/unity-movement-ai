@@ -436,27 +436,8 @@ public class MovementAIRigidbody : MonoBehaviour
     }
 
     /// <summary>
-    /// The actual position of the underlying unity rigidbody.
+    /// Gets the position of the collider (which can be offset from the transform position).
     /// </summary>
-    public Vector3 realPosition
-    {
-        get
-        {
-            return (is3D) ? rb3D.position : (Vector3) rb2D.position;
-        }
-        set
-        {
-            if (is3D)
-            {
-                rb3D.position = value;
-            }
-            else
-            {
-                rb2D.position = value;
-            }
-        }
-    }
-
     public Vector3 colliderPosition
     {
         get

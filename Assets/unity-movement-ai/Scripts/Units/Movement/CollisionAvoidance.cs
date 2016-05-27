@@ -34,7 +34,7 @@ public class CollisionAvoidance : MonoBehaviour {
         foreach (MovementAIRigidbody r in targets)
         {
             /* Calculate the time to collision */
-            Vector3 relativePos = rb.realPosition - r.realPosition;
+            Vector3 relativePos = rb.colliderPosition - r.colliderPosition;
             Vector3 relativeVel = rb.realVelocity - r.realVelocity;
             float distance = relativePos.magnitude;
             float relativeSpeed = relativeVel.magnitude;
@@ -80,7 +80,7 @@ public class CollisionAvoidance : MonoBehaviour {
 		 * steer based on current position */
         if (firstMinSeparation <= 0 || firstDistance < rb.radius + firstRadius + distanceBetween)
         {
-            acceleration = rb.realPosition - firstTarget.realPosition;
+            acceleration = rb.colliderPosition - firstTarget.colliderPosition;
         }
         /* Else calculate the future relative position */
         else
