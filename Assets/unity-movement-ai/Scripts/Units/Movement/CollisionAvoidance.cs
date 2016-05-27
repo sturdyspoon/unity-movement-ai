@@ -6,7 +6,8 @@ using System.Collections.Generic;
 public class CollisionAvoidance : MonoBehaviour {
     public float maxAcceleration = 15f;
 
-    //public float agentRadius = 0.25f;
+    [Tooltip("How much space can be between two characters before they are considered colliding")]
+    public float distanceBetween = 0f;
 
     private MovementAIRigidbody rb;
 
@@ -49,9 +50,7 @@ public class CollisionAvoidance : MonoBehaviour {
             Vector3 separation = relativePos + relativeVel * timeToCollision;
             float minSeparation = separation.magnitude;
 
-            float targetRadius = r.radius;
-
-            if (minSeparation > rb.radius + targetRadius)
+            if (minSeparation > rb.radius + r.radius + distanceBetween)
             {
                 continue;
             }
@@ -65,7 +64,7 @@ public class CollisionAvoidance : MonoBehaviour {
                 firstDistance = distance;
                 firstRelativePos = relativePos;
                 firstRelativeVel = relativeVel;
-                firstRadius = targetRadius;
+                firstRadius = r.radius;
             }
         }
 
@@ -79,7 +78,7 @@ public class CollisionAvoidance : MonoBehaviour {
 
         /* If we are going to collide with no separation or if we are already colliding then 
 		 * steer based on current position */
-        if (firstMinSeparation <= 0 || firstDistance < rb.radius + firstRadius)
+        if (firstMinSeparation <= 0 || firstDistance < rb.radius + firstRadius + distanceBetween)
         {
             acceleration = rb.realPosition - firstTarget.realPosition;
         }
