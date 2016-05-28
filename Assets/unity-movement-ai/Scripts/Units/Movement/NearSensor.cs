@@ -4,14 +4,28 @@ using System.Collections.Generic;
 
 public class NearSensor : MonoBehaviour {
 
-	public HashSet<MovementAIRigidbody> targets = new HashSet<MovementAIRigidbody>();
+    private HashSet<MovementAIRigidbody> _targets = new HashSet<MovementAIRigidbody>();
+    public HashSet<MovementAIRigidbody> targets
+    {
+        get
+        {
+            /* Remove any MovementAIRigidbodies that have been destroyed */
+            _targets.RemoveWhere(isNull);
+            return _targets;
+        }
+    }
+
+    private static bool isNull(MovementAIRigidbody r)
+    {
+        return (r == null || r.Equals(null));
+    }
 
     private void tryToAdd(Component other)
     {
         MovementAIRigidbody rb = other.GetComponent<MovementAIRigidbody>();
         if(rb != null)
         {
-            targets.Add(rb);
+            _targets.Add(rb);
         }
     }
 
@@ -20,7 +34,7 @@ public class NearSensor : MonoBehaviour {
         MovementAIRigidbody rb = other.GetComponent<MovementAIRigidbody>();
         if (rb != null)
         {
-            targets.Remove(rb);
+            _targets.Remove(rb);
         }
     }
 
