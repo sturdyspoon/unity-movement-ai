@@ -142,12 +142,15 @@ public class MovementAIRigidbody : MonoBehaviour
     {
         yield return new WaitForFixedUpdate();
 
-        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (velocity.normalized), Color.red, 0f, false);
-        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.ProjectOnPlane(velocity, movementNormal).normalized), Color.magenta, 0f, false);
+        Vector3 origin = colliderPosition;
+        Debug.DrawLine(origin, origin + (velocity.normalized), Color.red, 0f, false);
         if(is3D)
-            Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (rb3D.velocity.normalized * 1.5f), Color.green, 0f, false);
-        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (wallNormal), Color.yellow, 0f, false);
-        Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (movementNormal), Color.yellow, 0f, false);
+        {
+            Debug.DrawLine(origin, origin + (Vector3.ProjectOnPlane(velocity, movementNormal).normalized), Color.magenta, 0f, false);
+            Debug.DrawLine(origin, origin + (realVelocity.normalized), Color.green, 0f, false);
+            Debug.DrawLine(origin, origin + (wallNormal), Color.yellow, 0f, false);
+            Debug.DrawLine(origin, origin + (movementNormal), Color.yellow, 0f, false);
+        }
 
         //Debug.Log("waitforfixedupdate " + transform.position.ToString("f4"));
         //Debug.Log(rb3D.velocity.magnitude);
@@ -225,14 +228,14 @@ public class MovementAIRigidbody : MonoBehaviour
 
     private bool sphereCast(Vector3 dir, out RaycastHit hitInfo, float dist, int layerMask, Vector3 planeNormal = default(Vector3))
     {
-        /* The position of the characer is assumed to be at the base of the character,
-         * so make sure the sphere origin is truly in the middle of the character sphere.
+        /* Make sure we use the collider's origin for our cast (which can be different
+         * then the transform.position).
          *
          * Also if we are given a planeNormal then raise the origin a tiny amount away
          * from the plane to avoid problems when the given dir is just barely moving  
-         * into the plane (this occurs due to floating point inaccuracies when the dir
-         * is calculated with cross products) */
-        Vector3 origin = rb3D.position + (Vector3.up * radius) + (planeNormal * 0.001f);
+         * into the plane (this can occur due to floating point inaccuracies when the 
+         * dir is calculated with cross products) */
+        Vector3 origin = colliderPosition + (planeNormal * 0.001f);
 
         /* Start the ray with a small offset from inside the character, so it will
          * hit any colliders that the character is already touching. */
@@ -292,7 +295,7 @@ public class MovementAIRigidbody : MonoBehaviour
             Vector3 direction = rb3D.velocity.normalized;
             float dist = rb3D.velocity.magnitude * Time.deltaTime;
 
-            Vector3 origin = rb3D.position + (Vector3.up * radius);
+            Vector3 origin = colliderPosition;
             countDebug++;
 
             if (i == 0)
@@ -401,8 +404,8 @@ public class MovementAIRigidbody : MonoBehaviour
 
             velocity = newVel;
 
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (Vector3.up), Color.blue);
-            //Debug.DrawLine(transform.position + (Vector3.up * 0.3f), transform.position + (Vector3.up * 0.3f) + (planeMovement.normalized), Color.magenta);
+            //Debug.DrawLine(colliderPosition, colliderPosition + (Vector3.up), Color.blue);
+            //Debug.DrawLine(colliderPosition, colliderPosition + (planeMovement.normalized), Color.magenta);
         }
 
         return velocity;

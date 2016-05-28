@@ -27,7 +27,7 @@ public class Separation : MonoBehaviour {
         foreach (MovementAIRigidbody r in targets)
         {
             /* Get the direction and distance from the target */
-            Vector3 direction = transform.position - r.position;
+            Vector3 direction = rb.colliderPosition - r.colliderPosition;
             float dist = direction.magnitude;
 
             if (dist < maxSepDist)
@@ -36,6 +36,7 @@ public class Separation : MonoBehaviour {
                 var strength = sepMaxAcceleration * (maxSepDist - dist) / (maxSepDist - rb.radius - r.radius);
 
                 /* Added separation acceleration to the existing steering */
+                direction = rb.convertVector(direction);
                 direction.Normalize();
                 acceleration += direction * strength;
             }
