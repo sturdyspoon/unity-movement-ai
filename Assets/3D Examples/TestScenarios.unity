@@ -2235,7 +2235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c02c8958d8df1164caf10ab94e278195, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundingRadius: 0
+  radius: 0
   hitPosition: {x: 0, y: 0, z: 0}
   hitSphereCenter: {x: 0, y: 0, z: 0}
   slopeLimit: 80
@@ -6216,7 +6216,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 164970, guid: 2d852fb609c7d2d4dbaf51b31da1579a, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2d852fb609c7d2d4dbaf51b31da1579a, type: 2}
