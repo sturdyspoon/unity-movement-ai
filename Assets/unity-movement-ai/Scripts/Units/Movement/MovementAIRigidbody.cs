@@ -19,7 +19,7 @@ public class MovementAIRigidbody : MonoBehaviour
     public bool stayGrounded = true;
 
     /* How far the character should look below him for ground to stay grounded to */
-    public float fooGroundFollowDistance = 0.1f;
+    public float groundFollowDistance = 0.1f;
 
     /* The sphere cast mask that determines what layers should be consider the ground */
     public LayerMask groundCheckMask = Physics.DefaultRaycastLayers;
@@ -132,8 +132,6 @@ public class MovementAIRigidbody : MonoBehaviour
         /* Call fixed update for 3D grounded characters to make sure they get proper 
          * ground / movement normals before their velocity is set */
         FixedUpdate();
-
-        Debug.Log(Vector3.Angle(Vector3.up, Vector3.zero));
     }
 
     private int countDebug = 0;
@@ -179,7 +177,7 @@ public class MovementAIRigidbody : MonoBehaviour
             Start the ray with a small offset of 0.1f from inside the character. The
             transform.position of the characer is assumed to be at the base of the character.
              */
-            if (sphereCast(Vector3.down, out downHit, fooGroundFollowDistance, groundCheckMask.value))
+            if (sphereCast(Vector3.down, out downHit, groundFollowDistance, groundCheckMask.value))
             {
                 if (isWall(downHit.normal))
                 {
@@ -187,7 +185,7 @@ public class MovementAIRigidbody : MonoBehaviour
                     Vector3 rightSlope = Vector3.Cross(downHit.normal, Vector3.down);
                     Vector3 downSlope = Vector3.Cross(rightSlope, downHit.normal);
 
-                    float remainingDist = fooGroundFollowDistance - downHit.distance;
+                    float remainingDist = groundFollowDistance - downHit.distance;
 
                     RaycastHit downWallHit;
 
