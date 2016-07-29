@@ -2759,7 +2759,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0.50000006, z: 0, w: 0.8660254}
   m_LocalPosition: {x: 45, y: 2, z: -24.2}
   m_LocalScale: {x: 0.01, y: 3, z: 6}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 60, z: 0}
   m_Children: []
   m_Father: {fileID: 2029445260}
   m_RootOrder: 1

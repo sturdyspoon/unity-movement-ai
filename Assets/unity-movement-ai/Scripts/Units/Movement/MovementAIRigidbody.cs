@@ -445,7 +445,7 @@ public class MovementAIRigidbody : MonoBehaviour
         {
             if (is3D)
             {
-                return transform.TransformPoint(col3D.center);
+                return transform.TransformPoint(col3D.center) + rb3D.position - transform.position;
             }
             else
             {
