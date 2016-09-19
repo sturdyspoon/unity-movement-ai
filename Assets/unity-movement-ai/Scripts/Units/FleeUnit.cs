@@ -1,26 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FleeUnit : MonoBehaviour
+namespace UnityMovementAI
 {
-
-    public Transform target;
-
-    private SteeringBasics steeringBasics;
-    private Flee flee;
-
-    // Use this for initialization
-    void Start()
+    public class FleeUnit : MonoBehaviour
     {
-        steeringBasics = GetComponent<SteeringBasics>();
-        flee = GetComponent<Flee>();
-    }
 
-    void FixedUpdate()
-    {
-        Vector3 accel = flee.getSteering(target.position);
+        public Transform target;
 
-        steeringBasics.steer(accel);
-        steeringBasics.lookWhereYoureGoing();
+        private SteeringBasics steeringBasics;
+        private Flee flee;
+
+        // Use this for initialization
+        void Start()
+        {
+            steeringBasics = GetComponent<SteeringBasics>();
+            flee = GetComponent<Flee>();
+        }
+
+        void FixedUpdate()
+        {
+            Vector3 accel = flee.getSteering(target.position);
+
+            steeringBasics.steer(accel);
+            steeringBasics.lookWhereYoureGoing();
+        }
     }
 }

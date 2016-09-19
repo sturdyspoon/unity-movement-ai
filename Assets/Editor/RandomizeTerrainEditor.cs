@@ -2,14 +2,14 @@
 using System.Collections;
 using UnityEditor;
 
-[CustomEditor(typeof(RandomizeTerrain))]
+[CustomEditor(typeof(UnityMovementAI.RandomizeTerrain))]
 public class RandomizeTerrainEditor : Editor {
 
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
-        RandomizeTerrain myScript = (RandomizeTerrain) target;
+        UnityMovementAI.RandomizeTerrain myScript = (UnityMovementAI.RandomizeTerrain) target;
 
 
 
