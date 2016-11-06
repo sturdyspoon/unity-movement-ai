@@ -192,7 +192,7 @@ public class MovementAIRigidbody : MonoBehaviour
                     if (remainingDist > 0 && sphereCast(downSlope, out downWallHit, remainingDist, groundCheckMask.value, downHit.normal) && !isWall(downWallHit.normal))
                     {
                         Vector3 newPos = rb3D.position + (downSlope.normalized * downWallHit.distance);
-                        foundGround(downWallHit.normal, newPos, downWallHit.point);
+                        foundGround(downWallHit.normal, newPos);
                     }
 
                     /* If we are close enough to the hit to be touching it then we are on the wall */
@@ -205,7 +205,7 @@ public class MovementAIRigidbody : MonoBehaviour
                 else
                 {
                     Vector3 newPos = rb3D.position + (Vector3.down * downHit.distance);
-                    foundGround(downHit.normal, newPos, downHit.point);
+                    foundGround(downHit.normal, newPos);
                 }
             }
 
@@ -250,18 +250,11 @@ public class MovementAIRigidbody : MonoBehaviour
         }
     }
 
-    private void foundGround(Vector3 normal, Vector3 newPos, Vector3 hitPos)
+    private void foundGround(Vector3 normal, Vector3 newPos)
     {
         movementNormal = normal;
         rb3D.useGravity = false;
         rb3D.MovePosition(newPos);
-
-        //RaycastHit hitInfo;
-        //if (Physics.Raycast(colliderPosition, (hitPos - colliderPosition).normalized, out hitInfo, Mathf.Infinity, groundCheckMask.value) && !isWall(hitInfo.normal))
-        //{
-        //    Debug.DrawLine(colliderPosition, colliderPosition + (hitInfo.normal * 2), Color.red, 0f, false);
-        //    movementNormal = hitInfo.normal;
-        //}
 
         /* Reproject the velocity onto the ground plane in case the ground plane has changed this frame.
          * Make sure to multiple by the movement velocity's magnitude, rather than the actual velocity
@@ -370,18 +363,22 @@ public class MovementAIRigidbody : MonoBehaviour
 
         if (!rb3D.useGravity)
         {
-            Vector3 groundPlaneIntersection = Vector3.Cross(movementNormal, planeNormal);
-
-            float mag = velocity.magnitude;
-            //float mag = Vector3.Project(velocity, groundPlaneIntersection).magnitude;
-            //float mag = Vector3.Project(velocity, rightSlope).magnitude;
-
             /* Make sure the direction against the wall is dictated by the X/Z direction of the
              * character and the wall normal. So even when the character's ground normal changes
-             * the direction it is moving against the wall is not changed. */
+             * the direction it is moving against the wall is not changed.
+             *
+             * Also make sure the magnitude of the movement along the wall is also dictated by
+             * the X/Y direction of the character and the wall normal. This will is needed to 
+             * keep the change in magnitude in sync with the change in direction. */
+
+            float mag = velocity.magnitude;
+
             velocity.y = 0;
-            //mag = Mathf.Cos(Vector3.Angle(velocity, rightSlope) * Mathf.Deg2Rad) * mag;
+
+            /* Scale the original magnitude by how parallel the X/Z movement is to the wall's left/right direction */
             mag *= Mathf.Abs(Mathf.Cos(Vector3.Angle(velocity, rightSlope) * Mathf.Deg2Rad));
+
+            Vector3 groundPlaneIntersection = Vector3.Cross(movementNormal, planeNormal);
             velocity = Vector3.Project(velocity, rightSlope).normalized;
             velocity = Vector3.Project(velocity, groundPlaneIntersection).normalized * mag;
         }
