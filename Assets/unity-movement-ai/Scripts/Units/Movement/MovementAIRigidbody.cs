@@ -147,7 +147,7 @@ public class MovementAIRigidbody : MonoBehaviour
         {
             Debug.DrawLine(origin, origin + (realVelocity.normalized), Color.green, 0f, false);
             Debug.DrawLine(origin, origin + (wallNormal), Color.yellow, 0f, false);
-            Debug.DrawLine(origin, origin + (movementNormal), Color.yellow, 0f, false);
+            Debug.DrawLine(origin, origin + (movementNormal), Color.blue, 0f, false);
         }
 
         //SteeringBasics.debugCross(colliderPosition, 0.5f, Color.red, 0, false);
@@ -182,7 +182,7 @@ public class MovementAIRigidbody : MonoBehaviour
                 {
                     /* Get vector pointing down the wall */
                     Vector3 rightSlope = Vector3.Cross(downHit.normal, Vector3.down);
-                    Vector3 downSlope = Vector3.Cross(rightSlope, downHit.normal);
+                    Vector3 downSlope = Vector3.Cross(rightSlope, downHit.normal).normalized;
 
                     float remainingDist = groundFollowDistance - downHit.distance;
 
@@ -191,7 +191,7 @@ public class MovementAIRigidbody : MonoBehaviour
                     /* If we found ground that we would have hit if not for the wall then follow it */
                     if (remainingDist > 0 && sphereCast(downSlope, out downWallHit, remainingDist, groundCheckMask.value, downHit.normal) && !isWall(downWallHit.normal))
                     {
-                        Vector3 newPos = rb3D.position + (downSlope.normalized * downWallHit.distance);
+                        Vector3 newPos = rb3D.position + (downSlope * downWallHit.distance);
                         foundGround(downWallHit.normal, newPos);
                     }
 
@@ -223,6 +223,8 @@ public class MovementAIRigidbody : MonoBehaviour
 
     private bool sphereCast(Vector3 dir, out RaycastHit hitInfo, float dist, int layerMask, Vector3 planeNormal = default(Vector3))
     {
+        dir.Normalize();
+
         /* Make sure we use the collider's origin for our cast (which can be different
          * then the transform.position).
          *
@@ -379,7 +381,7 @@ public class MovementAIRigidbody : MonoBehaviour
             mag *= Mathf.Abs(Mathf.Cos(Vector3.Angle(velocity, rightSlope) * Mathf.Deg2Rad));
 
             Vector3 groundPlaneIntersection = Vector3.Cross(movementNormal, planeNormal);
-            velocity = Vector3.Project(velocity, rightSlope).normalized;
+            velocity = Vector3.Project(velocity, rightSlope);
             velocity = Vector3.Project(velocity, groundPlaneIntersection).normalized * mag;
         }
         else
