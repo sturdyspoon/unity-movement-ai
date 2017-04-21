@@ -5,7 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/3D Examples/TestScenarios.unity
+    guid: 403bc1d5608d13e428b5adb219adbd69
   - enabled: 0
     path: Assets/3D Examples/ThirdPerson.unity
+    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/3D Examples/FollowPath.unity
+    guid: 5e2d0d463b7b48b4caa90f6d2c950a8b
