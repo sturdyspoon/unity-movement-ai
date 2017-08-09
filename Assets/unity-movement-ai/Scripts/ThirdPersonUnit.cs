@@ -13,6 +13,8 @@ public class ThirdPersonUnit : MonoBehaviour {
 
     public float jumpSpeed = 7f;
 
+    public bool autoAttachToCamera = true;
+
     private MovementAIRigidbody rb;
 
     private Transform cam;
@@ -20,13 +22,16 @@ public class ThirdPersonUnit : MonoBehaviour {
     private float horAxis = 0f;
     private float vertAxis = 0f;
 
-    private Transform human;
 
     void Start()
     {
         rb = GetComponent<MovementAIRigidbody>();
         cam = Camera.main.transform;
-        human = transform.Find("human");
+
+        if (autoAttachToCamera)
+        {
+            cam.GetComponent<ThirdPersonCamera>().target = transform;
+        }
     }
 
     void Update()
@@ -58,9 +63,9 @@ public class ThirdPersonUnit : MonoBehaviour {
 			Vector3 dir = getMovementDir ();
 
 			if (dir.magnitude > 0) {
-				float curFacing = human.eulerAngles.y;
+				float curFacing = transform.eulerAngles.y;
 				float facing = Mathf.Atan2 (-dir.z, dir.x) * Mathf.Rad2Deg;
-				human.rotation = Quaternion.Euler (0, Mathf.MoveTowardsAngle (curFacing, facing, facingSpeed * Time.deltaTime), 0);
+                rb.rotation = Quaternion.Euler(0, Mathf.MoveTowardsAngle(curFacing, facing, facingSpeed * Time.deltaTime), 0);
 			}
 		}
     }
