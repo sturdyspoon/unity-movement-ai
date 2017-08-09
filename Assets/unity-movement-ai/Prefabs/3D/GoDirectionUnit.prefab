@@ -5,16 +5,16 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 490656}
-  - 33: {fileID: 3306036}
-  - 23: {fileID: 2351910}
-  - 114: {fileID: 11466368}
-  - 54: {fileID: 5430148}
-  - 135: {fileID: 13527424}
-  - 114: {fileID: 11417038}
-  - 114: {fileID: 11489572}
+  - component: {fileID: 490656}
+  - component: {fileID: 3306036}
+  - component: {fileID: 2351910}
+  - component: {fileID: 11466368}
+  - component: {fileID: 5430148}
+  - component: {fileID: 13527424}
+  - component: {fileID: 11417038}
+  - component: {fileID: 11489572}
   m_Layer: 2
   m_Name: GoDirectionUnit
   m_TagString: Untagged
@@ -34,6 +34,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2351910
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -43,22 +44,28 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: 91a6a98d47f55e347a20c2dadf7a8b73, type: 2}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &3306036
 MeshFilter:
@@ -79,7 +86,7 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &11417038
@@ -107,10 +114,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canFly: 0
   stayGrounded: 1
-  fooGroundFollowDistance: 0.1
+  groundFollowDistance: 0.1
   groundCheckMask:
     serializedVersion: 2
-    m_Bits: 4294967035
+    m_Bits: 4294964987
   slopeLimit: 80
 --- !u!114 &11489572
 MonoBehaviour:

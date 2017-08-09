@@ -5,13 +5,13 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 482716}
-  - 20: {fileID: 2043622}
-  - 124: {fileID: 12447140}
-  - 92: {fileID: 9209914}
-  - 81: {fileID: 8122712}
+  - component: {fileID: 482716}
+  - component: {fileID: 2043622}
+  - component: {fileID: 12447140}
+  - component: {fileID: 9209914}
+  - component: {fileID: 8122712}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -24,15 +24,15 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 455198}
-  - 33: {fileID: 3387796}
-  - 23: {fileID: 2315738}
-  - 114: {fileID: 11456644}
-  - 54: {fileID: 5443456}
-  - 135: {fileID: 13517334}
-  - 114: {fileID: 11460656}
+  - component: {fileID: 455198}
+  - component: {fileID: 3387796}
+  - component: {fileID: 2315738}
+  - component: {fileID: 11456644}
+  - component: {fileID: 5443456}
+  - component: {fileID: 13517334}
+  - component: {fileID: 11460656}
   m_Layer: 2
   m_Name: ThirdPersonUnit
   m_TagString: Untagged
@@ -53,6 +53,7 @@ Transform:
   - {fileID: 482716}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &482716
 Transform:
   m_ObjectHideFlags: 1
@@ -65,6 +66,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 455198}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &2043622
 Camera:
   m_ObjectHideFlags: 1
@@ -95,6 +97,8 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
+  m_AllowMSAA: 1
+  m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -108,22 +112,28 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: 91a6a98d47f55e347a20c2dadf7a8b73, type: 2}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &3387796
 MeshFilter:
@@ -174,10 +184,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canFly: 0
   stayGrounded: 1
-  fooGroundFollowDistance: 0.1
+  groundFollowDistance: 0.1
   groundCheckMask:
     serializedVersion: 2
-    m_Bits: 4294967035
+    m_Bits: 4294964987
   slopeLimit: 80
 --- !u!114 &11460656
 MonoBehaviour:
@@ -191,7 +201,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  turnSpeed: 120
+  facingSpeed: 540
+  jumpSpeed: 5
 --- !u!124 &12447140
 Behaviour:
   m_ObjectHideFlags: 1

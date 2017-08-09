@@ -7,91 +7,66 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Camera))]
 public class ThirdPersonUnit : MonoBehaviour {
 
-    public float speed = 5;
+    public float speed = 5f;
 
-    public float turnSpeed = 120f;
+    public float facingSpeed = 720f;
+
+    public float jumpSpeed = 7f;
 
     private MovementAIRigidbody rb;
 
-    private float horAxis = 0f;
-    private float vertAxis = 0f;
-    private float sideStepDir = 0f;
-
     private Transform cam;
 
-    // Use this for initialization
+    private float horAxis = 0f;
+    private float vertAxis = 0f;
+
+    private Transform human;
+
     void Start()
     {
         rb = GetComponent<MovementAIRigidbody>();
-        cam = GetComponentInChildren<Camera>().transform;
-
-        lookAtChar();
+        cam = Camera.main.transform;
+        human = transform.Find("human");
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
-        {
-            rotateCamera();
-        }
-
         horAxis = Input.GetAxisRaw("Horizontal");
         vertAxis = Input.GetAxisRaw("Vertical");
-        //vertAxis = 1f;
 
-        if (Input.GetKey(KeyCode.Q))
+        if(Input.GetButtonDown("Jump"))
         {
-            sideStepDir = 1f;
-        } else if (Input.GetKey(KeyCode.E))
-        {
-            sideStepDir = -1f;
-        } else
-        {
-            sideStepDir = 0f;
+            rb.jump(jumpSpeed);
         }
     }
 
-    private void rotateCamera()
-    {
-        float radius = cam.localPosition.magnitude;
-        float theta = Mathf.Acos(cam.localPosition.y / radius);
-        float phi = Mathf.Atan(cam.localPosition.z / cam.localPosition.x);
-
-        theta += Input.GetAxis("Mouse Y") * Mathf.Deg2Rad;
-
-        Vector3 newPos = new Vector3();
-        newPos.x = -1 * radius * Mathf.Sin(theta) * Mathf.Cos(phi);
-        newPos.y = radius * Mathf.Cos(theta);
-        newPos.z = radius * Mathf.Sin(theta) * Mathf.Sin(phi);
-
-        cam.localPosition = newPos;
-
-        lookAtChar();
-    }
-
-    private void lookAtChar()
-    {
-        cam.LookAt(rb.colliderPosition);
-    }
 
     void FixedUpdate()
     {
-        rotateChar();
-        moveChar();
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            rb.velocity = getMovementDir() * speed;
+        } else
+        {
+            rb.velocity = Vector3.zero;
+        }
     }
 
-    private void moveChar()
+    void LateUpdate()
     {
-        Vector3 vel = (transform.right * vertAxis) + (transform.forward * sideStepDir);
-        vel = vel.normalized * speed;
-        rb.velocity = vel;
+		if (Cursor.lockState == CursorLockMode.Locked) {
+			Vector3 dir = getMovementDir ();
+
+			if (dir.magnitude > 0) {
+				float curFacing = human.eulerAngles.y;
+				float facing = Mathf.Atan2 (-dir.z, dir.x) * Mathf.Rad2Deg;
+				human.rotation = Quaternion.Euler (0, Mathf.MoveTowardsAngle (curFacing, facing, facingSpeed * Time.deltaTime), 0);
+			}
+		}
     }
 
-    private void rotateChar()
+    private Vector3 getMovementDir()
     {
-        rb.angularVelocity = horAxis * turnSpeed * Mathf.Deg2Rad;
-        // Clear out any x/z orientation
-        rb.rotation = Quaternion.Euler(0, rb.rotation.eulerAngles.y, 0);
+        return ((cam.forward * vertAxis) + (cam.right * horAxis)).normalized;
     }
 }

@@ -5,20 +5,20 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 419270}
-  - 212: {fileID: 21251982}
-  - 114: {fileID: 11418690}
-  - 114: {fileID: 11485550}
-  - 114: {fileID: 11438688}
-  - 114: {fileID: 11479672}
-  - 114: {fileID: 11482590}
-  - 114: {fileID: 11471456}
-  - 114: {fileID: 11487916}
-  - 114: {fileID: 11433162}
-  - 50: {fileID: 5037008}
-  - 58: {fileID: 5866550}
+  - component: {fileID: 419270}
+  - component: {fileID: 21251982}
+  - component: {fileID: 11418690}
+  - component: {fileID: 11485550}
+  - component: {fileID: 11438688}
+  - component: {fileID: 11479672}
+  - component: {fileID: 11482590}
+  - component: {fileID: 11471456}
+  - component: {fileID: 11487916}
+  - component: {fileID: 11433162}
+  - component: {fileID: 5037008}
+  - component: {fileID: 5866550}
   m_Layer: 0
   m_Name: HideUnit
   m_TagString: Untagged
@@ -38,23 +38,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &5037008
 Rigidbody2D:
-  serializedVersion: 2
+  serializedVersion: 4
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 131374}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!58 &5866550
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -66,6 +70,7 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
+  m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.3
@@ -93,10 +98,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canFly: 0
-  groundCheckDistance: 0.01
   stayGrounded: 1
   groundFollowDistance: 0.3
-  groundFollowGravityMult: 4
   groundCheckMask:
     serializedVersion: 2
     m_Bits: 4294967291
@@ -202,27 +205,39 @@ SpriteRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedEditorRenderState: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f86036af4b9862940b330425ab36597f, type: 3}
   m_Color: {r: 0.6313726, g: 0.6431373, b: 0.6627451, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -165,6 +165,8 @@ public class MovementAIRigidbody : MonoBehaviour
         /* If the character can't fly then find the current the ground normal */
         if (is3D && !canFly)
         {
+            bool shouldFollowGround = !rb3D.useGravity || rb3D.velocity.y <= 0;
+
             /* Reset to default values */
             wallNormal = Vector3.zero;
             movementNormal = Vector3.up;
@@ -176,7 +178,7 @@ public class MovementAIRigidbody : MonoBehaviour
             Start the ray with a small offset of 0.1f from inside the character. The
             transform.position of the characer is assumed to be at the base of the character.
              */
-            if (sphereCast(Vector3.down, out downHit, groundFollowDistance, groundCheckMask.value))
+            if (shouldFollowGround && sphereCast(Vector3.down, out downHit, groundFollowDistance, groundCheckMask.value))
             {
                 if (isWall(downHit.normal))
                 {
@@ -415,6 +417,17 @@ public class MovementAIRigidbody : MonoBehaviour
         return velocity;
     }
 
+    public void jump(float speed)
+    {
+        if(rb3D.useGravity == false)
+        {
+            rb3D.useGravity = true;
+            Vector3 vel = rb3D.velocity;
+            vel.y = speed;
+            rb3D.velocity = vel;
+        }
+    }
+
     /// <summary>
     /// The position that should be used for most movement AI code. For 2D chars the position will 
     /// be on the X/Y plane. For 3D grounded characters the position is on the X/Z plane. For 3D
@@ -593,10 +606,10 @@ public class MovementAIRigidbody : MonoBehaviour
         {
             if(is3D)
             {
-                rb3D.rotation = value;
+                rb3D.MoveRotation(value);
             } else
             {
-                rb2D.rotation = value.eulerAngles.z;
+                rb2D.MoveRotation(value.eulerAngles.z);
             }
         }
     }

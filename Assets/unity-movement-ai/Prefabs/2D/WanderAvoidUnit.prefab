@@ -5,18 +5,18 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 477434}
-  - 212: {fileID: 21224622}
-  - 114: {fileID: 11485380}
-  - 114: {fileID: 11407602}
-  - 114: {fileID: 11417404}
-  - 114: {fileID: 11448818}
-  - 114: {fileID: 11447942}
-  - 114: {fileID: 11482538}
-  - 50: {fileID: 5024400}
-  - 58: {fileID: 5842210}
+  - component: {fileID: 477434}
+  - component: {fileID: 21224622}
+  - component: {fileID: 11485380}
+  - component: {fileID: 11407602}
+  - component: {fileID: 11417404}
+  - component: {fileID: 11448818}
+  - component: {fileID: 11447942}
+  - component: {fileID: 11482538}
+  - component: {fileID: 5024400}
+  - component: {fileID: 5842210}
   m_Layer: 0
   m_Name: WanderAvoidUnit
   m_TagString: Untagged
@@ -29,11 +29,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 480662}
-  - 114: {fileID: 11497910}
-  - 61: {fileID: 6109690}
+  - component: {fileID: 480662}
+  - component: {fileID: 11497910}
+  - component: {fileID: 6109690}
   m_Layer: 8
   m_Name: ColAvoidSensor
   m_TagString: Untagged
@@ -54,6 +54,7 @@ Transform:
   - {fileID: 480662}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &480662
 Transform:
   m_ObjectHideFlags: 1
@@ -66,22 +67,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 477434}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &5024400
 Rigidbody2D:
-  serializedVersion: 2
+  serializedVersion: 4
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 123982}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: .0500000007
+  m_AngularDrag: 0.05
   m_GravityScale: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!58 &5842210
 CircleCollider2D:
   m_ObjectHideFlags: 1
@@ -89,12 +95,14 @@ CircleCollider2D:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 123982}
   m_Enabled: 1
+  m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
+  m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: .300000012
+  m_Radius: 0.3
 --- !u!61 &6109690
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -102,12 +110,24 @@ BoxCollider2D:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 197404}
   m_Enabled: 1
+  m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_Offset: {x: .449999988, y: 0}
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.45, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.5, y: .600000024}
+  m_Size: {x: 1.5, y: 0.6}
+  m_EdgeRadius: 0
 --- !u!114 &11407602
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -122,13 +142,11 @@ MonoBehaviour:
   maxVelocity: 3.5
   maxAcceleration: 10
   turnSpeed: 20
-  targetRadius: .00499999989
+  targetRadius: 0.005
   slowRadius: 1
-  timeToTarget: .100000001
+  timeToTarget: 0.1
   smoothing: 1
   numSamplesForSmoothing: 5
-  fooCanFly: 0
-  fooGroundCheckDistance: 1
 --- !u!114 &11417404
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -140,8 +158,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 049423ef460e2524186c56ba0e274368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stopRadius: .00499999989
-  pathOffset: .709999979
+  stopRadius: 0.005
+  pathOffset: 0.71
   pathDirection: 1
 --- !u!114 &11447942
 MonoBehaviour:
@@ -154,7 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5943b3ef333d3b45b456e9a8ce26d40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wanderRadius: 1.20000005
+  wanderRadius: 1.2
   wanderDistance: 2
   wanderJitter: 40
 --- !u!114 &11448818
@@ -169,6 +187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAcceleration: 15
+  distanceBetween: 0
 --- !u!114 &11482538
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -180,6 +199,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7857a346b86a4e4ea2b03e8db88b9b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canFly: 0
+  stayGrounded: 1
+  groundFollowDistance: 0.1
+  groundCheckMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  slopeLimit: 80
 --- !u!114 &11485380
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -211,23 +237,39 @@ SpriteRenderer:
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f86036af4b9862940b330425ab36597f, type: 3}
-  m_Color: {r: .631372571, g: .643137276, b: .662745118, a: 1}
+  m_Color: {r: 0.6313726, g: 0.6431373, b: 0.6627451, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

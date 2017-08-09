@@ -5,20 +5,20 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 411838}
-  - 33: {fileID: 3344166}
-  - 23: {fileID: 2385776}
-  - 114: {fileID: 11448142}
-  - 54: {fileID: 5481068}
-  - 135: {fileID: 13572110}
-  - 114: {fileID: 11443776}
-  - 114: {fileID: 11486314}
-  - 114: {fileID: 11453142}
-  - 114: {fileID: 11455984}
-  - 114: {fileID: 11495998}
-  - 114: {fileID: 11483568}
+  - component: {fileID: 411838}
+  - component: {fileID: 3344166}
+  - component: {fileID: 2385776}
+  - component: {fileID: 11448142}
+  - component: {fileID: 5481068}
+  - component: {fileID: 13572110}
+  - component: {fileID: 11443776}
+  - component: {fileID: 11486314}
+  - component: {fileID: 11453142}
+  - component: {fileID: 11455984}
+  - component: {fileID: 11495998}
+  - component: {fileID: 11483568}
   m_Layer: 2
   m_Name: FlockingUnit
   m_TagString: Untagged
@@ -31,11 +31,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 475080}
-  - 114: {fileID: 11415046}
-  - 135: {fileID: 13533002}
+  - component: {fileID: 475080}
+  - component: {fileID: 11415046}
+  - component: {fileID: 13533002}
   m_Layer: 8
   m_Name: Sensor
   m_TagString: Untagged
@@ -56,6 +56,7 @@ Transform:
   - {fileID: 475080}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &475080
 Transform:
   m_ObjectHideFlags: 1
@@ -68,6 +69,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 411838}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2385776
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -77,22 +79,28 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: 91a6a98d47f55e347a20c2dadf7a8b73, type: 2}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &3344166
 MeshFilter:
@@ -113,7 +121,7 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &11415046
@@ -154,10 +162,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canFly: 0
   stayGrounded: 1
-  fooGroundFollowDistance: 0.1
+  groundFollowDistance: 0.1
   groundCheckMask:
     serializedVersion: 2
-    m_Bits: 4294967035
+    m_Bits: 4294964987
   slopeLimit: 80
 --- !u!114 &11453142
 MonoBehaviour:

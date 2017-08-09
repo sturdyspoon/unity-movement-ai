@@ -102,14 +102,14 @@ public class SteeringBasics : MonoBehaviour {
             {
                 // Mulitply by -1 because counter clockwise on the y-axis is in the negative direction
                 float toRotation = -1*(Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg);
-                float rotation = Mathf.LerpAngle(transform.rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
+                float rotation = Mathf.LerpAngle(rb.rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
 
-                transform.rotation = Quaternion.Euler(0, rotation, 0);
+                rb.rotation = Quaternion.Euler(0, rotation, 0);
             } else {
                 float toRotation = (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-                float rotation = Mathf.LerpAngle(transform.rotation.eulerAngles.z, toRotation, Time.deltaTime * turnSpeed);
+                float rotation = Mathf.LerpAngle(rb.rotation.eulerAngles.z, toRotation, Time.deltaTime * turnSpeed);
 
-                transform.rotation = Quaternion.Euler(0, 0, rotation);
+                rb.rotation = Quaternion.Euler(0, 0, rotation);
             }
 		}
 	}
@@ -133,15 +133,15 @@ public class SteeringBasics : MonoBehaviour {
     {
         if (rb.is3D)
         {
-            float rotation = Mathf.LerpAngle(transform.rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
+            float rotation = Mathf.LerpAngle(rb.rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
 
-            transform.rotation = Quaternion.Euler(0, rotation, 0);
+            rb.rotation = Quaternion.Euler(0, rotation, 0);
         }
         else
         {
-            float rotation = Mathf.LerpAngle(transform.rotation.eulerAngles.z, toRotation, Time.deltaTime * turnSpeed);
+            float rotation = Mathf.LerpAngle(rb.rotation.eulerAngles.z, toRotation, Time.deltaTime * turnSpeed);
 
-            transform.rotation = Quaternion.Euler(0, 0, rotation);
+            rb.rotation = Quaternion.Euler(0, 0, rotation);
         }
     }
 
