@@ -1,64 +1,67 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(SteeringBasics))]
-[RequireComponent(typeof(Evade))]
-public class Hide : MonoBehaviour {
-    public float distanceFromBoundary = 0.6f;
-
-    private SteeringBasics steeringBasics;
-    private Evade evade;
-
-    void Awake()
+namespace UnityMovementAI
+{
+    [RequireComponent(typeof(SteeringBasics))]
+    [RequireComponent(typeof(Evade))]
+    public class Hide : MonoBehaviour
     {
-        steeringBasics = GetComponent<SteeringBasics>();
-        evade = GetComponent<Evade>();
-	}
+        public float distanceFromBoundary = 0.6f;
 
-    public Vector3 getSteering(MovementAIRigidbody target, ICollection<MovementAIRigidbody> obstacles)
-    {
-        Vector3 bestHidingSpot;
-        return getSteering(target, obstacles, out bestHidingSpot);
-    }
+        private SteeringBasics steeringBasics;
+        private Evade evade;
 
-    public Vector3 getSteering(MovementAIRigidbody target, ICollection<MovementAIRigidbody> obstacles, out Vector3 bestHidingSpot)
-    {
-        //Find the closest hiding spot
-        float distToClostest = Mathf.Infinity;
-        bestHidingSpot = Vector3.zero;
-
-        foreach(MovementAIRigidbody r in obstacles)
+        void Awake()
         {
-            Vector3 hidingSpot = getHidingPosition(r, target);
+            steeringBasics = GetComponent<SteeringBasics>();
+            evade = GetComponent<Evade>();
+        }
 
-            float dist = Vector3.Distance(hidingSpot, transform.position);
+        public Vector3 getSteering(MovementAIRigidbody target, ICollection<MovementAIRigidbody> obstacles)
+        {
+            Vector3 bestHidingSpot;
+            return getSteering(target, obstacles, out bestHidingSpot);
+        }
 
-            if(dist < distToClostest)
+        public Vector3 getSteering(MovementAIRigidbody target, ICollection<MovementAIRigidbody> obstacles, out Vector3 bestHidingSpot)
+        {
+            //Find the closest hiding spot
+            float distToClostest = Mathf.Infinity;
+            bestHidingSpot = Vector3.zero;
+
+            foreach (MovementAIRigidbody r in obstacles)
             {
-                distToClostest = dist;
-                bestHidingSpot = hidingSpot;
+                Vector3 hidingSpot = getHidingPosition(r, target);
+
+                float dist = Vector3.Distance(hidingSpot, transform.position);
+
+                if (dist < distToClostest)
+                {
+                    distToClostest = dist;
+                    bestHidingSpot = hidingSpot;
+                }
             }
+
+            //If no hiding spot is found then just evade the enemy
+            if (distToClostest == Mathf.Infinity)
+            {
+                return evade.getSteering(target);
+            }
+
+            //Debug.DrawLine(transform.position, bestHidingSpot);
+
+            return steeringBasics.arrive(bestHidingSpot);
         }
 
-        //If no hiding spot is found then just evade the enemy
-        if(distToClostest == Mathf.Infinity)
+        private Vector3 getHidingPosition(MovementAIRigidbody obstacle, MovementAIRigidbody target)
         {
-            return evade.getSteering(target);
+            float distAway = obstacle.radius + distanceFromBoundary;
+
+            Vector3 dir = obstacle.position - target.position;
+            dir.Normalize();
+
+            return obstacle.position + dir * distAway;
         }
-
-        //Debug.DrawLine(transform.position, bestHidingSpot);
-
-        return steeringBasics.arrive(bestHidingSpot);
-    }
-
-    private Vector3 getHidingPosition(MovementAIRigidbody obstacle, MovementAIRigidbody target)
-    {
-        float distAway = obstacle.radius + distanceFromBoundary;
-
-        Vector3 dir = obstacle.position - target.position;
-        dir.Normalize();
-
-        return obstacle.position + dir * distAway;
     }
 }

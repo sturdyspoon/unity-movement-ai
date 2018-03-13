@@ -1,63 +1,64 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(SteeringBasics))]
-public class VelocityMatch : MonoBehaviour
+namespace UnityMovementAI
 {
-
-    public float facingCosine = 90;
-    public float timeToTarget = 0.1f;
-    public float maxAcceleration = 4f;
-
-    private float facingCosineVal;
-
-    private MovementAIRigidbody rb;
-    private SteeringBasics steeringBasics;
-
-    void Awake()
+    [RequireComponent(typeof(SteeringBasics))]
+    public class VelocityMatch : MonoBehaviour
     {
-        facingCosineVal = Mathf.Cos(facingCosine * Mathf.Deg2Rad);
+        public float facingCosine = 90;
+        public float timeToTarget = 0.1f;
+        public float maxAcceleration = 4f;
 
-        rb = GetComponent<MovementAIRigidbody>();
-        steeringBasics = GetComponent<SteeringBasics>();
-    }
+        private float facingCosineVal;
 
-    public Vector3 getSteering(ICollection<MovementAIRigidbody> targets)
-    {
-        Vector3 accel = Vector3.zero;
-        int count = 0;
+        private MovementAIRigidbody rb;
+        private SteeringBasics steeringBasics;
 
-        foreach (MovementAIRigidbody r in targets)
+        void Awake()
         {
-            if (steeringBasics.isFacing(r.position, facingCosineVal))
-            {
-                /* Calculate the acceleration we want to match this target */
-                Vector3 a = r.velocity - rb.velocity;
-                /*
-                 Rather than accelerate the character to the correct speed in 1 second, 
-                 accelerate so we reach the desired speed in timeToTarget seconds 
-                 (if we were to actually accelerate for the full timeToTarget seconds).
-                */
-                a = a / timeToTarget;
+            facingCosineVal = Mathf.Cos(facingCosine * Mathf.Deg2Rad);
 
-                accel += a;
-
-                count++;
-            }
+            rb = GetComponent<MovementAIRigidbody>();
+            steeringBasics = GetComponent<SteeringBasics>();
         }
 
-        if (count > 0)
+        public Vector3 getSteering(ICollection<MovementAIRigidbody> targets)
         {
-            accel = accel / count;
+            Vector3 accel = Vector3.zero;
+            int count = 0;
 
-            /* Make sure we are accelerating at max acceleration */
-            if (accel.magnitude > maxAcceleration)
+            foreach (MovementAIRigidbody r in targets)
             {
-                accel = accel.normalized * maxAcceleration;
-            }
-        }
+                if (steeringBasics.isFacing(r.position, facingCosineVal))
+                {
+                    /* Calculate the acceleration we want to match this target */
+                    Vector3 a = r.velocity - rb.velocity;
+                    /*
+                     Rather than accelerate the character to the correct speed in 1 second, 
+                     accelerate so we reach the desired speed in timeToTarget seconds 
+                     (if we were to actually accelerate for the full timeToTarget seconds).
+                    */
+                    a = a / timeToTarget;
 
-        return accel;
+                    accel += a;
+
+                    count++;
+                }
+            }
+
+            if (count > 0)
+            {
+                accel = accel / count;
+
+                /* Make sure we are accelerating at max acceleration */
+                if (accel.magnitude > maxAcceleration)
+                {
+                    accel = accel.normalized * maxAcceleration;
+                }
+            }
+
+            return accel;
+        }
     }
 }

@@ -1,36 +1,39 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class FollowPathUnit : MonoBehaviour {
+namespace UnityMovementAI
+{
+    public class FollowPathUnit : MonoBehaviour
+    {
+        public bool pathLoop = false;
 
-    public bool pathLoop = false;
+        public bool reversePath = false;
 
-    public bool reversePath = false;
+        public LinePath path;
 
-    public LinePath path;
+        private SteeringBasics steeringBasics;
+        private FollowPath followPath;
 
-    private SteeringBasics steeringBasics;
-    private FollowPath followPath;
-
-    // Use this for initialization
-    void Start () {
-        path.calcDistances();
-
-        steeringBasics = GetComponent<SteeringBasics>();
-        followPath = GetComponent<FollowPath>();
-    }
-	
-	void FixedUpdate () {
-        path.draw();
-
-        if (reversePath && followPath.isAtEndOfPath(path))
+        void Start()
         {
-            path.reversePath();
+            path.calcDistances();
+
+            steeringBasics = GetComponent<SteeringBasics>();
+            followPath = GetComponent<FollowPath>();
         }
 
-        Vector3 accel = followPath.getSteering(path, pathLoop);
+        void FixedUpdate()
+        {
+            path.draw();
 
-        steeringBasics.steer(accel);
-        steeringBasics.lookWhereYoureGoing();
+            if (reversePath && followPath.isAtEndOfPath(path))
+            {
+                path.reversePath();
+            }
+
+            Vector3 accel = followPath.getSteering(path, pathLoop);
+
+            steeringBasics.steer(accel);
+            steeringBasics.lookWhereYoureGoing();
+        }
     }
 }

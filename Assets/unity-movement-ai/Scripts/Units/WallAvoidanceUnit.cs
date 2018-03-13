@@ -1,42 +1,42 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class WallAvoidanceUnit: MonoBehaviour
+namespace UnityMovementAI
 {
-
-    public LinePath path;
-
-    private SteeringBasics steeringBasics;
-    private WallAvoidance wallAvoidance;
-    private FollowPath followPath;
-
-    // Use this for initialization
-    void Start()
+    public class WallAvoidanceUnit : MonoBehaviour
     {
-        path.calcDistances();
+        public LinePath path;
 
-        steeringBasics = GetComponent<SteeringBasics>();
-        wallAvoidance = GetComponent<WallAvoidance>();
-        followPath = GetComponent<FollowPath>();
-    }
+        private SteeringBasics steeringBasics;
+        private WallAvoidance wallAvoidance;
+        private FollowPath followPath;
 
-    void FixedUpdate()
-    {
-        if (followPath.isAtEndOfPath(path))
+        void Start()
         {
-            path.reversePath();
+            path.calcDistances();
+
+            steeringBasics = GetComponent<SteeringBasics>();
+            wallAvoidance = GetComponent<WallAvoidance>();
+            followPath = GetComponent<FollowPath>();
         }
 
-        Vector3 accel = wallAvoidance.getSteering();
-
-        if (accel.magnitude < 0.005f)
+        void FixedUpdate()
         {
-            accel = followPath.getSteering(path);
+            if (followPath.isAtEndOfPath(path))
+            {
+                path.reversePath();
+            }
+
+            Vector3 accel = wallAvoidance.getSteering();
+
+            if (accel.magnitude < 0.005f)
+            {
+                accel = followPath.getSteering(path);
+            }
+
+            steeringBasics.steer(accel);
+            steeringBasics.lookWhereYoureGoing();
+
+            path.draw();
         }
-
-        steeringBasics.steer(accel);
-        steeringBasics.lookWhereYoureGoing();
-
-        path.draw();
     }
 }

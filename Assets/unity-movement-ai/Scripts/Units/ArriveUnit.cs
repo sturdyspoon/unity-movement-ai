@@ -1,23 +1,25 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class ArriveUnit : MonoBehaviour {
-
-    public Vector3 targetPosition;
-
-    private SteeringBasics steeringBasics;
-
-    // Use this for initialization
-    void Start()
+namespace UnityMovementAI
+{
+    public class ArriveUnit : MonoBehaviour
     {
-        steeringBasics = GetComponent<SteeringBasics>();
-    }
 
-    void FixedUpdate()
-    {
-        Vector3 accel = steeringBasics.arrive(targetPosition);
+        public Vector3 targetPosition;
 
-        steeringBasics.steer(accel);
-        steeringBasics.lookWhereYoureGoing();
+        private SteeringBasics steeringBasics;
+
+        void Start()
+        {
+            steeringBasics = GetComponent<SteeringBasics>();
+        }
+
+        void FixedUpdate()
+        {
+            Vector3 accel = steeringBasics.arrive(targetPosition);
+
+            steeringBasics.steer(accel);
+            steeringBasics.lookWhereYoureGoing();
+        }
     }
 }

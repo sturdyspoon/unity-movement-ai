@@ -1,44 +1,46 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-[RequireComponent(typeof(Flee))]
-public class Evade : MonoBehaviour
+namespace UnityMovementAI
 {
-    /* Maximum prediction time the pursue will predict in the future */
-    public float maxPrediction = 1f;
-
-    private Flee flee;
-
-    void Awake()
+    [RequireComponent(typeof(Flee))]
+    public class Evade : MonoBehaviour
     {
-        flee = GetComponent<Flee>();
-    }
+        /* Maximum prediction time the pursue will predict in the future */
+        public float maxPrediction = 1f;
 
-    public Vector3 getSteering(MovementAIRigidbody target)
-    {
-        /* Calculate the distance to the target */
-        Vector3 displacement = target.position - transform.position;
-        float distance = displacement.magnitude;
+        private Flee flee;
 
-        /* Get the targets's speed */
-        float speed = target.velocity.magnitude;
-
-        /* Calculate the prediction time */
-        float prediction;
-        if (speed <= distance / maxPrediction)
+        void Awake()
         {
-            prediction = maxPrediction;
-        }
-        else
-        {
-            prediction = distance / speed;
-            //Place the predicted position a little before the target reaches the character
-            prediction *= 0.9f;
+            flee = GetComponent<Flee>();
         }
 
-        /* Put the target together based on where we think the target will be */
-        Vector3 explicitTarget = target.position + target.velocity * prediction;
+        public Vector3 getSteering(MovementAIRigidbody target)
+        {
+            /* Calculate the distance to the target */
+            Vector3 displacement = target.position - transform.position;
+            float distance = displacement.magnitude;
 
-        return flee.getSteering(explicitTarget);
+            /* Get the targets's speed */
+            float speed = target.velocity.magnitude;
+
+            /* Calculate the prediction time */
+            float prediction;
+            if (speed <= distance / maxPrediction)
+            {
+                prediction = maxPrediction;
+            }
+            else
+            {
+                prediction = distance / speed;
+                //Place the predicted position a little before the target reaches the character
+                prediction *= 0.9f;
+            }
+
+            /* Put the target together based on where we think the target will be */
+            Vector3 explicitTarget = target.position + target.velocity * prediction;
+
+            return flee.getSteering(explicitTarget);
+        }
     }
 }

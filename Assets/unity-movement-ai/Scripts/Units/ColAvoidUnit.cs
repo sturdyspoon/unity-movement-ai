@@ -1,45 +1,47 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class ColAvoidUnit : MonoBehaviour {
-
-    public LinePath path;
-
-    private SteeringBasics steeringBasics;
-    private FollowPath followPath;
-    private CollisionAvoidance colAvoid;
-
-    private NearSensor colAvoidSensor;
-
-    // Use this for initialization
-    void Start()
+namespace UnityMovementAI
+{
+    public class ColAvoidUnit : MonoBehaviour
     {
-        path.calcDistances();
 
-        steeringBasics = GetComponent<SteeringBasics>();
-        followPath = GetComponent<FollowPath>();
-        colAvoid = GetComponent<CollisionAvoidance>();
+        public LinePath path;
 
-        colAvoidSensor = transform.Find("ColAvoidSensor").GetComponent<NearSensor>();
-    }
+        private SteeringBasics steeringBasics;
+        private FollowPath followPath;
+        private CollisionAvoidance colAvoid;
 
-    void FixedUpdate()
-    {
-        path.draw();
+        private NearSensor colAvoidSensor;
 
-        if (followPath.isAtEndOfPath(path))
+        void Start()
         {
-            path.reversePath();
+            path.calcDistances();
+
+            steeringBasics = GetComponent<SteeringBasics>();
+            followPath = GetComponent<FollowPath>();
+            colAvoid = GetComponent<CollisionAvoidance>();
+
+            colAvoidSensor = transform.Find("ColAvoidSensor").GetComponent<NearSensor>();
         }
 
-        Vector3 accel = colAvoid.getSteering(colAvoidSensor.targets);
-
-        if (accel.magnitude < 0.005f)
+        void FixedUpdate()
         {
-            accel = followPath.getSteering(path);
-        }
+            path.draw();
 
-        steeringBasics.steer(accel);
-        steeringBasics.lookWhereYoureGoing();
+            if (followPath.isAtEndOfPath(path))
+            {
+                path.reversePath();
+            }
+
+            Vector3 accel = colAvoid.getSteering(colAvoidSensor.targets);
+
+            if (accel.magnitude < 0.005f)
+            {
+                accel = followPath.getSteering(path);
+            }
+
+            steeringBasics.steer(accel);
+            steeringBasics.lookWhereYoureGoing();
+        }
     }
 }

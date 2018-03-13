@@ -1,103 +1,101 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class FirstPersonCamera : MonoBehaviour
+namespace UnityMovementAI
 {
-    public float speed = 15;
-
-    public float xSensitivity = 2f;
-    public float ySensitivity = 2f;
-
-    public bool clampVerticalRotation = true;
-
-    private CursorLockMode wantedMode;
-
-    // Use this for initialization
-    void Start()
+    public class FirstPersonCamera : MonoBehaviour
     {
-        wantedMode = CursorLockMode.Locked;
-    }
+        public float speed = 15;
 
-    // Update is called once per frame
-    void Update()
-    {
-        updateCursor();
+        public float xSensitivity = 2f;
+        public float ySensitivity = 2f;
 
-        if (Cursor.lockState == CursorLockMode.Locked)
-        {
-            rotateCamera();
+        public bool clampVerticalRotation = true;
 
-            moveCamera();
-        }
-    }
+        private CursorLockMode wantedMode;
 
-    private void updateCursor()
-    {
-        // Release cursor on escape keypress
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            wantedMode = CursorLockMode.None;
-        }
-
-        // Lock cursor on click
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
+        void Start()
         {
             wantedMode = CursorLockMode.Locked;
         }
 
-        // Apply requested cursor state
-        Cursor.lockState = wantedMode;
-        // Hide cursor when locking
-        Cursor.visible = (CursorLockMode.Locked != wantedMode);
-    }
-
-    private void rotateCamera()
-    {
-        float yRot = Input.GetAxis("Mouse X") * xSensitivity;
-        float xRot = -1 * Input.GetAxis("Mouse Y") * ySensitivity;
-
-        if(clampVerticalRotation)
+        void Update()
         {
-            xRot = clampXAxisRotation(xRot);
-        }
+            updateCursor();
 
-        transform.Rotate(new Vector3(xRot, 0f, 0f), Space.Self);
-        transform.Rotate(new Vector3(0f, yRot, 0f), Space.World);
-    }
-
-    private float clampXAxisRotation(float xRot)
-    {
-        float curXRot = transform.localEulerAngles.x;
-        float newXRot = curXRot + xRot;
-
-        if (newXRot > 90 && newXRot < 270)
-        {
-            if (xRot > 0)
+            if (Cursor.lockState == CursorLockMode.Locked)
             {
-                xRot = 90 - curXRot;
-            }
-            else
-            {
-                xRot = 270 - curXRot;
+                rotateCamera();
+                moveCamera();
             }
         }
 
-        return xRot;
-    }
-
-    private void moveCamera()
-    {
-        float vertKey = Input.GetAxisRaw("Vertical");
-
-        float horKey = Input.GetAxisRaw("Horizontal");
-
-        Vector3 moveDir = transform.right * horKey + transform.forward * vertKey;
-
-        if(Input.GetButton("Jump"))
+        private void updateCursor()
         {
-            moveDir += transform.up;
+            // Release cursor on escape keypress
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                wantedMode = CursorLockMode.None;
+            }
+
+            // Lock cursor on click
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
+            {
+                wantedMode = CursorLockMode.Locked;
+            }
+
+            // Apply requested cursor state
+            Cursor.lockState = wantedMode;
+            // Hide cursor when locking
+            Cursor.visible = (CursorLockMode.Locked != wantedMode);
         }
 
-        transform.position += moveDir.normalized * speed * Time.deltaTime;
+        private void rotateCamera()
+        {
+            float yRot = Input.GetAxis("Mouse X") * xSensitivity;
+            float xRot = -1 * Input.GetAxis("Mouse Y") * ySensitivity;
+
+            if (clampVerticalRotation)
+            {
+                xRot = clampXAxisRotation(xRot);
+            }
+
+            transform.Rotate(new Vector3(xRot, 0f, 0f), Space.Self);
+            transform.Rotate(new Vector3(0f, yRot, 0f), Space.World);
+        }
+
+        private float clampXAxisRotation(float xRot)
+        {
+            float curXRot = transform.localEulerAngles.x;
+            float newXRot = curXRot + xRot;
+
+            if (newXRot > 90 && newXRot < 270)
+            {
+                if (xRot > 0)
+                {
+                    xRot = 90 - curXRot;
+                }
+                else
+                {
+                    xRot = 270 - curXRot;
+                }
+            }
+
+            return xRot;
+        }
+
+        private void moveCamera()
+        {
+            float vertKey = Input.GetAxisRaw("Vertical");
+            float horKey = Input.GetAxisRaw("Horizontal");
+
+            Vector3 moveDir = transform.right * horKey + transform.forward * vertKey;
+
+            if (Input.GetButton("Jump"))
+            {
+                moveDir += transform.up;
+            }
+
+            transform.position += moveDir.normalized * speed * Time.deltaTime;
+        }
     }
 }

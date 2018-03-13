@@ -1,38 +1,41 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class HideUnit : MonoBehaviour {
-    public MovementAIRigidbody target;
-
-    private SteeringBasics steeringBasics;
-    private Hide hide;
-    private Spawner obstacleSpawner;
-
-    private WallAvoidance wallAvoid;
-
-    // Use this for initialization
-    void Start()
+namespace UnityMovementAI
+{
+    public class HideUnit : MonoBehaviour
     {
-        steeringBasics = GetComponent<SteeringBasics>();
-        hide = GetComponent<Hide>();
-        obstacleSpawner = GameObject.Find("ObstacleSpawner").GetComponent<Spawner>();
+        public MovementAIRigidbody target;
 
-        wallAvoid = GetComponent<WallAvoidance>();
-    }
+        private SteeringBasics steeringBasics;
+        private Hide hide;
+        private Spawner obstacleSpawner;
 
-    void FixedUpdate()
-    {
-        Vector3 hidePosition;
-        Vector3 hideAccel = hide.getSteering(target, obstacleSpawner.objs, out hidePosition);
+        private WallAvoidance wallAvoid;
 
-        Vector3 accel = wallAvoid.getSteering(hidePosition - transform.position);
-
-        if (accel.magnitude < 0.005f)
+        // Use this for initialization
+        void Start()
         {
-            accel = hideAccel;
+            steeringBasics = GetComponent<SteeringBasics>();
+            hide = GetComponent<Hide>();
+            obstacleSpawner = GameObject.Find("ObstacleSpawner").GetComponent<Spawner>();
+
+            wallAvoid = GetComponent<WallAvoidance>();
         }
 
-        steeringBasics.steer(accel);
-        steeringBasics.lookWhereYoureGoing();
+        void FixedUpdate()
+        {
+            Vector3 hidePosition;
+            Vector3 hideAccel = hide.getSteering(target, obstacleSpawner.objs, out hidePosition);
+
+            Vector3 accel = wallAvoid.getSteering(hidePosition - transform.position);
+
+            if (accel.magnitude < 0.005f)
+            {
+                accel = hideAccel;
+            }
+
+            steeringBasics.steer(accel);
+            steeringBasics.lookWhereYoureGoing();
+        }
     }
 }
