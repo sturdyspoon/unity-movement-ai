@@ -17,10 +17,10 @@ namespace UnityMovementAI
 
         void FixedUpdate()
         {
-            Vector3 accel = flee.getSteering(target.position);
+            Vector3 accel = flee.GetSteering(target.position);
 
-            steeringBasics.steer(accel);
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.Steer(accel);
+            steeringBasics.LookWhereYoureGoing();
         }
     }
 }

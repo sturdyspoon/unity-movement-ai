@@ -4,7 +4,6 @@ namespace UnityMovementAI
 {
     public class SeekUnit : MonoBehaviour
     {
-
         public Transform target;
 
         private SteeringBasics steeringBasics;
@@ -16,10 +15,10 @@ namespace UnityMovementAI
 
         void FixedUpdate()
         {
-            Vector3 accel = steeringBasics.seek(target.position);
+            Vector3 accel = steeringBasics.Seek(target.position);
 
-            steeringBasics.steer(accel);
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.Steer(accel);
+            steeringBasics.LookWhereYoureGoing();
         }
     }
 }

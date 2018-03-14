@@ -18,21 +18,21 @@ namespace UnityMovementAI
             evade = GetComponent<Evade>();
         }
 
-        public Vector3 getSteering(MovementAIRigidbody target, ICollection<MovementAIRigidbody> obstacles)
+        public Vector3 GetSteering(MovementAIRigidbody target, ICollection<MovementAIRigidbody> obstacles)
         {
             Vector3 bestHidingSpot;
-            return getSteering(target, obstacles, out bestHidingSpot);
+            return GetSteering(target, obstacles, out bestHidingSpot);
         }
 
-        public Vector3 getSteering(MovementAIRigidbody target, ICollection<MovementAIRigidbody> obstacles, out Vector3 bestHidingSpot)
+        public Vector3 GetSteering(MovementAIRigidbody target, ICollection<MovementAIRigidbody> obstacles, out Vector3 bestHidingSpot)
         {
-            //Find the closest hiding spot
+            /* Find the closest hiding spot. */
             float distToClostest = Mathf.Infinity;
             bestHidingSpot = Vector3.zero;
 
             foreach (MovementAIRigidbody r in obstacles)
             {
-                Vector3 hidingSpot = getHidingPosition(r, target);
+                Vector3 hidingSpot = GetHidingPosition(r, target);
 
                 float dist = Vector3.Distance(hidingSpot, transform.position);
 
@@ -43,18 +43,18 @@ namespace UnityMovementAI
                 }
             }
 
-            //If no hiding spot is found then just evade the enemy
+            /* If no hiding spot is found then just evade the enemy. */
             if (distToClostest == Mathf.Infinity)
             {
-                return evade.getSteering(target);
+                return evade.GetSteering(target);
             }
 
             //Debug.DrawLine(transform.position, bestHidingSpot);
 
-            return steeringBasics.arrive(bestHidingSpot);
+            return steeringBasics.Arrive(bestHidingSpot);
         }
 
-        private Vector3 getHidingPosition(MovementAIRigidbody obstacle, MovementAIRigidbody target)
+        private Vector3 GetHidingPosition(MovementAIRigidbody obstacle, MovementAIRigidbody target)
         {
             float distAway = obstacle.radius + distanceFromBoundary;
 

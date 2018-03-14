@@ -25,7 +25,7 @@ namespace UnityMovementAI
 
         void Update()
         {
-            updateCursor();
+            UpdateCursor();
 
             if (Cursor.lockState == CursorLockMode.Locked)
             {
@@ -36,7 +36,7 @@ namespace UnityMovementAI
             }
         }
 
-        private void updateCursor()
+        private void UpdateCursor()
         {
             /* Release cursor on escape keypress */
             if (Input.GetKeyDown(KeyCode.Escape))

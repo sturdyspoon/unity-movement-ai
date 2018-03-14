@@ -20,50 +20,50 @@ namespace UnityMovementAI
 
         void Update()
         {
-            updateCursor();
+            UpdateCursor();
 
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                rotateCamera();
-                moveCamera();
+                RotateCamera();
+                MoveCamera();
             }
         }
 
-        private void updateCursor()
+        private void UpdateCursor()
         {
-            // Release cursor on escape keypress
+            /* Release cursor on escape keypress. */
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 wantedMode = CursorLockMode.None;
             }
 
-            // Lock cursor on click
+            /* Lock cursor on click. */
             if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
             {
                 wantedMode = CursorLockMode.Locked;
             }
 
-            // Apply requested cursor state
+            /* Apply requested cursor state. */
             Cursor.lockState = wantedMode;
-            // Hide cursor when locking
+            /* Hide cursor when locking */
             Cursor.visible = (CursorLockMode.Locked != wantedMode);
         }
 
-        private void rotateCamera()
+        private void RotateCamera()
         {
             float yRot = Input.GetAxis("Mouse X") * xSensitivity;
             float xRot = -1 * Input.GetAxis("Mouse Y") * ySensitivity;
 
             if (clampVerticalRotation)
             {
-                xRot = clampXAxisRotation(xRot);
+                xRot = ClampXAxisRotation(xRot);
             }
 
             transform.Rotate(new Vector3(xRot, 0f, 0f), Space.Self);
             transform.Rotate(new Vector3(0f, yRot, 0f), Space.World);
         }
 
-        private float clampXAxisRotation(float xRot)
+        private float ClampXAxisRotation(float xRot)
         {
             float curXRot = transform.localEulerAngles.x;
             float newXRot = curXRot + xRot;
@@ -83,7 +83,7 @@ namespace UnityMovementAI
             return xRot;
         }
 
-        private void moveCamera()
+        private void MoveCamera()
         {
             float vertKey = Input.GetAxisRaw("Vertical");
             float horKey = Input.GetAxisRaw("Horizontal");

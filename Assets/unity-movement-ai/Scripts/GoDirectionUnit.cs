@@ -20,7 +20,7 @@ namespace UnityMovementAI
         {
             rb.velocity = direction.normalized * steeringBasics.maxVelocity;
 
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.LookWhereYoureGoing();
 
             Debug.DrawLine(rb.colliderPosition, rb.colliderPosition + (direction.normalized), Color.cyan, 0f, false);
         }

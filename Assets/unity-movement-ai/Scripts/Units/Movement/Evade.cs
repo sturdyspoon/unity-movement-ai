@@ -15,7 +15,7 @@ namespace UnityMovementAI
             flee = GetComponent<Flee>();
         }
 
-        public Vector3 getSteering(MovementAIRigidbody target)
+        public Vector3 GetSteering(MovementAIRigidbody target)
         {
             /* Calculate the distance to the target */
             Vector3 displacement = target.position - transform.position;
@@ -40,7 +40,7 @@ namespace UnityMovementAI
             /* Put the target together based on where we think the target will be */
             Vector3 explicitTarget = target.position + target.velocity * prediction;
 
-            return flee.getSteering(explicitTarget);
+            return flee.GetSteering(explicitTarget);
         }
     }
 }

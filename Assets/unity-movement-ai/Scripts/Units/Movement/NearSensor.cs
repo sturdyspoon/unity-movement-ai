@@ -12,17 +12,17 @@ namespace UnityMovementAI
             get
             {
                 /* Remove any MovementAIRigidbodies that have been destroyed */
-                _targets.RemoveWhere(isNull);
+                _targets.RemoveWhere(IsNull);
                 return _targets;
             }
         }
 
-        private static bool isNull(MovementAIRigidbody r)
+        private static bool IsNull(MovementAIRigidbody r)
         {
             return (r == null || r.Equals(null));
         }
 
-        private void tryToAdd(Component other)
+        private void TryToAdd(Component other)
         {
             MovementAIRigidbody rb = other.GetComponent<MovementAIRigidbody>();
             if (rb != null)
@@ -31,7 +31,7 @@ namespace UnityMovementAI
             }
         }
 
-        private void tryToRemove(Component other)
+        private void TryToRemove(Component other)
         {
             MovementAIRigidbody rb = other.GetComponent<MovementAIRigidbody>();
             if (rb != null)
@@ -42,22 +42,22 @@ namespace UnityMovementAI
 
         void OnTriggerEnter(Collider other)
         {
-            tryToAdd(other);
+            TryToAdd(other);
         }
 
         void OnTriggerExit(Collider other)
         {
-            tryToRemove(other);
+            TryToRemove(other);
         }
 
         void OnTriggerEnter2D(Collider2D other)
         {
-            tryToAdd(other);
+            TryToAdd(other);
         }
 
         void OnTriggerExit2D(Collider2D other)
         {
-            tryToRemove(other);
+            TryToRemove(other);
         }
     }
 }

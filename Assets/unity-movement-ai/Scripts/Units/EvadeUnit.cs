@@ -9,7 +9,6 @@ namespace UnityMovementAI
         private SteeringBasics steeringBasics;
         private Evade evade;
 
-        // Use this for initialization
         void Start()
         {
             steeringBasics = GetComponent<SteeringBasics>();
@@ -18,10 +17,10 @@ namespace UnityMovementAI
 
         void FixedUpdate()
         {
-            Vector3 accel = evade.getSteering(target);
+            Vector3 accel = evade.GetSteering(target);
 
-            steeringBasics.steer(accel);
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.Steer(accel);
+            steeringBasics.LookWhereYoureGoing();
         }
     }
 }

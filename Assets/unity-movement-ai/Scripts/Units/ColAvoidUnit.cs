@@ -15,7 +15,7 @@ namespace UnityMovementAI
 
         void Start()
         {
-            path.calcDistances();
+            path.CalcDistances();
 
             steeringBasics = GetComponent<SteeringBasics>();
             followPath = GetComponent<FollowPath>();
@@ -26,22 +26,22 @@ namespace UnityMovementAI
 
         void FixedUpdate()
         {
-            path.draw();
+            path.Draw();
 
-            if (followPath.isAtEndOfPath(path))
+            if (followPath.IsAtEndOfPath(path))
             {
-                path.reversePath();
+                path.ReversePath();
             }
 
-            Vector3 accel = colAvoid.getSteering(colAvoidSensor.targets);
+            Vector3 accel = colAvoid.GetSteering(colAvoidSensor.targets);
 
             if (accel.magnitude < 0.005f)
             {
-                accel = followPath.getSteering(path);
+                accel = followPath.GetSteering(path);
             }
 
-            steeringBasics.steer(accel);
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.Steer(accel);
+            steeringBasics.LookWhereYoureGoing();
         }
     }
 }

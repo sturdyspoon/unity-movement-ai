@@ -4,7 +4,6 @@ namespace UnityMovementAI
 {
     public class Wander1Unit : MonoBehaviour
     {
-
         private SteeringBasics steeringBasics;
         private Wander1 wander;
 
@@ -16,10 +15,10 @@ namespace UnityMovementAI
 
         void FixedUpdate()
         {
-            Vector3 accel = wander.getSteering();
+            Vector3 accel = wander.GetSteering();
 
-            steeringBasics.steer(accel);
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.Steer(accel);
+            steeringBasics.LookWhereYoureGoing();
         }
     }
 }

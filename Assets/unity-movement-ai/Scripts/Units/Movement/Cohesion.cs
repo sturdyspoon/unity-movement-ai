@@ -19,7 +19,7 @@ namespace UnityMovementAI
             steeringBasics = GetComponent<SteeringBasics>();
         }
 
-        public Vector3 getSteering(ICollection<MovementAIRigidbody> targets)
+        public Vector3 GetSteering(ICollection<MovementAIRigidbody> targets)
         {
             Vector3 centerOfMass = Vector3.zero;
             int count = 0;
@@ -27,7 +27,7 @@ namespace UnityMovementAI
             /* Sums up everyone's position who is close enough and in front of the character */
             foreach (MovementAIRigidbody r in targets)
             {
-                if (steeringBasics.isFacing(r.position, facingCosineVal))
+                if (steeringBasics.IsFacing(r.position, facingCosineVal))
                 {
                     centerOfMass += r.position;
                     count++;
@@ -42,7 +42,7 @@ namespace UnityMovementAI
             {
                 centerOfMass = centerOfMass / count;
 
-                return steeringBasics.arrive(centerOfMass);
+                return steeringBasics.Arrive(centerOfMass);
             }
         }
     }

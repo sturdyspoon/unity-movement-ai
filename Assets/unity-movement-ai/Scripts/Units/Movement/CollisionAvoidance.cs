@@ -18,7 +18,7 @@ namespace UnityMovementAI
             rb = GetComponent<MovementAIRigidbody>();
         }
 
-        public Vector3 getSteering(ICollection<MovementAIRigidbody> targets)
+        public Vector3 GetSteering(ICollection<MovementAIRigidbody> targets)
         {
             Vector3 acceleration = Vector3.zero;
 
@@ -91,7 +91,7 @@ namespace UnityMovementAI
             }
 
             /* Avoid the target */
-            acceleration = rb.convertVector(acceleration);
+            acceleration = rb.ConvertVector(acceleration);
             acceleration.Normalize();
             acceleration *= maxAcceleration;
 

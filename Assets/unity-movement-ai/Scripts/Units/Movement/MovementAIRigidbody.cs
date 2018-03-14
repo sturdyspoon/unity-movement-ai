@@ -74,19 +74,19 @@ namespace UnityMovementAI
 
         void Awake()
         {
-            setUp();
+            SetUp();
         }
 
         /// <summary>
         /// Sets up the MovementAIRigidbody so it knows about its underlying collider and rigidbody.
         /// </summary>
-        public void setUp()
+        public void SetUp()
         {
-            setUpRigidbody();
-            setUpCollider();
+            SetUpRigidbody();
+            SetUpCollider();
         }
 
-        private void setUpRigidbody()
+        private void SetUpRigidbody()
         {
             Rigidbody rb = GetComponent<Rigidbody>();
             if (rb != null)
@@ -101,7 +101,7 @@ namespace UnityMovementAI
             }
         }
 
-        private void setUpCollider()
+        private void SetUpCollider()
         {
             if (is3D)
             {
@@ -125,7 +125,7 @@ namespace UnityMovementAI
 
         void Start()
         {
-            StartCoroutine(debugDraw());
+            StartCoroutine(DebugDraw());
 
             /* Call fixed update for 3D grounded characters to make sure they get proper 
              * ground / movement normals before their velocity is set */
@@ -135,7 +135,7 @@ namespace UnityMovementAI
         private int count = 0;
         private int countDebug = 0;
 
-        private IEnumerator debugDraw()
+        private IEnumerator DebugDraw()
         {
             yield return new WaitForFixedUpdate();
 
@@ -155,7 +155,7 @@ namespace UnityMovementAI
 
             count++;
             countDebug = 0;
-            StartCoroutine(debugDraw());
+            StartCoroutine(DebugDraw());
         }
 
         void FixedUpdate()
@@ -172,13 +172,11 @@ namespace UnityMovementAI
 
                 RaycastHit downHit;
 
-                /* 
-                Start the ray with a small offset of 0.1f from inside the character. The
-                transform.position of the characer is assumed to be at the base of the character.
-                 */
-                if (shouldFollowGround && sphereCast(Vector3.down, out downHit, groundFollowDistance, groundCheckMask.value))
+                /* Start the ray with a small offset of 0.1f from inside the character. The
+                 * transform.position of the characer is assumed to be at the base of the character. */
+                if (shouldFollowGround && SphereCast(Vector3.down, out downHit, groundFollowDistance, groundCheckMask.value))
                 {
-                    if (isWall(downHit.normal))
+                    if (IsWall(downHit.normal))
                     {
                         /* Get vector pointing down the wall */
                         Vector3 rightSlope = Vector3.Cross(downHit.normal, Vector3.down);
@@ -189,10 +187,10 @@ namespace UnityMovementAI
                         RaycastHit downWallHit;
 
                         /* If we found ground that we would have hit if not for the wall then follow it */
-                        if (remainingDist > 0 && sphereCast(downSlope, out downWallHit, remainingDist, groundCheckMask.value) && !isWall(downWallHit.normal))
+                        if (remainingDist > 0 && SphereCast(downSlope, out downWallHit, remainingDist, groundCheckMask.value) && !IsWall(downWallHit.normal))
                         {
                             Vector3 newPos = rb3D.position + (downSlope * downWallHit.distance);
-                            foundGround(downWallHit.normal, newPos);
+                            FoundGround(downWallHit.normal, newPos);
                         }
 
                         /* If we are close enough to the hit to be touching it then we are on the wall */
@@ -205,11 +203,11 @@ namespace UnityMovementAI
                     else
                     {
                         Vector3 newPos = rb3D.position + (Vector3.down * downHit.distance);
-                        foundGround(downHit.normal, newPos);
+                        FoundGround(downHit.normal, newPos);
                     }
                 }
 
-                limitMovementOnSteepSlopes();
+                LimitMovementOnSteepSlopes();
             }
         }
 
@@ -221,7 +219,7 @@ namespace UnityMovementAI
          * slightly bigger than 0.05f */
         private float spherecastOffset = 0.051f;
 
-        private bool sphereCast(Vector3 dir, out RaycastHit hitInfo, float dist, int layerMask, Vector3 planeNormal = default(Vector3))
+        private bool SphereCast(Vector3 dir, out RaycastHit hitInfo, float dist, int layerMask, Vector3 planeNormal = default(Vector3))
         {
             dir.Normalize();
 
@@ -252,7 +250,7 @@ namespace UnityMovementAI
             }
         }
 
-        private void foundGround(Vector3 normal, Vector3 newPos)
+        private void FoundGround(Vector3 normal, Vector3 newPos)
         {
             movementNormal = normal;
             rb3D.useGravity = false;
@@ -263,23 +261,23 @@ namespace UnityMovementAI
              * since we could have been falling and now found ground so all the downward y velocity is not
              * part of our movement speed. Technically I am projecting the actual velocity onto the ground
              * plane rather than finding the real movement velocity's speed.*/
-            rb3D.velocity = dirOnPlane(rb3D.velocity, movementNormal) * velocity.magnitude;
+            rb3D.velocity = DirOnPlane(rb3D.velocity, movementNormal) * velocity.magnitude;
         }
 
-        private bool isWall(Vector3 surfNormal)
+        private bool IsWall(Vector3 surfNormal)
         {
             /* If the normal of the surface is greater then our slope limit then its a wall */
             return Vector3.Angle(Vector3.up, surfNormal) > slopeLimit;
         }
 
-        private void limitMovementOnSteepSlopes()
+        private void LimitMovementOnSteepSlopes()
         {
             Vector3 startVelocity = rb3D.velocity;
 
             /* If we are currently on a wall then limit our movement */
-            if (wallNormal != Vector3.zero && isMovingInto(rb3D.velocity, wallNormal))
+            if (wallNormal != Vector3.zero && IsMovingInto(rb3D.velocity, wallNormal))
             {
-                rb3D.velocity = limitVelocityOnWall(rb3D.velocity, wallNormal);
+                rb3D.velocity = LimitVelocityOnWall(rb3D.velocity, wallNormal);
             }
             /* Else we have no wall or we are moving away from the wall so we will no longer be touching it */
             else
@@ -314,20 +312,20 @@ namespace UnityMovementAI
                 /* Spherecast in the direction we are moving and check if we will hit a wall. Also check that we are
                  * in fact moving into the wall (it seems that it is possible to clip the corner of a wall even 
                  * though the char/spherecast is moving away from the wall) */
-                if (sphereCast(direction, out hitInfo, dist, groundCheckMask.value, movementNormal) && isWall(hitInfo.normal)
-                    && isMovingInto(direction, hitInfo.normal))
+                if (SphereCast(direction, out hitInfo, dist, groundCheckMask.value, movementNormal) && IsWall(hitInfo.normal)
+                    && IsMovingInto(direction, hitInfo.normal))
                 {
                     /* Move up to the on coming wall */
                     float moveUpDist = Mathf.Max(0, hitInfo.distance);
                     rb3D.MovePosition(rb3D.position + (direction * moveUpDist));
 
-                    Vector3 projectedVel = limitVelocityOnWall(rb3D.velocity, hitInfo.normal);
-                    Vector3 projectedStartVel = limitVelocityOnWall(startVelocity, hitInfo.normal);
+                    Vector3 projectedVel = LimitVelocityOnWall(rb3D.velocity, hitInfo.normal);
+                    Vector3 projectedStartVel = LimitVelocityOnWall(startVelocity, hitInfo.normal);
 
                     /* If we have a previous wall. And if the latest velocity is moving into the previous wall or if 
                      * our starting velocity projected onto this new wall is moving into the previous wall then stop
                      * movement */
-                    if (wallNormal != Vector3.zero && (isMovingInto(projectedVel, wallNormal) || isMovingInto(projectedStartVel, wallNormal)))
+                    if (wallNormal != Vector3.zero && (IsMovingInto(projectedVel, wallNormal) || IsMovingInto(projectedStartVel, wallNormal)))
                     {
                         Vector3 vel = Vector3.zero;
                         if (rb3D.useGravity)
@@ -354,12 +352,12 @@ namespace UnityMovementAI
             }
         }
 
-        private bool isMovingInto(Vector3 dir, Vector3 normal)
+        private bool IsMovingInto(Vector3 dir, Vector3 normal)
         {
             return Vector3.Angle(dir, normal) > 90f;
         }
 
-        private Vector3 limitVelocityOnWall(Vector3 velocity, Vector3 planeNormal)
+        private Vector3 LimitVelocityOnWall(Vector3 velocity, Vector3 planeNormal)
         {
             Vector3 rightSlope = Vector3.Cross(planeNormal, Vector3.down);
 
@@ -415,7 +413,7 @@ namespace UnityMovementAI
             return velocity;
         }
 
-        public void jump(float speed)
+        public void Jump(float speed)
         {
             if (rb3D.useGravity == false)
             {
@@ -524,10 +522,10 @@ namespace UnityMovementAI
                         /* Else only move along the ground plane */
                         else
                         {
-                            rb3D.velocity = dirOnPlane(value, movementNormal) * value.magnitude;
+                            rb3D.velocity = DirOnPlane(value, movementNormal) * value.magnitude;
                         }
 
-                        limitMovementOnSteepSlopes();
+                        LimitMovementOnSteepSlopes();
                     }
                 }
                 else
@@ -562,7 +560,7 @@ namespace UnityMovementAI
         /// <summary>
         /// Creates a vector that maintains x/z direction but lies on the plane.
         /// </summary>
-        private Vector3 dirOnPlane(Vector3 vector, Vector3 planeNormal)
+        private Vector3 DirOnPlane(Vector3 vector, Vector3 planeNormal)
         {
             Vector3 newVel = vector;
             newVel.y = (-planeNormal.x * vector.x - planeNormal.z * vector.z) / planeNormal.y;
@@ -679,7 +677,7 @@ namespace UnityMovementAI
         {
             get
             {
-                return SteeringBasics.orientationToVector(rotationInRadians, is3D);
+                return SteeringBasics.OrientationToVector(rotationInRadians, is3D);
             }
         }
 
@@ -691,7 +689,7 @@ namespace UnityMovementAI
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
-        public Vector3 convertVector(Vector3 v)
+        public Vector3 ConvertVector(Vector3 v)
         {
             /* If the character is a 2D character then ignore the z component */
             if (!is3D)

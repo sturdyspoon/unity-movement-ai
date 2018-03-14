@@ -12,7 +12,7 @@ namespace UnityMovementAI
 
         void Start()
         {
-            path.calcDistances();
+            path.CalcDistances();
 
             steeringBasics = GetComponent<SteeringBasics>();
             wallAvoidance = GetComponent<WallAvoidance>();
@@ -21,22 +21,22 @@ namespace UnityMovementAI
 
         void FixedUpdate()
         {
-            if (followPath.isAtEndOfPath(path))
+            if (followPath.IsAtEndOfPath(path))
             {
-                path.reversePath();
+                path.ReversePath();
             }
 
-            Vector3 accel = wallAvoidance.getSteering();
+            Vector3 accel = wallAvoidance.GetSteering();
 
             if (accel.magnitude < 0.005f)
             {
-                accel = followPath.getSteering(path);
+                accel = followPath.GetSteering(path);
             }
 
-            steeringBasics.steer(accel);
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.Steer(accel);
+            steeringBasics.LookWhereYoureGoing();
 
-            path.draw();
+            path.Draw();
         }
     }
 }

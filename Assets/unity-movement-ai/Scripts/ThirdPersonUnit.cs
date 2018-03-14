@@ -21,7 +21,6 @@ namespace UnityMovementAI
         private float horAxis = 0f;
         private float vertAxis = 0f;
 
-
         void Start()
         {
             rb = GetComponent<MovementAIRigidbody>();
@@ -40,7 +39,7 @@ namespace UnityMovementAI
 
             if (Input.GetButtonDown("Jump"))
             {
-                rb.jump(jumpSpeed);
+                rb.Jump(jumpSpeed);
             }
         }
 
@@ -48,7 +47,7 @@ namespace UnityMovementAI
         {
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                rb.velocity = getMovementDir() * speed;
+                rb.velocity = GetMovementDir() * speed;
             }
             else
             {
@@ -60,7 +59,7 @@ namespace UnityMovementAI
         {
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                Vector3 dir = getMovementDir();
+                Vector3 dir = GetMovementDir();
 
                 if (dir.magnitude > 0)
                 {
@@ -71,7 +70,7 @@ namespace UnityMovementAI
             }
         }
 
-        private Vector3 getMovementDir()
+        private Vector3 GetMovementDir()
         {
             return ((cam.forward * vertAxis) + (cam.right * horAxis)).normalized;
         }

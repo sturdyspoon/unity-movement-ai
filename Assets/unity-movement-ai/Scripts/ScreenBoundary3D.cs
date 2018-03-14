@@ -4,7 +4,6 @@ namespace UnityMovementAI
 {
     public class ScreenBoundary3D : MonoBehaviour
     {
-
         private Vector3 bottomLeft;
         private Vector3 topRight;
         private Vector3 widthHeight;
@@ -22,15 +21,15 @@ namespace UnityMovementAI
 
         void OnTriggerStay(Collider other)
         {
-            keepInBounds(other);
+            KeepInBounds(other);
         }
 
         void OnTriggerExit(Collider other)
         {
-            keepInBounds(other);
+            KeepInBounds(other);
         }
 
-        private void keepInBounds(Collider other)
+        private void KeepInBounds(Collider other)
         {
             Transform t = other.transform;
 

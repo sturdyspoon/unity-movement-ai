@@ -23,22 +23,20 @@ namespace UnityMovementAI
             steeringBasics = GetComponent<SteeringBasics>();
         }
 
-        public Vector3 getSteering(ICollection<MovementAIRigidbody> targets)
+        public Vector3 GetSteering(ICollection<MovementAIRigidbody> targets)
         {
             Vector3 accel = Vector3.zero;
             int count = 0;
 
             foreach (MovementAIRigidbody r in targets)
             {
-                if (steeringBasics.isFacing(r.position, facingCosineVal))
+                if (steeringBasics.IsFacing(r.position, facingCosineVal))
                 {
                     /* Calculate the acceleration we want to match this target */
                     Vector3 a = r.velocity - rb.velocity;
-                    /*
-                     Rather than accelerate the character to the correct speed in 1 second, 
-                     accelerate so we reach the desired speed in timeToTarget seconds 
-                     (if we were to actually accelerate for the full timeToTarget seconds).
-                    */
+                    /* Rather than accelerate the character to the correct speed in 1 second, 
+                     * accelerate so we reach the desired speed in timeToTarget seconds 
+                     * (if we were to actually accelerate for the full timeToTarget seconds). */
                     a = a / timeToTarget;
 
                     accel += a;

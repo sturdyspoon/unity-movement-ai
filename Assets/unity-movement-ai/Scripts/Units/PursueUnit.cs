@@ -4,7 +4,6 @@ namespace UnityMovementAI
 {
     public class PursueUnit : MonoBehaviour
     {
-
         public MovementAIRigidbody target;
 
         private SteeringBasics steeringBasics;
@@ -18,10 +17,10 @@ namespace UnityMovementAI
 
         void FixedUpdate()
         {
-            Vector3 accel = pursue.getSteering(target);
+            Vector3 accel = pursue.GetSteering(target);
 
-            steeringBasics.steer(accel);
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.Steer(accel);
+            steeringBasics.LookWhereYoureGoing();
         }
     }
 }

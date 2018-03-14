@@ -4,7 +4,6 @@ namespace UnityMovementAI
 {
     public class OffsetPursuitUnit : MonoBehaviour
     {
-
         public MovementAIRigidbody target;
 
         public Vector3 offset;
@@ -28,19 +27,19 @@ namespace UnityMovementAI
         void LateUpdate()
         {
             Vector3 targetPos;
-            Vector3 offsetAccel = offsetPursuit.getSteering(target, offset, out targetPos);
-            Vector3 sepAccel = separation.getSteering(sensor.targets);
+            Vector3 offsetAccel = offsetPursuit.GetSteering(target, offset, out targetPos);
+            Vector3 sepAccel = separation.GetSteering(sensor.targets);
 
-            steeringBasics.steer(offsetAccel + sepAccel);
+            steeringBasics.Steer(offsetAccel + sepAccel);
 
             /* If we are still arriving then look where we are going, else look the same direction as our formation target */
             if (Vector3.Distance(transform.position, targetPos) > groupLookDist)
             {
-                steeringBasics.lookWhereYoureGoing();
+                steeringBasics.LookWhereYoureGoing();
             }
             else
             {
-                steeringBasics.lookAtDirection(target.rotation);
+                steeringBasics.LookAtDirection(target.rotation);
             }
         }
     }

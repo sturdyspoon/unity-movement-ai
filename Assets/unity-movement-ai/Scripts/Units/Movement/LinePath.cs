@@ -14,7 +14,7 @@ namespace UnityMovementAI
         [System.NonSerialized]
         public float[] distances;
 
-        // Indexer declaration.
+        /* Indexer declaration. */
         public Vector3 this[int i]
         {
             get
@@ -28,7 +28,7 @@ namespace UnityMovementAI
             }
         }
 
-        public int Length
+        public int size
         {
             get
             {
@@ -49,12 +49,12 @@ namespace UnityMovementAI
         {
             this.nodes = nodes;
 
-            calcDistances();
+            CalcDistances();
         }
 
         /* Loops through the path's nodes and determines how far each node in the path is 
          * from the starting node */
-        public void calcDistances()
+        public void CalcDistances()
         {
             distances = new float[nodes.Length];
             distances[0] = 0;
@@ -68,7 +68,7 @@ namespace UnityMovementAI
         }
 
         /* Draws the path in the scene view */
-        public void draw()
+        public void Draw()
         {
             for (int i = 0; i < nodes.Length - 1; i++)
             {
@@ -77,24 +77,24 @@ namespace UnityMovementAI
         }
 
         /* Gets the param for the closest point on the path given a position */
-        public float getParam(Vector3 position, MovementAIRigidbody rb)
+        public float GetParam(Vector3 position, MovementAIRigidbody rb)
         {
-            int closestSegment = getClosestSegment(position);
+            int closestSegment = GetClosestSegment(position);
 
-            float param = this.distances[closestSegment] + getParamForSegment(position, nodes[closestSegment], nodes[closestSegment + 1], rb);
+            float param = this.distances[closestSegment] + GetParamForSegment(position, nodes[closestSegment], nodes[closestSegment + 1], rb);
 
             return param;
         }
 
-        public int getClosestSegment(Vector3 position)
+        public int GetClosestSegment(Vector3 position)
         {
             /* Find the first point in the closest line segment to the path */
-            float closestDist = distToSegment(position, nodes[0], nodes[1]);
+            float closestDist = DistToSegment(position, nodes[0], nodes[1]);
             int closestSegment = 0;
 
             for (int i = 1; i < nodes.Length - 1; i++)
             {
-                float dist = distToSegment(position, nodes[i], nodes[i + 1]);
+                float dist = DistToSegment(position, nodes[i], nodes[i + 1]);
 
                 if (dist <= closestDist)
                 {
@@ -107,7 +107,7 @@ namespace UnityMovementAI
         }
 
         /* Given a param it gets the position on the path */
-        public Vector3 getPosition(float param, bool pathLoop = false)
+        public Vector3 GetPosition(float param, bool pathLoop = false)
         {
             /* Make sure the param is not past the beginning or end of the path */
             if (param < 0)
@@ -148,7 +148,7 @@ namespace UnityMovementAI
 
         /* Gives the distance of a point to a line segment.
          * p is the point, v and w are the two points of the line segment */
-        private float distToSegment(Vector3 p, Vector3 v, Vector3 w)
+        private float DistToSegment(Vector3 p, Vector3 v, Vector3 w)
         {
             Vector3 vw = w - v;
 
@@ -177,11 +177,11 @@ namespace UnityMovementAI
         }
 
         /* Finds the param for the closest point on the segment vw given the point p */
-        private float getParamForSegment(Vector3 p, Vector3 v, Vector3 w, MovementAIRigidbody rb)
+        private float GetParamForSegment(Vector3 p, Vector3 v, Vector3 w, MovementAIRigidbody rb)
         {
             Vector3 vw = w - v;
 
-            vw = rb.convertVector(vw);
+            vw = rb.ConvertVector(vw);
 
             float l2 = Vector3.Dot(vw, vw);
 
@@ -205,7 +205,7 @@ namespace UnityMovementAI
             return t * (v - w).magnitude;
         }
 
-        public void removeNode(int i)
+        public void RemoveNode(int i)
         {
             Vector3[] newNodes = new Vector3[nodes.Length - 1];
 
@@ -221,14 +221,14 @@ namespace UnityMovementAI
 
             this.nodes = newNodes;
 
-            calcDistances();
+            CalcDistances();
         }
 
-        public void reversePath()
+        public void ReversePath()
         {
             Array.Reverse(nodes);
 
-            calcDistances();
+            CalcDistances();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace UnityMovementAI
             steeringBasics = GetComponent<SteeringBasics>();
         }
 
-        public Vector3 getSteering(MovementAIRigidbody target)
+        public Vector3 GetSteering(MovementAIRigidbody target)
         {
             /* Calculate the distance to the target */
             Vector3 displacement = target.position - transform.position;
@@ -42,7 +42,7 @@ namespace UnityMovementAI
 
             //Debug.DrawLine(transform.position, explicitTarget);
 
-            return steeringBasics.seek(explicitTarget);
+            return steeringBasics.Seek(explicitTarget);
         }
     }
 }

@@ -4,7 +4,6 @@ namespace UnityMovementAI
 {
     public class InterposeUnit : MonoBehaviour
     {
-
         public MovementAIRigidbody target1;
         public MovementAIRigidbody target2;
 
@@ -17,10 +16,10 @@ namespace UnityMovementAI
 
         void FixedUpdate()
         {
-            Vector3 accel = steeringBasics.interpose(target1, target2);
+            Vector3 accel = steeringBasics.Interpose(target1, target2);
 
-            steeringBasics.steer(accel);
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.Steer(accel);
+            steeringBasics.LookWhereYoureGoing();
         }
     }
 }

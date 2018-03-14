@@ -5,7 +5,6 @@ namespace UnityMovementAI
 {
     public class Spawner : MonoBehaviour
     {
-
         public Transform obj;
         public Vector2 objectSizeRange = new Vector2(1, 2);
 
@@ -25,27 +24,27 @@ namespace UnityMovementAI
         [System.NonSerialized]
         public List<MovementAIRigidbody> objs = new List<MovementAIRigidbody>();
 
-        // Use this for initialization
         void Start()
         {
             MovementAIRigidbody rb = obj.GetComponent<MovementAIRigidbody>();
-            rb.setUp(); //Manually set up the MovementAIRigidbody since the given obj can be a prefab
+            /* Manually set up the MovementAIRigidbody since the given obj can be a prefab */
+            rb.SetUp();
             isObj3D = rb.is3D;
 
-            //Find the size of the map
+            /* Find the size of the map */
             float distAway = Camera.main.WorldToViewportPoint(Vector3.zero).z;
 
             bottomLeft = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distAway));
             Vector3 topRight = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, distAway));
             widthHeight = topRight - bottomLeft;
 
-            //Create the create the objects
+            /* Create the create the objects */
             for (int i = 0; i < numberOfObjects; i++)
             {
-                //Try to place the objects multiple times before giving up
+                /* Try to place the objects multiple times before giving up */
                 for (int j = 0; j < 10; j++)
                 {
-                    if (tryToCreateObject())
+                    if (TryToCreateObject())
                     {
                         break;
                     }
@@ -53,7 +52,7 @@ namespace UnityMovementAI
             }
         }
 
-        private bool tryToCreateObject()
+        private bool TryToCreateObject()
         {
             float size = Random.Range(objectSizeRange.x, objectSizeRange.y);
             float halfSize = size / 2f;
@@ -70,7 +69,7 @@ namespace UnityMovementAI
                 pos.y = bottomLeft.y + Random.Range(boundaryPadding + halfSize, widthHeight.y - boundaryPadding - halfSize);
             }
 
-            if (canPlaceObject(halfSize, pos))
+            if (CanPlaceObject(halfSize, pos))
             {
                 Transform t = Instantiate(obj, pos, Quaternion.identity) as Transform;
 
@@ -106,9 +105,9 @@ namespace UnityMovementAI
             return false;
         }
 
-        private bool canPlaceObject(float halfSize, Vector3 pos)
+        private bool CanPlaceObject(float halfSize, Vector3 pos)
         {
-            //Make sure it does not overlap with any thing to avoid
+            /* Make sure it does not overlap with any thing to avoid */
             for (int i = 0; i < thingsToAvoid.Length; i++)
             {
                 float dist = Vector3.Distance(thingsToAvoid[i].position, pos);
@@ -119,7 +118,7 @@ namespace UnityMovementAI
                 }
             }
 
-            //Make sure it does not overlap with any existing object
+            /* Make sure it does not overlap with any existing object */
             foreach (MovementAIRigidbody o in objs)
             {
                 float dist = Vector3.Distance(o.position, pos);

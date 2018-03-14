@@ -34,26 +34,26 @@ namespace UnityMovementAI
             steeringBasics = GetComponent<SteeringBasics>();
         }
 
-        public Vector3 getSteering()
+        public Vector3 GetSteering()
         {
             if (rb.velocity.magnitude > 0.005f)
             {
-                return getSteering(rb.velocity);
+                return GetSteering(rb.velocity);
             }
             else
             {
-                return getSteering(rb.rotationAsVector);
+                return GetSteering(rb.rotationAsVector);
             }
         }
 
-        public Vector3 getSteering(Vector3 facingDir)
+        public Vector3 GetSteering(Vector3 facingDir)
         {
             Vector3 acceleration = Vector3.zero;
 
             GenericCastHit hit;
 
             /* If no collision do nothing */
-            if (!findObstacle(facingDir, out hit))
+            if (!FindObstacle(facingDir, out hit))
             {
                 return acceleration;
             }
@@ -62,7 +62,7 @@ namespace UnityMovementAI
             Vector3 targetPostition = hit.point + hit.normal * wallAvoidDistance;
 
             /* If velocity and the collision normal are parallel then move the target a bit to
-             the left or right of the normal */
+             * the left or right of the normal */
             float angle = Vector3.Angle(rb.velocity, hit.normal);
             if (angle > 165f)
             {
@@ -85,26 +85,26 @@ namespace UnityMovementAI
 
             //SteeringBasics.debugCross(targetPostition, 0.5f, new Color(0.612f, 0.153f, 0.69f), 0.5f, false);
 
-            return steeringBasics.seek(targetPostition, maxAcceleration);
+            return steeringBasics.Seek(targetPostition, maxAcceleration);
         }
 
-        private bool findObstacle(Vector3 facingDir, out GenericCastHit firstHit)
+        private bool FindObstacle(Vector3 facingDir, out GenericCastHit firstHit)
         {
-            facingDir = rb.convertVector(facingDir).normalized;
+            facingDir = rb.ConvertVector(facingDir).normalized;
 
             /* Create the direction vectors */
             Vector3[] dirs = new Vector3[3];
             dirs[0] = facingDir;
 
-            float orientation = SteeringBasics.vectorToOrientation(facingDir, rb.is3D);
+            float orientation = SteeringBasics.VectorToOrientation(facingDir, rb.is3D);
 
-            dirs[1] = SteeringBasics.orientationToVector(orientation + sideWhiskerAngle * Mathf.Deg2Rad, rb.is3D);
-            dirs[2] = SteeringBasics.orientationToVector(orientation - sideWhiskerAngle * Mathf.Deg2Rad, rb.is3D);
+            dirs[1] = SteeringBasics.OrientationToVector(orientation + sideWhiskerAngle * Mathf.Deg2Rad, rb.is3D);
+            dirs[2] = SteeringBasics.OrientationToVector(orientation - sideWhiskerAngle * Mathf.Deg2Rad, rb.is3D);
 
-            return castWhiskers(dirs, out firstHit);
+            return CastWhiskers(dirs, out firstHit);
         }
 
-        private bool castWhiskers(Vector3[] dirs, out GenericCastHit firstHit)
+        private bool CastWhiskers(Vector3[] dirs, out GenericCastHit firstHit)
         {
             firstHit = new GenericCastHit();
             bool foundObs = false;
@@ -115,7 +115,7 @@ namespace UnityMovementAI
 
                 GenericCastHit hit;
 
-                if (genericCast(dirs[i], out hit, dist))
+                if (GenericCast(dirs[i], out hit, dist))
                 {
                     foundObs = true;
                     firstHit = hit;
@@ -126,7 +126,7 @@ namespace UnityMovementAI
             return foundObs;
         }
 
-        private bool genericCast(Vector3 direction, out GenericCastHit hit, float distance = Mathf.Infinity)
+        private bool GenericCast(Vector3 direction, out GenericCastHit hit, float distance = Mathf.Infinity)
         {
             bool result = false;
             Vector3 origin = rb.colliderPosition;
@@ -154,7 +154,7 @@ namespace UnityMovementAI
 
                     if (angle < rb.slopeLimit)
                     {
-                        hit.normal = rb.convertVector(hit.normal);
+                        hit.normal = rb.ConvertVector(hit.normal);
                         result = false;
                     }
                 }
@@ -172,7 +172,8 @@ namespace UnityMovementAI
                     h = Physics2D.CircleCast(origin, (rb.radius * 0.5f), direction, distance, castMask.value);
                 }
 
-                result = (h.collider != null); //RaycastHit2D auto evaluates to true or false evidently
+                /* RaycastHit2D auto evaluates to true or false evidently */
+                result = (h.collider != null);
                 hit = new GenericCastHit(h);
             }
 

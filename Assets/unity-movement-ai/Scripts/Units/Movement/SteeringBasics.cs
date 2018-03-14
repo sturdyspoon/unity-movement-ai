@@ -14,7 +14,6 @@ namespace UnityMovementAI
 
         public float turnSpeed = 20f;
 
-
         [Header("Arrive")]
 
         /* The radius from the target that means we are close enough and have arrived */
@@ -44,7 +43,7 @@ namespace UnityMovementAI
         }
 
         /* Updates the velocity of the current game object by the given linear acceleration */
-        public void steer(Vector3 linearAcceleration)
+        public void Steer(Vector3 linearAcceleration)
         {
             rb.velocity += linearAcceleration * Time.deltaTime;
 
@@ -55,26 +54,26 @@ namespace UnityMovementAI
         }
 
         /* A seek steering behavior. Will return the steering for the current game object to seek a given position */
-        public Vector3 seek(Vector3 targetPosition, float maxSeekAccel)
+        public Vector3 Seek(Vector3 targetPosition, float maxSeekAccel)
         {
-            //Get the direction
-            Vector3 acceleration = rb.convertVector(targetPosition - transform.position);
+            /* Get the direction */
+            Vector3 acceleration = rb.ConvertVector(targetPosition - transform.position);
 
             acceleration.Normalize();
 
-            //Accelerate to the target
+            /* Accelerate to the target */
             acceleration *= maxSeekAccel;
 
             return acceleration;
         }
 
-        public Vector3 seek(Vector3 targetPosition)
+        public Vector3 Seek(Vector3 targetPosition)
         {
-            return seek(targetPosition, maxAcceleration);
+            return Seek(targetPosition, maxAcceleration);
         }
 
         /* Makes the current game object look where he is going */
-        public void lookWhereYoureGoing()
+        public void LookWhereYoureGoing()
         {
             Vector3 direction = rb.velocity;
 
@@ -97,19 +96,19 @@ namespace UnityMovementAI
                 direction /= velocitySamples.Count;
             }
 
-            lookAtDirection(direction);
+            LookAtDirection(direction);
         }
 
-        public void lookAtDirection(Vector3 direction)
+        public void LookAtDirection(Vector3 direction)
         {
             direction.Normalize();
 
-            // If we have a non-zero direction then look towards that direciton otherwise do nothing
+            /* If we have a non-zero direction then look towards that direciton otherwise do nothing */
             if (direction.sqrMagnitude > 0.001f)
             {
                 if (rb.is3D)
                 {
-                    // Mulitply by -1 because counter clockwise on the y-axis is in the negative direction
+                    /* Mulitply by -1 because counter clockwise on the y-axis is in the negative direction */
                     float toRotation = -1 * (Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg);
                     float rotation = Mathf.LerpAngle(rb.rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
 
@@ -125,15 +124,15 @@ namespace UnityMovementAI
             }
         }
 
-        public void lookAtDirection(Quaternion toRotation)
+        public void LookAtDirection(Quaternion toRotation)
         {
             if (rb.is3D)
             {
-                lookAtDirection(toRotation.eulerAngles.y);
+                LookAtDirection(toRotation.eulerAngles.y);
             }
             else
             {
-                lookAtDirection(toRotation.eulerAngles.z);
+                LookAtDirection(toRotation.eulerAngles.z);
             }
         }
 
@@ -141,7 +140,7 @@ namespace UnityMovementAI
         /// Makes the character's rotation lerp closer to the given target rotation (in degrees).
         /// </summary>
         /// <param name="toRotation">the desired rotation to be looking at in degrees</param>
-        public void lookAtDirection(float toRotation)
+        public void LookAtDirection(float toRotation)
         {
             if (rb.is3D)
             {
@@ -158,11 +157,11 @@ namespace UnityMovementAI
         }
 
         /* Returns the steering for a character so it arrives at the target */
-        public Vector3 arrive(Vector3 targetPosition)
+        public Vector3 Arrive(Vector3 targetPosition)
         {
             Debug.DrawLine(transform.position, targetPosition, Color.cyan, 0f, false);
 
-            targetPosition = rb.convertVector(targetPosition);
+            targetPosition = rb.ConvertVector(targetPosition);
 
             /* Get the right direction for the linear acceleration */
             Vector3 targetVelocity = targetPosition - rb.position;
@@ -195,11 +194,9 @@ namespace UnityMovementAI
 
             /* Calculate the linear acceleration we want */
             Vector3 acceleration = targetVelocity - rb.velocity;
-            /*
-            Rather than accelerate the character to the correct speed in 1 second, 
-            accelerate so we reach the desired speed in timeToTarget seconds 
-            (if we were to actually accelerate for the full timeToTarget seconds).
-            */
+            /* Rather than accelerate the character to the correct speed in 1 second, 
+             * accelerate so we reach the desired speed in timeToTarget seconds 
+             * (if we were to actually accelerate for the full timeToTarget seconds). */
             acceleration *= 1 / timeToTarget;
 
             /* Make sure we are accelerating at max acceleration */
@@ -212,21 +209,7 @@ namespace UnityMovementAI
             return acceleration;
         }
 
-        static float quadForm(float a, float b, float c, bool pos)
-        {
-            float preRoot = b * b - 4 * a * c;
-            if (preRoot < 0)
-            {
-                return float.NaN;
-            }
-            else
-            {
-                float sgn = pos ? 1.0f : -1.0f;
-                return (sgn * Mathf.Sqrt(preRoot) - b) / (2.0f * a);
-            }
-        }
-
-        public Vector3 interpose(MovementAIRigidbody target1, MovementAIRigidbody target2)
+        public Vector3 Interpose(MovementAIRigidbody target1, MovementAIRigidbody target2)
         {
             Vector3 midPoint = (target1.position + target2.position) / 2;
 
@@ -237,16 +220,18 @@ namespace UnityMovementAI
 
             midPoint = (futureTarget1Pos + futureTarget2Pos) / 2;
 
-            return arrive(midPoint);
+            return Arrive(midPoint);
         }
 
-        /* Checks to see if the target is in front of the character */
-        public bool isInFront(Vector3 target)
+        /// <summary>
+        /// Checks to see if the target is in front of the character
+        /// </summary>
+        public bool IsInFront(Vector3 target)
         {
-            return isFacing(target, 0);
+            return IsFacing(target, 0);
         }
 
-        public bool isFacing(Vector3 target, float cosineValue)
+        public bool IsFacing(Vector3 target, float cosineValue)
         {
             Vector3 facing = transform.right.normalized;
 
@@ -262,12 +247,12 @@ namespace UnityMovementAI
         /// <param name="orientation">the orientation in radians</param>
         /// <param name="is3DGameObj">is the orientation for a 3D game object or a 2D game object</param>
         /// <returns></returns>
-        public static Vector3 orientationToVector(float orientation, bool is3DGameObj)
+        public static Vector3 OrientationToVector(float orientation, bool is3DGameObj)
         {
             if (is3DGameObj)
             {
-                // Mulitply the orientation by -1 because counter clockwise on the y-axis is in the negative
-                // direction, but Cos And Sin expect clockwise orientation to be the positive direction
+                /* Mulitply the orientation by -1 because counter clockwise on the y-axis is in the negative
+                 * direction, but Cos And Sin expect clockwise orientation to be the positive direction */
                 return new Vector3(Mathf.Cos(-orientation), 0, Mathf.Sin(-orientation));
             }
             else
@@ -283,11 +268,11 @@ namespace UnityMovementAI
         /// <param name="direction">the direction vector</param>
         /// <param name="is3DGameObj">is the direction vector for a 3D game object or a 2D game object</param>
         /// <returns>orientation in radians</returns>
-        public static float vectorToOrientation(Vector3 direction, bool is3DGameObj)
+        public static float VectorToOrientation(Vector3 direction, bool is3DGameObj)
         {
             if (is3DGameObj)
             {
-                // Mulitply by -1 because counter clockwise on the y-axis is in the negative direction
+                /* Mulitply by -1 because counter clockwise on the y-axis is in the negative direction */
                 return -1 * Mathf.Atan2(direction.z, direction.x);
             }
             else
@@ -299,7 +284,7 @@ namespace UnityMovementAI
         /// <summary>
         /// Creates a debug cross at the given position in the scene view to help with debugging.
         /// </summary>
-        public static void debugCross(Vector3 position, float size = 0.5f, Color color = default(Color), float duration = 0f, bool depthTest = true)
+        public static void DebugCross(Vector3 position, float size = 0.5f, Color color = default(Color), float duration = 0f, bool depthTest = true)
         {
             Vector3 xStart = position + Vector3.right * size * 0.5f;
             Vector3 xEnd = position - Vector3.right * size * 0.5f;

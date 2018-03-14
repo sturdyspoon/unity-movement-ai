@@ -21,23 +21,23 @@ namespace UnityMovementAI
         }
 
         /* A flee steering behavior. Will return the steering for the current game object to flee a given position */
-        public Vector3 getSteering(Vector3 targetPosition)
+        public Vector3 GetSteering(Vector3 targetPosition)
         {
-            //Get the direction
+            /* Get the direction */
             Vector3 acceleration = transform.position - targetPosition;
 
-            //If the target is far way then don't flee
+            /* If the target is far way then don't flee */
             if (acceleration.magnitude > panicDist)
             {
-                //Slow down if we should decelerate on stop
+                /* Slow down if we should decelerate on stop */
                 if (decelerateOnStop && rb.velocity.magnitude > 0.001f)
                 {
-                    //Decelerate to zero velocity in time to target amount of time
+                    /* Decelerate to zero velocity in time to target amount of time */
                     acceleration = -rb.velocity / timeToTarget;
 
                     if (acceleration.magnitude > maxAcceleration)
                     {
-                        acceleration = giveMaxAccel(acceleration);
+                        acceleration = GiveMaxAccel(acceleration);
                     }
 
                     return acceleration;
@@ -49,14 +49,14 @@ namespace UnityMovementAI
                 }
             }
 
-            return giveMaxAccel(acceleration);
+            return GiveMaxAccel(acceleration);
         }
 
-        private Vector3 giveMaxAccel(Vector3 v)
+        private Vector3 GiveMaxAccel(Vector3 v)
         {
             v.Normalize();
 
-            //Accelerate to the target
+            /* Accelerate to the target */
             v *= maxAcceleration;
 
             return v;

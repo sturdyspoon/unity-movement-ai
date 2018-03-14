@@ -21,15 +21,15 @@ namespace UnityMovementAI
 
         void FixedUpdate()
         {
-            Vector3 accel = colAvoid.getSteering(colAvoidSensor.targets);
+            Vector3 accel = colAvoid.GetSteering(colAvoidSensor.targets);
 
             if (accel.magnitude < 0.005f)
             {
-                accel = wander.getSteering();
+                accel = wander.GetSteering();
             }
 
-            steeringBasics.steer(accel);
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.Steer(accel);
+            steeringBasics.LookWhereYoureGoing();
         }
     }
 }

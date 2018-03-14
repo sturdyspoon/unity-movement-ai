@@ -4,7 +4,6 @@ namespace UnityMovementAI
 {
     public class RandomizeTerrain : MonoBehaviour
     {
-
         public float perlinScale = 10.0f;
         public float minHeight = 0f;
         public float maxHeight = 10f;
@@ -13,12 +12,12 @@ namespace UnityMovementAI
 
         public int numSmoothings = 3;
 
-        public void randomize()
+        public void Randomize()
         {
-            generateHeights(GetComponent<Terrain>(), perlinScale);
+            GenerateHeights(GetComponent<Terrain>(), perlinScale);
         }
 
-        public void generateHeights(Terrain terrain, float perlinScale)
+        public void GenerateHeights(Terrain terrain, float perlinScale)
         {
             float radius = terrain.terrainData.heightmapWidth / 2;
             float innerRadius = radius - circleCutoff;
@@ -57,25 +56,25 @@ namespace UnityMovementAI
 
             for (int i = 0; i < numSmoothings; i++)
             {
-                smoothHeights(heights);
+                SmoothHeights(heights);
             }
 
             terrain.terrainData.SetHeights(0, 0, heights);
         }
 
 
-        private void smoothHeights(float[,] heights)
+        private void SmoothHeights(float[,] heights)
         {
             for (int x = 0; x < heights.GetLength(0); x++)
             {
                 for (int y = 0; y < heights.GetLength(1); y++)
                 {
-                    heights[x, y] = getHeightAverage(heights, x, y);
+                    heights[x, y] = GetHeightAverage(heights, x, y);
                 }
             }
         }
 
-        private float getHeightAverage(float[,] heights, int x, int y)
+        private float GetHeightAverage(float[,] heights, int x, int y)
         {
             float count = 0;
             float average = 0;

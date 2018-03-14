@@ -26,10 +26,10 @@ namespace UnityMovementAI
                 hitPosition = hitInfo.point;
                 hitSphereCenter = transform.position + (Vector3.down * (hitInfo.distance + radius));
 
-                SteeringBasics.debugCross(hitPosition, 0.5f, Color.yellow);
-                SteeringBasics.debugCross(hitSphereCenter, 0.5f, Color.red);
+                SteeringBasics.DebugCross(hitPosition, 0.5f, Color.yellow);
+                SteeringBasics.DebugCross(hitSphereCenter, 0.5f, Color.red);
 
-                if (isWall(hitInfo.normal))
+                if (IsWall(hitInfo.normal))
                 {
                     /* Get vector pointing down the slope) */
                     Vector3 rightSlope = Vector3.Cross(hitInfo.normal, Vector3.down);
@@ -39,13 +39,13 @@ namespace UnityMovementAI
 
                     if (Physics.Raycast(hitInfo.point, downSlope, out rayHitInfo))
                     {
-                        SteeringBasics.debugCross(rayHitInfo.point, 0.5f, Color.magenta);
+                        SteeringBasics.DebugCross(rayHitInfo.point, 0.5f, Color.magenta);
                     }
                 }
             }
         }
 
-        private bool isWall(Vector3 surfNormal)
+        private bool IsWall(Vector3 surfNormal)
         {
             /* If the normal of the surface is greater then our slope limit then its a wall */
             return Vector3.Angle(Vector3.up, surfNormal) > slopeLimit;

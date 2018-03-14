@@ -31,17 +31,17 @@ namespace UnityMovementAI
         {
             Vector3 accel = Vector3.zero;
 
-            accel += cohesion.getSteering(sensor.targets) * cohesionWeight;
-            accel += separation.getSteering(sensor.targets) * separationWeight;
-            accel += velocityMatch.getSteering(sensor.targets) * velocityMatchWeight;
+            accel += cohesion.GetSteering(sensor.targets) * cohesionWeight;
+            accel += separation.GetSteering(sensor.targets) * separationWeight;
+            accel += velocityMatch.GetSteering(sensor.targets) * velocityMatchWeight;
 
             if (accel.magnitude < 0.005f)
             {
-                accel = wander.getSteering();
+                accel = wander.GetSteering();
             }
 
-            steeringBasics.steer(accel);
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.Steer(accel);
+            steeringBasics.LookWhereYoureGoing();
         }
     }
 }

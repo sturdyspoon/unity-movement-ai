@@ -5,12 +5,11 @@ namespace UnityMovementAI
     [RequireComponent(typeof(SteeringBasics))]
     public class Wander2 : MonoBehaviour
     {
-
         public float wanderRadius = 1.2f;
 
         public float wanderDistance = 2f;
 
-        //maximum amount of random displacement a second
+        /* Maximum amount of random displacement a second */
         public float wanderJitter = 40f;
 
         private Vector3 wanderTarget;
@@ -32,7 +31,7 @@ namespace UnityMovementAI
              * sets itself up in Awake(). */
             float theta = Random.value * 2 * Mathf.PI;
 
-            //create a vector to a target position on the wander circle
+            /* Create a vector to a target position on the wander circle */
             if (rb.is3D)
             {
                 wanderTarget = new Vector3(wanderRadius * Mathf.Cos(theta), 0f, wanderRadius * Mathf.Sin(theta));
@@ -43,12 +42,12 @@ namespace UnityMovementAI
             }
         }
 
-        public Vector3 getSteering()
+        public Vector3 GetSteering()
         {
-            //get the jitter for this time frame
+            /* Get the jitter for this time frame */
             float jitter = wanderJitter * Time.deltaTime;
 
-            //add a small random vector to the target's position
+            /* Add a small random vector to the target's position */
             if (rb.is3D)
             {
                 wanderTarget += new Vector3(Random.Range(-1f, 1f) * jitter, 0f, Random.Range(-1f, 1f) * jitter);
@@ -58,18 +57,16 @@ namespace UnityMovementAI
                 wanderTarget += new Vector3(Random.Range(-1f, 1f) * jitter, Random.Range(-1f, 1f) * jitter, 0f);
             }
 
-            //make the wanderTarget fit on the wander circle again
+            /* Make the wanderTarget fit on the wander circle again */
             wanderTarget.Normalize();
             wanderTarget *= wanderRadius;
 
-            //move the target in front of the character
+            /* Move the target in front of the character */
             Vector3 targetPosition = transform.position + transform.right * wanderDistance + wanderTarget;
 
             //Debug.DrawLine(transform.position, targetPosition);
 
-            return steeringBasics.seek(targetPosition);
+            return steeringBasics.Seek(targetPosition);
         }
-
-
     }
 }

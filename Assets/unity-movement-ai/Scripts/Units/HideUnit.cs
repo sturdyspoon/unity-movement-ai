@@ -12,7 +12,6 @@ namespace UnityMovementAI
 
         private WallAvoidance wallAvoid;
 
-        // Use this for initialization
         void Start()
         {
             steeringBasics = GetComponent<SteeringBasics>();
@@ -25,17 +24,17 @@ namespace UnityMovementAI
         void FixedUpdate()
         {
             Vector3 hidePosition;
-            Vector3 hideAccel = hide.getSteering(target, obstacleSpawner.objs, out hidePosition);
+            Vector3 hideAccel = hide.GetSteering(target, obstacleSpawner.objs, out hidePosition);
 
-            Vector3 accel = wallAvoid.getSteering(hidePosition - transform.position);
+            Vector3 accel = wallAvoid.GetSteering(hidePosition - transform.position);
 
             if (accel.magnitude < 0.005f)
             {
                 accel = hideAccel;
             }
 
-            steeringBasics.steer(accel);
-            steeringBasics.lookWhereYoureGoing();
+            steeringBasics.Steer(accel);
+            steeringBasics.LookWhereYoureGoing();
         }
     }
 }

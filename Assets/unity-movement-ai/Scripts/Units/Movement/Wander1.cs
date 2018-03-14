@@ -32,34 +32,33 @@ namespace UnityMovementAI
             rb = GetComponent<MovementAIRigidbody>();
         }
 
-        public Vector3 getSteering()
+        public Vector3 GetSteering()
         {
             float characterOrientation = rb.rotationInRadians;
 
             /* Update the wander orientation */
-            wanderOrientation += randomBinomial() * wanderRate;
+            wanderOrientation += RandomBinomial() * wanderRate;
 
             /* Calculate the combined target orientation */
             float targetOrientation = wanderOrientation + characterOrientation;
 
             /* Calculate the center of the wander circle */
-            Vector3 targetPosition = transform.position + (SteeringBasics.orientationToVector(characterOrientation, rb.is3D) * wanderOffset);
+            Vector3 targetPosition = transform.position + (SteeringBasics.OrientationToVector(characterOrientation, rb.is3D) * wanderOffset);
 
             //debugRing.transform.position = targetPosition;
 
             /* Calculate the target position */
-            targetPosition = targetPosition + (SteeringBasics.orientationToVector(targetOrientation, rb.is3D) * wanderRadius);
+            targetPosition = targetPosition + (SteeringBasics.OrientationToVector(targetOrientation, rb.is3D) * wanderRadius);
 
             //Debug.DrawLine (transform.position, targetPosition);
 
-            return steeringBasics.seek(targetPosition);
+            return steeringBasics.Seek(targetPosition);
         }
 
         /* Returns a random number between -1 and 1. Values around zero are more likely. */
-        float randomBinomial()
+        private float RandomBinomial()
         {
             return Random.value - Random.value;
         }
-
     }
 }

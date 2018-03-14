@@ -13,13 +13,13 @@ namespace UnityMovementAI
 
             RandomizeTerrain myScript = (RandomizeTerrain)target;
 
-            if (createCenteredButton("Randomize Terrain"))
+            if (CreateCenteredButton("Randomize Terrain"))
             {
-                myScript.randomize();
+                myScript.Randomize();
             }
         }
 
-        public bool createCenteredButton(string text)
+        public bool CreateCenteredButton(string text)
         {
             GUIContent content = new GUIContent(text);
 

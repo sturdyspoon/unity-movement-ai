@@ -24,7 +24,7 @@ namespace UnityMovementAI
 
         private Vector2 widthHeight;
 
-        private void getGridBounds()
+        private void GetGridBounds()
         {
             float distAway = Camera.main.WorldToViewportPoint(gridLocation).z;
 
@@ -42,20 +42,20 @@ namespace UnityMovementAI
 
             oneByOneDiagonal = (rightDir + upDir).normalized * Mathf.Sqrt(cellSize * cellSize + cellSize * cellSize);
 
-            // Convert the camera bounds to the grid bounds
-            convertToGridBounds();
+            /* Convert the camera bounds to the grid bounds */
+            ConvertToGridBounds();
         }
 
-        private void convertToGridBounds()
+        private void ConvertToGridBounds()
         {
             Vector3 rightComponent, upComponent;
 
-            rightComponent = projectAndExtend(bottomLeft, rightDir, true);
-            upComponent = projectAndExtend(bottomLeft, upDir, true);
+            rightComponent = ProjectAndExtend(bottomLeft, rightDir, true);
+            upComponent = ProjectAndExtend(bottomLeft, upDir, true);
             bottomLeft = rightComponent + upComponent - oneByOneDiagonal;
 
-            rightComponent = projectAndExtend(topRight, rightDir, false);
-            upComponent = projectAndExtend(topRight, upDir, false);
+            rightComponent = ProjectAndExtend(topRight, rightDir, false);
+            upComponent = ProjectAndExtend(topRight, upDir, false);
             topRight = rightComponent + upComponent + oneByOneDiagonal;
 
             Vector3 diagonalDir = topRight - bottomLeft;
@@ -64,7 +64,7 @@ namespace UnityMovementAI
             widthHeight.y = Vector3.Project(diagonalDir, upDir).magnitude;
         }
 
-        private Vector3 projectAndExtend(Vector3 vector, Vector3 onNormal, bool shouldFloor)
+        private Vector3 ProjectAndExtend(Vector3 vector, Vector3 onNormal, bool shouldFloor)
         {
             Vector3 projection = Vector3.Project(vector, onNormal);
 
@@ -86,9 +86,9 @@ namespace UnityMovementAI
                 Material lineMaterial = lineMat;
                 lineMaterial.SetPass(0);
 
-                getGridBounds();
+                GetGridBounds();
 
-                //X axis lines
+                /* X axis lines */
                 for (float j = 0; j <= widthHeight.y; j++)
                 {
                     Vector3 p1 = bottomLeft + upDir * j;
@@ -98,7 +98,7 @@ namespace UnityMovementAI
                     GL.Vertex3(p2.x, p2.y, p2.z);
                 }
 
-                //Y axis lines
+                /* Y axis lines */
                 for (float k = 0; k <= widthHeight.x; k++)
                 {
 

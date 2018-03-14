@@ -21,7 +21,7 @@ namespace UnityMovementAI
             rb = GetComponent<MovementAIRigidbody>();
         }
 
-        public Vector3 getSteering(ICollection<MovementAIRigidbody> targets)
+        public Vector3 GetSteering(ICollection<MovementAIRigidbody> targets)
         {
             Vector3 acceleration = Vector3.zero;
 
@@ -37,7 +37,7 @@ namespace UnityMovementAI
                     var strength = sepMaxAcceleration * (maxSepDist - dist) / (maxSepDist - rb.radius - r.radius);
 
                     /* Added separation acceleration to the existing steering */
-                    direction = rb.convertVector(direction);
+                    direction = rb.ConvertVector(direction);
                     direction.Normalize();
                     acceleration += direction * strength;
                 }
