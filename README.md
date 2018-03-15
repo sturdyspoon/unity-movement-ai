@@ -2,7 +2,7 @@
 **Unity Movement AI** is a library of common movement AI scripts known as Steering Behaviors. You can use these scripts to help your NPCs move around your game.
 
 # How to Use
-If you want to add this library to your game then import the [**UnityMovementAI.unitypackage**](https://github.com/antonpantev/unity-movement-ai/raw/master/UnityMovementAI.unitypackage). This package includes all of the movement scripts along with some premade game objects that use the scripts. 
+If you want to add this library to your game then import the [**UnityMovementAI.unitypackage**](https://github.com/antonpantev/unity-movement-ai/raw/dev/UnityMovementAI.unitypackage). This package includes all of the movement scripts along with some premade game objects that use the scripts. 
 
 Feel free to only use what you need from the package.
 
