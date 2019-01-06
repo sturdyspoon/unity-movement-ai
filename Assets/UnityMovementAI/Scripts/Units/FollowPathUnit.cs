@@ -10,8 +10,8 @@ namespace UnityMovementAI
 
         public LinePath path;
 
-        private SteeringBasics steeringBasics;
-        private FollowPath followPath;
+        SteeringBasics steeringBasics;
+        FollowPath followPath;
 
         void Start()
         {

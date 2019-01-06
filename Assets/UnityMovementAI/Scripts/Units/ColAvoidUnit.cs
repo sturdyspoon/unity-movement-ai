@@ -7,11 +7,11 @@ namespace UnityMovementAI
 
         public LinePath path;
 
-        private SteeringBasics steeringBasics;
-        private FollowPath followPath;
-        private CollisionAvoidance colAvoid;
+        SteeringBasics steeringBasics;
+        FollowPath followPath;
+        CollisionAvoidance colAvoid;
 
-        private NearSensor colAvoidSensor;
+        NearSensor colAvoidSensor;
 
         void Start()
         {

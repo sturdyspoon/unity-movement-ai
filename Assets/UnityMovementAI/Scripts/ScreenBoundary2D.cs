@@ -5,9 +5,9 @@ namespace UnityMovementAI
 {
     public class ScreenBoundary2D : MonoBehaviour
     {
-        private Vector3 bottomLeft;
-        private Vector3 topRight;
-        private Vector3 widthHeight;
+        Vector3 bottomLeft;
+        Vector3 topRight;
+        Vector3 widthHeight;
 
         void Start()
         {
@@ -30,7 +30,7 @@ namespace UnityMovementAI
             KeepInBounds(other);
         }
 
-        private void KeepInBounds(Collider2D other)
+        void KeepInBounds(Collider2D other)
         {
             Transform t = other.transform;
 

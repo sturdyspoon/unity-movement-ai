@@ -8,13 +8,13 @@ namespace UnityMovementAI
         public float separationWeight = 2f;
         public float velocityMatchWeight = 1f;
 
-        private SteeringBasics steeringBasics;
-        private Wander2 wander;
-        private Cohesion cohesion;
-        private Separation separation;
-        private VelocityMatch velocityMatch;
+        SteeringBasics steeringBasics;
+        Wander2 wander;
+        Cohesion cohesion;
+        Separation separation;
+        VelocityMatch velocityMatch;
 
-        private NearSensor sensor;
+        NearSensor sensor;
 
         void Start()
         {

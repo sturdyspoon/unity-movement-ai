@@ -11,7 +11,7 @@ namespace UnityMovementAI
 
         public bool clampVerticalRotation = true;
 
-        private CursorLockMode wantedMode;
+        CursorLockMode wantedMode;
 
         void Start()
         {
@@ -29,7 +29,7 @@ namespace UnityMovementAI
             }
         }
 
-        private void UpdateCursor()
+        void UpdateCursor()
         {
             /* Release cursor on escape keypress. */
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -49,7 +49,7 @@ namespace UnityMovementAI
             Cursor.visible = (CursorLockMode.Locked != wantedMode);
         }
 
-        private void RotateCamera()
+        void RotateCamera()
         {
             float yRot = Input.GetAxis("Mouse X") * xSensitivity;
             float xRot = -1 * Input.GetAxis("Mouse Y") * ySensitivity;
@@ -63,7 +63,7 @@ namespace UnityMovementAI
             transform.Rotate(new Vector3(0f, yRot, 0f), Space.World);
         }
 
-        private float ClampXAxisRotation(float xRot)
+        float ClampXAxisRotation(float xRot)
         {
             float curXRot = transform.localEulerAngles.x;
             float newXRot = curXRot + xRot;
@@ -83,7 +83,7 @@ namespace UnityMovementAI
             return xRot;
         }
 
-        private void MoveCamera()
+        void MoveCamera()
         {
             float vertKey = Input.GetAxisRaw("Vertical");
             float horKey = Input.GetAxisRaw("Horizontal");

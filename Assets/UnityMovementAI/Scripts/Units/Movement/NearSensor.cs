@@ -5,7 +5,7 @@ namespace UnityMovementAI
 {
     public class NearSensor : MonoBehaviour
     {
-        private HashSet<MovementAIRigidbody> _targets = new HashSet<MovementAIRigidbody>();
+        HashSet<MovementAIRigidbody> _targets = new HashSet<MovementAIRigidbody>();
 
         public HashSet<MovementAIRigidbody> targets
         {
@@ -17,12 +17,12 @@ namespace UnityMovementAI
             }
         }
 
-        private static bool IsNull(MovementAIRigidbody r)
+        static bool IsNull(MovementAIRigidbody r)
         {
             return (r == null || r.Equals(null));
         }
 
-        private void TryToAdd(Component other)
+        void TryToAdd(Component other)
         {
             MovementAIRigidbody rb = other.GetComponent<MovementAIRigidbody>();
             if (rb != null)
@@ -31,7 +31,7 @@ namespace UnityMovementAI
             }
         }
 
-        private void TryToRemove(Component other)
+        void TryToRemove(Component other)
         {
             MovementAIRigidbody rb = other.GetComponent<MovementAIRigidbody>();
             if (rb != null)

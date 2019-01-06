@@ -5,22 +5,28 @@ namespace UnityMovementAI
     [RequireComponent(typeof(SteeringBasics))]
     public class Wander1 : MonoBehaviour
     {
-        /* The forward offset of the wander square */
+        /// <summary>
+        /// The forward offset of the wander square
+        /// </summary>
         public float wanderOffset = 1.5f;
 
-        /* The radius of the wander square */
+        /// <summary>
+        /// The radius of the wander square
+        /// </summary>
         public float wanderRadius = 4;
 
-        /* The rate at which the wander orientation can change in radians*/
+        /// <summary>
+        /// The rate at which the wander orientation can change in radians
+        /// </summary>
         public float wanderRate = 0.4f;
 
-        private float wanderOrientation = 0;
+        float wanderOrientation = 0;
 
-        private SteeringBasics steeringBasics;
+        SteeringBasics steeringBasics;
 
-        private MovementAIRigidbody rb;
+        MovementAIRigidbody rb;
 
-        //private GameObject debugRing;
+        //GameObject debugRing;
 
         void Awake()
         {
@@ -34,7 +40,7 @@ namespace UnityMovementAI
 
         public Vector3 GetSteering()
         {
-            float characterOrientation = rb.rotationInRadians;
+            float characterOrientation = rb.RotationInRadians;
 
             /* Update the wander orientation */
             wanderOrientation += RandomBinomial() * wanderRate;
@@ -56,7 +62,7 @@ namespace UnityMovementAI
         }
 
         /* Returns a random number between -1 and 1. Values around zero are more likely. */
-        private float RandomBinomial()
+        float RandomBinomial()
         {
             return Random.value - Random.value;
         }

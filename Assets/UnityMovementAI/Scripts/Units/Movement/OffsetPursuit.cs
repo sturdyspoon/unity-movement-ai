@@ -5,11 +5,13 @@ namespace UnityMovementAI
     [RequireComponent(typeof(SteeringBasics))]
     public class OffsetPursuit : MonoBehaviour
     {
-        /* Maximum prediction time the pursue will predict in the future */
+        /// <summary>
+        /// Maximum prediction time the pursue will predict in the future
+        /// </summary>
         public float maxPrediction = 1f;
 
-        private MovementAIRigidbody rb;
-        private SteeringBasics steeringBasics;
+        MovementAIRigidbody rb;
+        SteeringBasics steeringBasics;
 
         void Awake()
         {
@@ -25,7 +27,7 @@ namespace UnityMovementAI
 
         public Vector3 GetSteering(MovementAIRigidbody target, Vector3 offset, out Vector3 targetPos)
         {
-            Vector3 worldOffsetPos = target.position + target.transform.TransformDirection(offset);
+            Vector3 worldOffsetPos = target.Position + target.Transform.TransformDirection(offset);
 
             //Debug.DrawLine(transform.position, worldOffsetPos);
 
@@ -34,7 +36,7 @@ namespace UnityMovementAI
             float distance = displacement.magnitude;
 
             /* Get the character's speed */
-            float speed = rb.velocity.magnitude;
+            float speed = rb.Velocity.magnitude;
 
             /* Calculate the prediction time */
             float prediction;
@@ -48,7 +50,7 @@ namespace UnityMovementAI
             }
 
             /* Put the target together based on where we think the target will be */
-            targetPos = worldOffsetPos + target.velocity * prediction;
+            targetPos = worldOffsetPos + target.Velocity * prediction;
 
             return steeringBasics.Arrive(targetPos);
         }

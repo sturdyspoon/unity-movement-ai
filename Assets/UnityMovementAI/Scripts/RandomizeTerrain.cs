@@ -63,7 +63,7 @@ namespace UnityMovementAI
         }
 
 
-        private void SmoothHeights(float[,] heights)
+        void SmoothHeights(float[,] heights)
         {
             for (int x = 0; x < heights.GetLength(0); x++)
             {
@@ -74,7 +74,7 @@ namespace UnityMovementAI
             }
         }
 
-        private float GetHeightAverage(float[,] heights, int x, int y)
+        float GetHeightAverage(float[,] heights, int x, int y)
         {
             float count = 0;
             float average = 0;

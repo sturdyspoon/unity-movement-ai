@@ -9,31 +9,41 @@ namespace UnityMovementAI
     public class MovementAIRigidbody : MonoBehaviour
     {
         [Header("3D Settings")]
-        /* Determines if the character should follow the ground or can fly any where in 3D space */
-        public bool canFly = false;
+        /// <summary>
+        /// Determines if the character should follow the ground or can fly any where in 3D space
+        /// </summary>
+        public bool canFly;
 
         [Header("3D Grounded Settings")]
-        /* If the character should try to stay grounded */
+        /// <summary>
+        /// If the character should try to stay grounded
+        /// </summary>
         public bool stayGrounded = true;
 
-        /* How far the character should look below him for ground to stay grounded to */
+        /// <summary>
+        /// How far the character should look below him for ground to stay grounded to
+        /// </summary>
         public float groundFollowDistance = 0.1f;
 
-        /* The sphere cast mask that determines what layers should be consider the ground */
+        /// <summary>
+        /// The sphere cast mask that determines what layers should be consider the ground
+        /// </summary>
         public LayerMask groundCheckMask = Physics.DefaultRaycastLayers;
 
-        /* The maximum slope the character can climb in degrees */
+        /// <summary>
+        /// The maximum slope the character can climb in degrees
+        /// </summary>
         public float slopeLimit = 80f;
 
-        private SphereCollider col3D;
-        private CircleCollider2D col2D;
+        SphereCollider col3D;
+        CircleCollider2D col2D;
 
         /// <summary>
         /// The radius for the current game object (either the radius of a sphere or circle
         /// collider). If the game object does not have a sphere or circle collider this 
         /// will return -1.
         /// </summary>
-        public float radius
+        public float Radius
         {
             get
             {
@@ -69,8 +79,8 @@ namespace UnityMovementAI
         [System.NonSerialized]
         public Vector3 movementNormal = Vector3.up;
 
-        private Rigidbody rb3D;
-        private Rigidbody2D rb2D;
+        Rigidbody rb3D;
+        Rigidbody2D rb2D;
 
         void Awake()
         {
@@ -86,7 +96,7 @@ namespace UnityMovementAI
             SetUpCollider();
         }
 
-        private void SetUpRigidbody()
+        void SetUpRigidbody()
         {
             Rigidbody rb = GetComponent<Rigidbody>();
             if (rb != null)
@@ -101,7 +111,7 @@ namespace UnityMovementAI
             }
         }
 
-        private void SetUpCollider()
+        void SetUpCollider()
         {
             if (is3D)
             {
@@ -132,18 +142,18 @@ namespace UnityMovementAI
             FixedUpdate();
         }
 
-        private int count = 0;
-        private int countDebug = 0;
+        int count = 0;
+        int countDebug = 0;
 
-        private IEnumerator DebugDraw()
+        IEnumerator DebugDraw()
         {
             yield return new WaitForFixedUpdate();
 
-            Vector3 origin = colliderPosition;
-            Debug.DrawLine(origin, origin + (velocity.normalized), Color.red, 0f, false);
+            Vector3 origin = ColliderPosition;
+            Debug.DrawLine(origin, origin + (Velocity.normalized), Color.red, 0f, false);
             if (is3D)
             {
-                Debug.DrawLine(origin, origin + (realVelocity.normalized), Color.green, 0f, false);
+                Debug.DrawLine(origin, origin + (RealVelocity.normalized), Color.green, 0f, false);
                 Debug.DrawLine(origin, origin + (wallNormal), Color.yellow, 0f, false);
                 Debug.DrawLine(origin, origin + (movementNormal), Color.blue, 0f, false);
             }
@@ -217,9 +227,9 @@ namespace UnityMovementAI
          * My tests show that as of Unity 5.3.0f4 this is not %100 true and Unity still seems to be 
          * allowing overlaps of 0.05f somewhere internally. So I'm setting my spherecast offset to be
          * slightly bigger than 0.05f */
-        private float spherecastOffset = 0.051f;
+        readonly float spherecastOffset = 0.051f;
 
-        private bool SphereCast(Vector3 dir, out RaycastHit hitInfo, float dist, int layerMask, Vector3 planeNormal = default(Vector3))
+        bool SphereCast(Vector3 dir, out RaycastHit hitInfo, float dist, int layerMask, Vector3 planeNormal = default(Vector3))
         {
             dir.Normalize();
 
@@ -230,7 +240,7 @@ namespace UnityMovementAI
              * from the plane to avoid problems when the given dir is just barely moving  
              * into the plane (this can occur due to floating point inaccuracies when the 
              * dir is calculated with cross products) */
-            Vector3 origin = colliderPosition + (planeNormal * 0.001f);
+            Vector3 origin = ColliderPosition + (planeNormal * 0.001f);
 
             /* Start the ray with a small offset from inside the character, so it will
              * hit any colliders that the character is already touching. */
@@ -238,7 +248,7 @@ namespace UnityMovementAI
 
             float maxDist = (spherecastOffset + dist);
 
-            if (Physics.SphereCast(origin, radius, dir, out hitInfo, maxDist, layerMask))
+            if (Physics.SphereCast(origin, Radius, dir, out hitInfo, maxDist, layerMask))
             {
                 /* Remove the small offset from the distance before returning*/
                 hitInfo.distance -= spherecastOffset;
@@ -250,7 +260,7 @@ namespace UnityMovementAI
             }
         }
 
-        private void FoundGround(Vector3 normal, Vector3 newPos)
+        void FoundGround(Vector3 normal, Vector3 newPos)
         {
             movementNormal = normal;
             rb3D.useGravity = false;
@@ -261,16 +271,16 @@ namespace UnityMovementAI
              * since we could have been falling and now found ground so all the downward y velocity is not
              * part of our movement speed. Technically I am projecting the actual velocity onto the ground
              * plane rather than finding the real movement velocity's speed.*/
-            rb3D.velocity = DirOnPlane(rb3D.velocity, movementNormal) * velocity.magnitude;
+            rb3D.velocity = DirOnPlane(rb3D.velocity, movementNormal) * Velocity.magnitude;
         }
 
-        private bool IsWall(Vector3 surfNormal)
+        bool IsWall(Vector3 surfNormal)
         {
             /* If the normal of the surface is greater then our slope limit then its a wall */
             return Vector3.Angle(Vector3.up, surfNormal) > slopeLimit;
         }
 
-        private void LimitMovementOnSteepSlopes()
+        void LimitMovementOnSteepSlopes()
         {
             Vector3 startVelocity = rb3D.velocity;
 
@@ -291,7 +301,7 @@ namespace UnityMovementAI
                 Vector3 direction = rb3D.velocity.normalized;
                 float dist = rb3D.velocity.magnitude * Time.deltaTime;
 
-                Vector3 origin = colliderPosition;
+                Vector3 origin = ColliderPosition;
                 countDebug++;
 
                 if (i == 0)
@@ -352,12 +362,12 @@ namespace UnityMovementAI
             }
         }
 
-        private bool IsMovingInto(Vector3 dir, Vector3 normal)
+        bool IsMovingInto(Vector3 dir, Vector3 normal)
         {
             return Vector3.Angle(dir, normal) > 90f;
         }
 
-        private Vector3 LimitVelocityOnWall(Vector3 velocity, Vector3 planeNormal)
+        Vector3 LimitVelocityOnWall(Vector3 velocity, Vector3 planeNormal)
         {
             Vector3 rightSlope = Vector3.Cross(planeNormal, Vector3.down);
 
@@ -429,7 +439,7 @@ namespace UnityMovementAI
         /// be on the X/Y plane. For 3D grounded characters the position is on the X/Z plane. For 3D
         /// flying characters the position is in full 3D (X/Y/Z).
         /// </summary>
-        public Vector3 position
+        public Vector3 Position
         {
             get
             {
@@ -454,17 +464,17 @@ namespace UnityMovementAI
         /// <summary>
         /// Gets the position of the collider (which can be offset from the transform position).
         /// </summary>
-        public Vector3 colliderPosition
+        public Vector3 ColliderPosition
         {
             get
             {
                 if (is3D)
                 {
-                    return transform.TransformPoint(col3D.center) + rb3D.position - transform.position;
+                    return Transform.TransformPoint(col3D.center) + rb3D.position - Transform.position;
                 }
                 else
                 {
-                    return transform.TransformPoint(col2D.offset);
+                    return Transform.TransformPoint(col2D.offset);
                 }
             }
         }
@@ -475,7 +485,7 @@ namespace UnityMovementAI
         /// applied on whatever plane the character is currently moving on. For 3D flying characters the
         /// velocity will be in full 3D (X/Y/Z).
         /// </summary>
-        public Vector3 velocity
+        public Vector3 Velocity
         {
             get
             {
@@ -538,7 +548,7 @@ namespace UnityMovementAI
         /// <summary>
         /// The actual velocity of the underlying unity rigidbody.
         /// </summary>
-        public Vector3 realVelocity
+        public Vector3 RealVelocity
         {
             get
             {
@@ -560,14 +570,14 @@ namespace UnityMovementAI
         /// <summary>
         /// Creates a vector that maintains x/z direction but lies on the plane.
         /// </summary>
-        private Vector3 DirOnPlane(Vector3 vector, Vector3 planeNormal)
+        Vector3 DirOnPlane(Vector3 vector, Vector3 planeNormal)
         {
             Vector3 newVel = vector;
             newVel.y = (-planeNormal.x * vector.x - planeNormal.z * vector.z) / planeNormal.y;
             return newVel.normalized;
         }
 
-        public new Transform transform
+        public Transform Transform
         {
             get
             {
@@ -582,7 +592,7 @@ namespace UnityMovementAI
             }
         }
 
-        public Quaternion rotation
+        public Quaternion Rotation
         {
             get
             {
@@ -614,7 +624,7 @@ namespace UnityMovementAI
         /// <summary>
         /// The angularVelocity for the rigidbody. If its a 3D rigidbody underneath then the angularVelocity is for the y axis only (setting the angular velocity will clear out the x/z angular velocities).
         /// </summary>
-        public float angularVelocity
+        public float AngularVelocity
         {
             get
             {
@@ -658,7 +668,7 @@ namespace UnityMovementAI
             }
         }
 
-        public float rotationInRadians
+        public float RotationInRadians
         {
             get
             {
@@ -673,11 +683,11 @@ namespace UnityMovementAI
             }
         }
 
-        public Vector3 rotationAsVector
+        public Vector3 RotationAsVector
         {
             get
             {
-                return SteeringBasics.OrientationToVector(rotationInRadians, is3D);
+                return SteeringBasics.OrientationToVector(RotationInRadians, is3D);
             }
         }
 

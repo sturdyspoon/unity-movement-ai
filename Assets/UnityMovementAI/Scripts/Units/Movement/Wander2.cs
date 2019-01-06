@@ -9,14 +9,16 @@ namespace UnityMovementAI
 
         public float wanderDistance = 2f;
 
-        /* Maximum amount of random displacement a second */
+        /// <summary>
+        /// Maximum amount of random displacement a second
+        /// </summary>
         public float wanderJitter = 40f;
 
-        private Vector3 wanderTarget;
+        Vector3 wanderTarget;
 
-        private SteeringBasics steeringBasics;
+        SteeringBasics steeringBasics;
 
-        private MovementAIRigidbody rb;
+        MovementAIRigidbody rb;
 
         void Awake()
         {

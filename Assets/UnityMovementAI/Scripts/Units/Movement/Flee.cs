@@ -13,14 +13,13 @@ namespace UnityMovementAI
 
         public float timeToTarget = 0.1f;
 
-        private MovementAIRigidbody rb;
+        MovementAIRigidbody rb;
 
         void Awake()
         {
             rb = GetComponent<MovementAIRigidbody>();
         }
 
-        /* A flee steering behavior. Will return the steering for the current game object to flee a given position */
         public Vector3 GetSteering(Vector3 targetPosition)
         {
             /* Get the direction */
@@ -30,10 +29,10 @@ namespace UnityMovementAI
             if (acceleration.magnitude > panicDist)
             {
                 /* Slow down if we should decelerate on stop */
-                if (decelerateOnStop && rb.velocity.magnitude > 0.001f)
+                if (decelerateOnStop && rb.Velocity.magnitude > 0.001f)
                 {
                     /* Decelerate to zero velocity in time to target amount of time */
-                    acceleration = -rb.velocity / timeToTarget;
+                    acceleration = -rb.Velocity / timeToTarget;
 
                     if (acceleration.magnitude > maxAcceleration)
                     {
@@ -44,7 +43,7 @@ namespace UnityMovementAI
                 }
                 else
                 {
-                    rb.velocity = Vector3.zero;
+                    rb.Velocity = Vector3.zero;
                     return Vector3.zero;
                 }
             }
@@ -52,7 +51,7 @@ namespace UnityMovementAI
             return GiveMaxAccel(acceleration);
         }
 
-        private Vector3 GiveMaxAccel(Vector3 v)
+        Vector3 GiveMaxAccel(Vector3 v)
         {
             v.Normalize();
 

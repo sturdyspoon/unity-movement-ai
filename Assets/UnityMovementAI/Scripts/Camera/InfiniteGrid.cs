@@ -2,29 +2,28 @@
 
 namespace UnityMovementAI
 {
-    /**
-     * This class will create an infinite grid in the x/y directions for a camera using perspective.
-     * Put this class on your camera.
-     */
+    /// <summary>
+    /// This class will create an infinite grid in the x/y directions for a
+    /// camera using perspective. Put this class on your camera.
+    /// </summary>
     public class InfiniteGrid : MonoBehaviour
     {
-
         public bool show = true;
 
         public float cellSize = 1;
 
         public Vector3 gridLocation;
 
-        private Vector3 bottomLeft;
-        private Vector3 topRight;
+        Vector3 bottomLeft;
+        Vector3 topRight;
 
-        private Vector3 upDir;
-        private Vector3 rightDir;
-        private Vector3 oneByOneDiagonal;
+        Vector3 upDir;
+        Vector3 rightDir;
+        Vector3 oneByOneDiagonal;
 
-        private Vector2 widthHeight;
+        Vector2 widthHeight;
 
-        private void GetGridBounds()
+        void GetGridBounds()
         {
             float distAway = Camera.main.WorldToViewportPoint(gridLocation).z;
 
@@ -46,7 +45,7 @@ namespace UnityMovementAI
             ConvertToGridBounds();
         }
 
-        private void ConvertToGridBounds()
+        void ConvertToGridBounds()
         {
             Vector3 rightComponent, upComponent;
 
@@ -64,7 +63,7 @@ namespace UnityMovementAI
             widthHeight.y = Vector3.Project(diagonalDir, upDir).magnitude;
         }
 
-        private Vector3 ProjectAndExtend(Vector3 vector, Vector3 onNormal, bool shouldFloor)
+        Vector3 ProjectAndExtend(Vector3 vector, Vector3 onNormal, bool shouldFloor)
         {
             Vector3 projection = Vector3.Project(vector, onNormal);
 

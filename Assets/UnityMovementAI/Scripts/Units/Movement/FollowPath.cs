@@ -11,8 +11,8 @@ namespace UnityMovementAI
 
         public float pathDirection = 1f;
 
-        private SteeringBasics steeringBasics;
-        private MovementAIRigidbody rb;
+        SteeringBasics steeringBasics;
+        MovementAIRigidbody rb;
 
         void Awake()
         {
@@ -35,7 +35,7 @@ namespace UnityMovementAI
         {
 
             /* If the path has only one node then just go to that position. */
-            if (path.size == 1)
+            if (path.Length == 1)
             {
                 targetPosition = path[0];
             }
@@ -56,7 +56,7 @@ namespace UnityMovementAI
                     {
                         targetPosition = finalDestination;
 
-                        rb.velocity = Vector3.zero;
+                        rb.Velocity = Vector3.zero;
                         return Vector3.zero;
                     }
                 }
@@ -79,10 +79,10 @@ namespace UnityMovementAI
         public bool IsAtEndOfPath(LinePath path)
         {
             /* If the path has only one node then just check the distance to that node. */
-            if (path.size == 1)
+            if (path.Length == 1)
             {
                 Vector3 endPos = rb.ConvertVector(path[0]);
-                return Vector3.Distance(rb.position, endPos) < stopRadius;
+                return Vector3.Distance(rb.Position, endPos) < stopRadius;
             }
             /* Else see if the character is at the end of the path. */
             else
@@ -96,18 +96,18 @@ namespace UnityMovementAI
             }
         }
 
-        private bool IsAtEndOfPath(LinePath path, float param, out Vector3 finalDestination)
+        bool IsAtEndOfPath(LinePath path, float param, out Vector3 finalDestination)
         {
             bool result;
 
             /* Find the final destination of the character on this path */
-            finalDestination = (pathDirection > 0) ? path[path.size - 1] : path[0];
+            finalDestination = (pathDirection > 0) ? path[path.Length - 1] : path[0];
             finalDestination = rb.ConvertVector(finalDestination);
 
             /* If the param is closest to the last segment then check if we are at the final destination */
-            if (param >= path.distances[path.size - 2])
+            if (param >= path.distances[path.Length - 2])
             {
-                result = Vector3.Distance(rb.position, finalDestination) < stopRadius;
+                result = Vector3.Distance(rb.Position, finalDestination) < stopRadius;
             }
             /* Else we are not at the end of the path */
             else

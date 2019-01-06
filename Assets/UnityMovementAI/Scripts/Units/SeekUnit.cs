@@ -6,7 +6,7 @@ namespace UnityMovementAI
     {
         public Transform target;
 
-        private SteeringBasics steeringBasics;
+        SteeringBasics steeringBasics;
 
         void Start()
         {

@@ -10,10 +10,10 @@ namespace UnityMovementAI
         public float timeToTarget = 0.1f;
         public float maxAcceleration = 4f;
 
-        private float facingCosineVal;
+        float facingCosineVal;
 
-        private MovementAIRigidbody rb;
-        private SteeringBasics steeringBasics;
+        MovementAIRigidbody rb;
+        SteeringBasics steeringBasics;
 
         void Awake()
         {
@@ -30,10 +30,10 @@ namespace UnityMovementAI
 
             foreach (MovementAIRigidbody r in targets)
             {
-                if (steeringBasics.IsFacing(r.position, facingCosineVal))
+                if (steeringBasics.IsFacing(r.Position, facingCosineVal))
                 {
                     /* Calculate the acceleration we want to match this target */
-                    Vector3 a = r.velocity - rb.velocity;
+                    Vector3 a = r.Velocity - rb.Velocity;
                     /* Rather than accelerate the character to the correct speed in 1 second, 
                      * accelerate so we reach the desired speed in timeToTarget seconds 
                      * (if we were to actually accelerate for the full timeToTarget seconds). */

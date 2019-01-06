@@ -5,10 +5,12 @@ namespace UnityMovementAI
     [RequireComponent(typeof(Flee))]
     public class Evade : MonoBehaviour
     {
-        /* Maximum prediction time the pursue will predict in the future */
+        /// <summary>
+        /// Maximum prediction time the pursue will predict in the future
+        /// </summary>
         public float maxPrediction = 1f;
 
-        private Flee flee;
+        Flee flee;
 
         void Awake()
         {
@@ -18,11 +20,11 @@ namespace UnityMovementAI
         public Vector3 GetSteering(MovementAIRigidbody target)
         {
             /* Calculate the distance to the target */
-            Vector3 displacement = target.position - transform.position;
+            Vector3 displacement = target.Position - transform.position;
             float distance = displacement.magnitude;
 
             /* Get the targets's speed */
-            float speed = target.velocity.magnitude;
+            float speed = target.Velocity.magnitude;
 
             /* Calculate the prediction time */
             float prediction;
@@ -38,7 +40,7 @@ namespace UnityMovementAI
             }
 
             /* Put the target together based on where we think the target will be */
-            Vector3 explicitTarget = target.position + target.velocity * prediction;
+            Vector3 explicitTarget = target.Position + target.Velocity * prediction;
 
             return flee.GetSteering(explicitTarget);
         }

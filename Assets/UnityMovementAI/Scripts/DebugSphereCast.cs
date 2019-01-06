@@ -45,7 +45,7 @@ namespace UnityMovementAI
             }
         }
 
-        private bool IsWall(Vector3 surfNormal)
+        bool IsWall(Vector3 surfNormal)
         {
             /* If the normal of the surface is greater then our slope limit then its a wall */
             return Vector3.Angle(Vector3.up, surfNormal) > slopeLimit;

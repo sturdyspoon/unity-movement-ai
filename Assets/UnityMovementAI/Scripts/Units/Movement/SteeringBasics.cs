@@ -16,25 +16,35 @@ namespace UnityMovementAI
 
         [Header("Arrive")]
 
-        /* The radius from the target that means we are close enough and have arrived */
+        /// <summary>
+        /// The radius from the target that means we are close enough and have arrived
+        /// </summary>
         public float targetRadius = 0.005f;
 
-        /* The radius from the target where we start to slow down  */
+        /// <summary>
+        /// The radius from the target where we start to slow down
+        /// </summary>
         public float slowRadius = 1f;
 
-        /* The time in which we want to achieve the targetSpeed */
+        /// <summary>
+        /// The time in which we want to achieve the targetSpeed
+        /// </summary>
         public float timeToTarget = 0.1f;
 
 
         [Header("Look Direction Smoothing")]
 
-        /* Smoothing controls if the character's look direction should be an average of its previous directions (to smooth out momentary changes in directions) */
+        /// <summary>
+        /// Smoothing controls if the character's look direction should be an
+        /// average of its previous directions (to smooth out momentary changes
+        /// in directions)
+        /// </summary>
         public bool smoothing = true;
         public int numSamplesForSmoothing = 5;
-        private Queue<Vector3> velocitySamples = new Queue<Vector3>();
+        Queue<Vector3> velocitySamples = new Queue<Vector3>();
 
 
-        private MovementAIRigidbody rb;
+        MovementAIRigidbody rb;
 
 
         void Awake()
@@ -42,18 +52,23 @@ namespace UnityMovementAI
             rb = GetComponent<MovementAIRigidbody>();
         }
 
-        /* Updates the velocity of the current game object by the given linear acceleration */
+        /// <summary>
+        /// Updates the velocity of the current game object by the given linear
+        /// acceleration
+        /// </summary>
         public void Steer(Vector3 linearAcceleration)
         {
-            rb.velocity += linearAcceleration * Time.deltaTime;
+            rb.Velocity += linearAcceleration * Time.deltaTime;
 
-            if (rb.velocity.magnitude > maxVelocity)
+            if (rb.Velocity.magnitude > maxVelocity)
             {
-                rb.velocity = rb.velocity.normalized * maxVelocity;
+                rb.Velocity = rb.Velocity.normalized * maxVelocity;
             }
         }
 
-        /* A seek steering behavior. Will return the steering for the current game object to seek a given position */
+        /// <summary>
+        /// A seek steering behavior. Will return the steering for the current game object to seek a given position
+        /// </summary>
         public Vector3 Seek(Vector3 targetPosition, float maxSeekAccel)
         {
             /* Get the direction */
@@ -72,10 +87,12 @@ namespace UnityMovementAI
             return Seek(targetPosition, maxAcceleration);
         }
 
-        /* Makes the current game object look where he is going */
+        /// <summary>
+        /// Makes the current game object look where he is going
+        /// </summary>
         public void LookWhereYoureGoing()
         {
-            Vector3 direction = rb.velocity;
+            Vector3 direction = rb.Velocity;
 
             if (smoothing)
             {
@@ -84,7 +101,7 @@ namespace UnityMovementAI
                     velocitySamples.Dequeue();
                 }
 
-                velocitySamples.Enqueue(rb.velocity);
+                velocitySamples.Enqueue(rb.Velocity);
 
                 direction = Vector3.zero;
 
@@ -110,16 +127,16 @@ namespace UnityMovementAI
                 {
                     /* Mulitply by -1 because counter clockwise on the y-axis is in the negative direction */
                     float toRotation = -1 * (Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg);
-                    float rotation = Mathf.LerpAngle(rb.rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
+                    float rotation = Mathf.LerpAngle(rb.Rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
 
-                    rb.rotation = Quaternion.Euler(0, rotation, 0);
+                    rb.Rotation = Quaternion.Euler(0, rotation, 0);
                 }
                 else
                 {
                     float toRotation = (Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-                    float rotation = Mathf.LerpAngle(rb.rotation.eulerAngles.z, toRotation, Time.deltaTime * turnSpeed);
+                    float rotation = Mathf.LerpAngle(rb.Rotation.eulerAngles.z, toRotation, Time.deltaTime * turnSpeed);
 
-                    rb.rotation = Quaternion.Euler(0, 0, rotation);
+                    rb.Rotation = Quaternion.Euler(0, 0, rotation);
                 }
             }
         }
@@ -144,19 +161,21 @@ namespace UnityMovementAI
         {
             if (rb.is3D)
             {
-                float rotation = Mathf.LerpAngle(rb.rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
+                float rotation = Mathf.LerpAngle(rb.Rotation.eulerAngles.y, toRotation, Time.deltaTime * turnSpeed);
 
-                rb.rotation = Quaternion.Euler(0, rotation, 0);
+                rb.Rotation = Quaternion.Euler(0, rotation, 0);
             }
             else
             {
-                float rotation = Mathf.LerpAngle(rb.rotation.eulerAngles.z, toRotation, Time.deltaTime * turnSpeed);
+                float rotation = Mathf.LerpAngle(rb.Rotation.eulerAngles.z, toRotation, Time.deltaTime * turnSpeed);
 
-                rb.rotation = Quaternion.Euler(0, 0, rotation);
+                rb.Rotation = Quaternion.Euler(0, 0, rotation);
             }
         }
 
-        /* Returns the steering for a character so it arrives at the target */
+        /// <summary>
+        /// Returns the steering for a character so it arrives at the target
+        /// </summary>
         public Vector3 Arrive(Vector3 targetPosition)
         {
             Debug.DrawLine(transform.position, targetPosition, Color.cyan, 0f, false);
@@ -164,7 +183,7 @@ namespace UnityMovementAI
             targetPosition = rb.ConvertVector(targetPosition);
 
             /* Get the right direction for the linear acceleration */
-            Vector3 targetVelocity = targetPosition - rb.position;
+            Vector3 targetVelocity = targetPosition - rb.Position;
             //Debug.Log("Displacement " + targetVelocity.ToString("f4"));
 
             /* Get the distance to the target */
@@ -173,7 +192,7 @@ namespace UnityMovementAI
             /* If we are within the stopping radius then stop */
             if (dist < targetRadius)
             {
-                rb.velocity = Vector3.zero;
+                rb.Velocity = Vector3.zero;
                 return Vector3.zero;
             }
 
@@ -193,7 +212,7 @@ namespace UnityMovementAI
             targetVelocity *= targetSpeed;
 
             /* Calculate the linear acceleration we want */
-            Vector3 acceleration = targetVelocity - rb.velocity;
+            Vector3 acceleration = targetVelocity - rb.Velocity;
             /* Rather than accelerate the character to the correct speed in 1 second, 
              * accelerate so we reach the desired speed in timeToTarget seconds 
              * (if we were to actually accelerate for the full timeToTarget seconds). */
@@ -211,12 +230,12 @@ namespace UnityMovementAI
 
         public Vector3 Interpose(MovementAIRigidbody target1, MovementAIRigidbody target2)
         {
-            Vector3 midPoint = (target1.position + target2.position) / 2;
+            Vector3 midPoint = (target1.Position + target2.Position) / 2;
 
             float timeToReachMidPoint = Vector3.Distance(midPoint, transform.position) / maxVelocity;
 
-            Vector3 futureTarget1Pos = target1.position + target1.velocity * timeToReachMidPoint;
-            Vector3 futureTarget2Pos = target2.position + target2.velocity * timeToReachMidPoint;
+            Vector3 futureTarget1Pos = target1.Position + target1.Velocity * timeToReachMidPoint;
+            Vector3 futureTarget2Pos = target2.Position + target2.Velocity * timeToReachMidPoint;
 
             midPoint = (futureTarget1Pos + futureTarget2Pos) / 2;
 

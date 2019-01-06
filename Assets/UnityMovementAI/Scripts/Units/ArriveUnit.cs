@@ -7,7 +7,7 @@ namespace UnityMovementAI
 
         public Vector3 targetPosition;
 
-        private SteeringBasics steeringBasics;
+        SteeringBasics steeringBasics;
 
         void Start()
         {

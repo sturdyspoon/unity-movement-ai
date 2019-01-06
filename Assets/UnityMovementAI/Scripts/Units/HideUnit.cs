@@ -6,11 +6,11 @@ namespace UnityMovementAI
     {
         public MovementAIRigidbody target;
 
-        private SteeringBasics steeringBasics;
-        private Hide hide;
-        private Spawner obstacleSpawner;
+        SteeringBasics steeringBasics;
+        Hide hide;
+        Spawner obstacleSpawner;
 
-        private WallAvoidance wallAvoid;
+        WallAvoidance wallAvoid;
 
         void Start()
         {

@@ -9,8 +9,8 @@ namespace UnityMovementAI
     {
         public float distanceFromBoundary = 0.6f;
 
-        private SteeringBasics steeringBasics;
-        private Evade evade;
+        SteeringBasics steeringBasics;
+        Evade evade;
 
         void Awake()
         {
@@ -54,14 +54,14 @@ namespace UnityMovementAI
             return steeringBasics.Arrive(bestHidingSpot);
         }
 
-        private Vector3 GetHidingPosition(MovementAIRigidbody obstacle, MovementAIRigidbody target)
+        Vector3 GetHidingPosition(MovementAIRigidbody obstacle, MovementAIRigidbody target)
         {
-            float distAway = obstacle.radius + distanceFromBoundary;
+            float distAway = obstacle.Radius + distanceFromBoundary;
 
-            Vector3 dir = obstacle.position - target.position;
+            Vector3 dir = obstacle.Position - target.Position;
             dir.Normalize();
 
-            return obstacle.position + dir * distAway;
+            return obstacle.Position + dir * distAway;
         }
     }
 }

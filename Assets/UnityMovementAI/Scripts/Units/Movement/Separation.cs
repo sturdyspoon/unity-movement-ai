@@ -6,15 +6,19 @@ namespace UnityMovementAI
     [RequireComponent(typeof(MovementAIRigidbody))]
     public class Separation : MonoBehaviour
     {
-        /* The maximum acceleration for separation */
+        /// <summary>
+        /// The maximum acceleration for separation
+        /// </summary>
         public float sepMaxAcceleration = 25;
 
-        /* This should be the maximum separation distance possible between a separation
-         * target and the character.
-         * So it should be: separation sensor radius + max target radius */
+        /// <summary>
+        /// This should be the maximum separation distance possible between a
+        /// separation target and the character. So it should be: separation
+        /// sensor radius + max target radius
+        /// </summary>
         public float maxSepDist = 1f;
 
-        private MovementAIRigidbody rb;
+        MovementAIRigidbody rb;
 
         void Awake()
         {
@@ -28,13 +32,13 @@ namespace UnityMovementAI
             foreach (MovementAIRigidbody r in targets)
             {
                 /* Get the direction and distance from the target */
-                Vector3 direction = rb.colliderPosition - r.colliderPosition;
+                Vector3 direction = rb.ColliderPosition - r.ColliderPosition;
                 float dist = direction.magnitude;
 
                 if (dist < maxSepDist)
                 {
                     /* Calculate the separation strength (can be changed to use inverse square law rather than linear) */
-                    var strength = sepMaxAcceleration * (maxSepDist - dist) / (maxSepDist - rb.radius - r.radius);
+                    var strength = sepMaxAcceleration * (maxSepDist - dist) / (maxSepDist - rb.Radius - r.Radius);
 
                     /* Added separation acceleration to the existing steering */
                     direction = rb.ConvertVector(direction);

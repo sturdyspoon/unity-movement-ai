@@ -13,8 +13,8 @@ namespace UnityMovementAI
         public Transform target;
         public Vector3 targetOffset = new Vector3(0f, 1f, 0f);
 
-        private float currentX = 0f;
-        private float currentY = 0f;
+        float currentX;
+        float currentY;
 
         public static CursorLockMode cursorMode;
 
@@ -36,7 +36,7 @@ namespace UnityMovementAI
             }
         }
 
-        private void UpdateCursor()
+        void UpdateCursor()
         {
             /* Release cursor on escape keypress */
             if (Input.GetKeyDown(KeyCode.Escape))

@@ -4,8 +4,8 @@ namespace UnityMovementAI
 {
     public class Wander1Unit : MonoBehaviour
     {
-        private SteeringBasics steeringBasics;
-        private Wander1 wander;
+        SteeringBasics steeringBasics;
+        Wander1 wander;
 
         void Start()
         {

@@ -9,11 +9,11 @@ namespace UnityMovementAI
         public Vector3 offset;
         public float groupLookDist = 1.5f;
 
-        private SteeringBasics steeringBasics;
-        private OffsetPursuit offsetPursuit;
-        private Separation separation;
+        SteeringBasics steeringBasics;
+        OffsetPursuit offsetPursuit;
+        Separation separation;
 
-        private NearSensor sensor;
+        NearSensor sensor;
 
         void Start()
         {
@@ -39,7 +39,7 @@ namespace UnityMovementAI
             }
             else
             {
-                steeringBasics.LookAtDirection(target.rotation);
+                steeringBasics.LookAtDirection(target.Rotation);
             }
         }
     }

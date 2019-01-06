@@ -6,8 +6,8 @@ namespace UnityMovementAI
     {
         public Transform target;
 
-        private SteeringBasics steeringBasics;
-        private Flee flee;
+        SteeringBasics steeringBasics;
+        Flee flee;
 
         void Start()
         {

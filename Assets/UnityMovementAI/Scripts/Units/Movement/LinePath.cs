@@ -3,18 +3,20 @@ using System;
 
 namespace UnityMovementAI
 {
-    [System.Serializable]
+    [Serializable]
     public class LinePath
     {
         public Vector3[] nodes;
 
-        [System.NonSerialized]
+        [NonSerialized]
         public float maxDist;
 
-        [System.NonSerialized]
+        [NonSerialized]
         public float[] distances;
 
-        /* Indexer declaration. */
+        /// <summary>
+        /// Indexer declaration.
+        /// </summary>
         public Vector3 this[int i]
         {
             get
@@ -28,7 +30,7 @@ namespace UnityMovementAI
             }
         }
 
-        public int size
+        public int Length
         {
             get
             {
@@ -36,7 +38,7 @@ namespace UnityMovementAI
             }
         }
 
-        public Vector3 endNode
+        public Vector3 EndNode
         {
             get
             {
@@ -44,7 +46,10 @@ namespace UnityMovementAI
             }
         }
 
-        /* This function creates a path of line segments */
+        /// <summary>
+        /// This function creates a path of line segments
+        /// </summary>
+        /// <param name="nodes">Nodes.</param>
         public LinePath(Vector3[] nodes)
         {
             this.nodes = nodes;
@@ -52,8 +57,10 @@ namespace UnityMovementAI
             CalcDistances();
         }
 
-        /* Loops through the path's nodes and determines how far each node in the path is 
-         * from the starting node */
+        /// <summary>
+        /// Loops through the path's nodes and determines how far each node in
+        /// the path is from the starting node.
+        /// </summary>
         public void CalcDistances()
         {
             distances = new float[nodes.Length];
@@ -67,7 +74,9 @@ namespace UnityMovementAI
             maxDist = distances[distances.Length - 1];
         }
 
-        /* Draws the path in the scene view */
+        /// <summary>
+        /// Draws the path in the scene view
+        /// </summary>
         public void Draw()
         {
             for (int i = 0; i < nodes.Length - 1; i++)
@@ -76,7 +85,9 @@ namespace UnityMovementAI
             }
         }
 
-        /* Gets the param for the closest point on the path given a position */
+        /// <summary>
+        /// Gets the param for the closest point on the path given a position
+        /// </summary>
         public float GetParam(Vector3 position, MovementAIRigidbody rb)
         {
             int closestSegment = GetClosestSegment(position);
@@ -106,7 +117,9 @@ namespace UnityMovementAI
             return closestSegment;
         }
 
-        /* Given a param it gets the position on the path */
+        /// <summary>
+        /// Given a param it gets the position on the path
+        /// </summary>
         public Vector3 GetPosition(float param, bool pathLoop = false)
         {
             /* Make sure the param is not past the beginning or end of the path */
@@ -146,9 +159,11 @@ namespace UnityMovementAI
             return Vector3.Lerp(nodes[i], nodes[i + 1], t);
         }
 
-        /* Gives the distance of a point to a line segment.
-         * p is the point, v and w are the two points of the line segment */
-        private float DistToSegment(Vector3 p, Vector3 v, Vector3 w)
+        /// <summary>
+        /// Gives the distance of a point to a line segment.
+        /// p is the point, v and w are the two points of the line segment
+        /// </summary>
+        float DistToSegment(Vector3 p, Vector3 v, Vector3 w)
         {
             Vector3 vw = w - v;
 
@@ -176,8 +191,11 @@ namespace UnityMovementAI
             return Vector3.Distance(p, closestPoint);
         }
 
-        /* Finds the param for the closest point on the segment vw given the point p */
-        private float GetParamForSegment(Vector3 p, Vector3 v, Vector3 w, MovementAIRigidbody rb)
+        /// <summary>
+        /// Finds the param for the closest point on the segment vw given the point p
+        /// </summary>
+        /// <returns>The parameter for segment.</returns>
+        float GetParamForSegment(Vector3 p, Vector3 v, Vector3 w, MovementAIRigidbody rb)
         {
             Vector3 vw = w - v;
 

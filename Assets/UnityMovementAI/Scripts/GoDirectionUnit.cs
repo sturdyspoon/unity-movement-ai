@@ -7,8 +7,8 @@ namespace UnityMovementAI
     {
         public Vector3 direction;
 
-        private MovementAIRigidbody rb;
-        private SteeringBasics steeringBasics;
+        MovementAIRigidbody rb;
+        SteeringBasics steeringBasics;
 
         void Start()
         {
@@ -18,11 +18,11 @@ namespace UnityMovementAI
 
         void FixedUpdate()
         {
-            rb.velocity = direction.normalized * steeringBasics.maxVelocity;
+            rb.Velocity = direction.normalized * steeringBasics.maxVelocity;
 
             steeringBasics.LookWhereYoureGoing();
 
-            Debug.DrawLine(rb.colliderPosition, rb.colliderPosition + (direction.normalized), Color.cyan, 0f, false);
+            Debug.DrawLine(rb.ColliderPosition, rb.ColliderPosition + (direction.normalized), Color.cyan, 0f, false);
         }
     }
 }

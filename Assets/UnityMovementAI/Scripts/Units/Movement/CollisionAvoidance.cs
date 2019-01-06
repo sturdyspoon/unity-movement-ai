@@ -9,9 +9,9 @@ namespace UnityMovementAI
         public float maxAcceleration = 15f;
 
         [Tooltip("How much space can be between two characters before they are considered colliding")]
-        public float distanceBetween = 0f;
+        public float distanceBetween;
 
-        private MovementAIRigidbody rb;
+        MovementAIRigidbody rb;
 
         void Awake()
         {
@@ -36,8 +36,8 @@ namespace UnityMovementAI
             foreach (MovementAIRigidbody r in targets)
             {
                 /* Calculate the time to collision */
-                Vector3 relativePos = rb.colliderPosition - r.colliderPosition;
-                Vector3 relativeVel = rb.realVelocity - r.realVelocity;
+                Vector3 relativePos = rb.ColliderPosition - r.ColliderPosition;
+                Vector3 relativeVel = rb.RealVelocity - r.RealVelocity;
                 float distance = relativePos.magnitude;
                 float relativeSpeed = relativeVel.magnitude;
 
@@ -52,7 +52,7 @@ namespace UnityMovementAI
                 Vector3 separation = relativePos + relativeVel * timeToCollision;
                 float minSeparation = separation.magnitude;
 
-                if (minSeparation > rb.radius + r.radius + distanceBetween)
+                if (minSeparation > rb.Radius + r.Radius + distanceBetween)
                 {
                     continue;
                 }
@@ -66,7 +66,7 @@ namespace UnityMovementAI
                     firstDistance = distance;
                     firstRelativePos = relativePos;
                     firstRelativeVel = relativeVel;
-                    firstRadius = r.radius;
+                    firstRadius = r.Radius;
                 }
             }
 
@@ -80,9 +80,9 @@ namespace UnityMovementAI
 
             /* If we are going to collide with no separation or if we are already colliding then 
              * steer based on current position */
-            if (firstMinSeparation <= 0 || firstDistance < rb.radius + firstRadius + distanceBetween)
+            if (firstMinSeparation <= 0 || firstDistance < rb.Radius + firstRadius + distanceBetween)
             {
-                acceleration = rb.colliderPosition - firstTarget.colliderPosition;
+                acceleration = rb.ColliderPosition - firstTarget.ColliderPosition;
             }
             /* Else calculate the future relative position */
             else

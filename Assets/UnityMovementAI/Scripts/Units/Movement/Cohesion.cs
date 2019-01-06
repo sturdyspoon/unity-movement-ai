@@ -6,12 +6,11 @@ namespace UnityMovementAI
     [RequireComponent(typeof(SteeringBasics))]
     public class Cohesion : MonoBehaviour
     {
-
         public float facingCosine = 120f;
 
-        private float facingCosineVal;
+        float facingCosineVal;
 
-        private SteeringBasics steeringBasics;
+        SteeringBasics steeringBasics;
 
         void Awake()
         {
@@ -27,9 +26,9 @@ namespace UnityMovementAI
             /* Sums up everyone's position who is close enough and in front of the character */
             foreach (MovementAIRigidbody r in targets)
             {
-                if (steeringBasics.IsFacing(r.position, facingCosineVal))
+                if (steeringBasics.IsFacing(r.Position, facingCosineVal))
                 {
-                    centerOfMass += r.position;
+                    centerOfMass += r.Position;
                     count++;
                 }
             }

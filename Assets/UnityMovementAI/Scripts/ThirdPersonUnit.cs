@@ -14,12 +14,12 @@ namespace UnityMovementAI
 
         public bool autoAttachToCamera = true;
 
-        private MovementAIRigidbody rb;
+        MovementAIRigidbody rb;
 
-        private Transform cam;
+        Transform cam;
 
-        private float horAxis = 0f;
-        private float vertAxis = 0f;
+        float horAxis = 0f;
+        float vertAxis = 0f;
 
         void Start()
         {
@@ -47,11 +47,11 @@ namespace UnityMovementAI
         {
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                rb.velocity = GetMovementDir() * speed;
+                rb.Velocity = GetMovementDir() * speed;
             }
             else
             {
-                rb.velocity = Vector3.zero;
+                rb.Velocity = Vector3.zero;
             }
         }
 
@@ -65,12 +65,12 @@ namespace UnityMovementAI
                 {
                     float curFacing = transform.eulerAngles.y;
                     float facing = Mathf.Atan2(-dir.z, dir.x) * Mathf.Rad2Deg;
-                    rb.rotation = Quaternion.Euler(0, Mathf.MoveTowardsAngle(curFacing, facing, facingSpeed * Time.deltaTime), 0);
+                    rb.Rotation = Quaternion.Euler(0, Mathf.MoveTowardsAngle(curFacing, facing, facingSpeed * Time.deltaTime), 0);
                 }
             }
         }
 
-        private Vector3 GetMovementDir()
+        Vector3 GetMovementDir()
         {
             return ((cam.forward * vertAxis) + (cam.right * horAxis)).normalized;
         }

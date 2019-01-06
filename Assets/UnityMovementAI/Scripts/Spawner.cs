@@ -16,10 +16,10 @@ namespace UnityMovementAI
 
         public MovementAIRigidbody[] thingsToAvoid;
 
-        private Vector3 bottomLeft;
-        private Vector3 widthHeight;
+        Vector3 bottomLeft;
+        Vector3 widthHeight;
 
-        private bool isObj3D;
+        bool isObj3D;
 
         [System.NonSerialized]
         public List<MovementAIRigidbody> objs = new List<MovementAIRigidbody>();
@@ -52,7 +52,7 @@ namespace UnityMovementAI
             }
         }
 
-        private bool TryToCreateObject()
+        bool TryToCreateObject()
         {
             float size = Random.Range(objectSizeRange.x, objectSizeRange.y);
             float halfSize = size / 2f;
@@ -105,14 +105,14 @@ namespace UnityMovementAI
             return false;
         }
 
-        private bool CanPlaceObject(float halfSize, Vector3 pos)
+        bool CanPlaceObject(float halfSize, Vector3 pos)
         {
             /* Make sure it does not overlap with any thing to avoid */
             for (int i = 0; i < thingsToAvoid.Length; i++)
             {
-                float dist = Vector3.Distance(thingsToAvoid[i].position, pos);
+                float dist = Vector3.Distance(thingsToAvoid[i].Position, pos);
 
-                if (dist < halfSize + thingsToAvoid[i].radius)
+                if (dist < halfSize + thingsToAvoid[i].Radius)
                 {
                     return false;
                 }
@@ -121,9 +121,9 @@ namespace UnityMovementAI
             /* Make sure it does not overlap with any existing object */
             foreach (MovementAIRigidbody o in objs)
             {
-                float dist = Vector3.Distance(o.position, pos);
+                float dist = Vector3.Distance(o.Position, pos);
 
-                if (dist < o.radius + spaceBetweenObjects + halfSize)
+                if (dist < o.Radius + spaceBetweenObjects + halfSize)
                 {
                     return false;
                 }

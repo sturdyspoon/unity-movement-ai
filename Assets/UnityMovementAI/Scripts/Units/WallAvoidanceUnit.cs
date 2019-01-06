@@ -6,9 +6,9 @@ namespace UnityMovementAI
     {
         public LinePath path;
 
-        private SteeringBasics steeringBasics;
-        private WallAvoidance wallAvoidance;
-        private FollowPath followPath;
+        SteeringBasics steeringBasics;
+        WallAvoidance wallAvoidance;
+        FollowPath followPath;
 
         void Start()
         {

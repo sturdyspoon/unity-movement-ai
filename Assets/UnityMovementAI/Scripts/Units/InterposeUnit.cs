@@ -7,7 +7,7 @@ namespace UnityMovementAI
         public MovementAIRigidbody target1;
         public MovementAIRigidbody target2;
 
-        private SteeringBasics steeringBasics;
+        SteeringBasics steeringBasics;
 
         void Start()
         {

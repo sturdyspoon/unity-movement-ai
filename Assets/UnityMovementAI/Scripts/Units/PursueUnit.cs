@@ -6,8 +6,8 @@ namespace UnityMovementAI
     {
         public MovementAIRigidbody target;
 
-        private SteeringBasics steeringBasics;
-        private Pursue pursue;
+        SteeringBasics steeringBasics;
+        Pursue pursue;
 
         void Start()
         {

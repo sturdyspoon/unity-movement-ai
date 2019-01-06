@@ -4,11 +4,11 @@ namespace UnityMovementAI
 {
     public class WanderAvoidUnit : MonoBehaviour
     {
-        private SteeringBasics steeringBasics;
-        private Wander2 wander;
-        private CollisionAvoidance colAvoid;
+        SteeringBasics steeringBasics;
+        Wander2 wander;
+        CollisionAvoidance colAvoid;
 
-        private NearSensor colAvoidSensor;
+        NearSensor colAvoidSensor;
 
         void Start()
         {

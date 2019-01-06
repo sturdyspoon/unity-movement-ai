@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 namespace UnityMovementAI
 {
     public class CameraMovement : MonoBehaviour
     {
-
         public Transform target;
 
-        private Vector3 displacement;
+        Vector3 displacement;
 
         void Start()
         {

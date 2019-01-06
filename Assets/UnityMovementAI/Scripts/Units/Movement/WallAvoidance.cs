@@ -14,10 +14,14 @@ namespace UnityMovementAI
 
         public LayerMask castMask = Physics.DefaultRaycastLayers;
 
-        /* The distance away from the collision that we wish go */
+        /// <summary>
+        /// The distance away from the collision that we wish go
+        /// </summary>
         public float wallAvoidDistance = 0.5f;
 
-        /* How far ahead the ray should extend */
+        /// <summary>
+        /// How far ahead the ray should extend
+        /// </summary>
         public float mainWhiskerLen = 1.25f;
 
         public float sideWhiskerLen = 0.701f;
@@ -25,8 +29,8 @@ namespace UnityMovementAI
         public float sideWhiskerAngle = 45f;
 
 
-        private MovementAIRigidbody rb;
-        private SteeringBasics steeringBasics;
+        MovementAIRigidbody rb;
+        SteeringBasics steeringBasics;
 
         void Awake()
         {
@@ -36,13 +40,13 @@ namespace UnityMovementAI
 
         public Vector3 GetSteering()
         {
-            if (rb.velocity.magnitude > 0.005f)
+            if (rb.Velocity.magnitude > 0.005f)
             {
-                return GetSteering(rb.velocity);
+                return GetSteering(rb.Velocity);
             }
             else
             {
-                return GetSteering(rb.rotationAsVector);
+                return GetSteering(rb.RotationAsVector);
             }
         }
 
@@ -63,7 +67,7 @@ namespace UnityMovementAI
 
             /* If velocity and the collision normal are parallel then move the target a bit to
              * the left or right of the normal */
-            float angle = Vector3.Angle(rb.velocity, hit.normal);
+            float angle = Vector3.Angle(rb.Velocity, hit.normal);
             if (angle > 165f)
             {
                 Vector3 perp;
@@ -88,7 +92,7 @@ namespace UnityMovementAI
             return steeringBasics.Seek(targetPostition, maxAcceleration);
         }
 
-        private bool FindObstacle(Vector3 facingDir, out GenericCastHit firstHit)
+        bool FindObstacle(Vector3 facingDir, out GenericCastHit firstHit)
         {
             facingDir = rb.ConvertVector(facingDir).normalized;
 
@@ -104,7 +108,7 @@ namespace UnityMovementAI
             return CastWhiskers(dirs, out firstHit);
         }
 
-        private bool CastWhiskers(Vector3[] dirs, out GenericCastHit firstHit)
+        bool CastWhiskers(Vector3[] dirs, out GenericCastHit firstHit)
         {
             firstHit = new GenericCastHit();
             bool foundObs = false;
@@ -126,10 +130,10 @@ namespace UnityMovementAI
             return foundObs;
         }
 
-        private bool GenericCast(Vector3 direction, out GenericCastHit hit, float distance = Mathf.Infinity)
+        bool GenericCast(Vector3 direction, out GenericCastHit hit, float distance = Mathf.Infinity)
         {
             bool result = false;
-            Vector3 origin = rb.colliderPosition;
+            Vector3 origin = rb.ColliderPosition;
 
             if (rb.is3D)
             {
@@ -141,7 +145,7 @@ namespace UnityMovementAI
                 }
                 else
                 {
-                    result = Physics.SphereCast(origin, (rb.radius * 0.5f), direction, out h, distance, castMask.value);
+                    result = Physics.SphereCast(origin, (rb.Radius * 0.5f), direction, out h, distance, castMask.value);
                 }
 
                 hit = new GenericCastHit(h);
@@ -169,7 +173,7 @@ namespace UnityMovementAI
                 }
                 else
                 {
-                    h = Physics2D.CircleCast(origin, (rb.radius * 0.5f), direction, distance, castMask.value);
+                    h = Physics2D.CircleCast(origin, (rb.Radius * 0.5f), direction, distance, castMask.value);
                 }
 
                 /* RaycastHit2D auto evaluates to true or false evidently */
@@ -182,21 +186,21 @@ namespace UnityMovementAI
             return result;
         }
 
-        private struct GenericCastHit
+        struct GenericCastHit
         {
             public Vector3 point;
             public Vector3 normal;
 
             public GenericCastHit(RaycastHit h)
             {
-                this.point = h.point;
-                this.normal = h.normal;
+                point = h.point;
+                normal = h.normal;
             }
 
             public GenericCastHit(RaycastHit2D h)
             {
-                this.point = h.point;
-                this.normal = h.normal;
+                point = h.point;
+                normal = h.normal;
             }
         }
     }

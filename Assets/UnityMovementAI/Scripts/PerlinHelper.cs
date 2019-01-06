@@ -25,10 +25,10 @@ namespace UnityMovementAI
             this.width = width;
             this.height = height;
 
-            this.offset = new Vector2(Random.value * 100000, Random.value * 100000);
+            offset = new Vector2(Random.value * 100000, Random.value * 100000);
 
             float rAspect = (float)width / height;
-            this.scale = new Vector2(perlinScale * rAspect, perlinScale);
+            scale = new Vector2(perlinScale * rAspect, perlinScale);
         }
     }
 }
