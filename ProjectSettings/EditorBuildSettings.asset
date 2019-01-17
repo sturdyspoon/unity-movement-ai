@@ -5,10 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/TestScenarios/TestScenarios.unity
     guid: 403bc1d5608d13e428b5adb219adbd69
   - enabled: 0
-    path: Assets/3D Examples/FollowPath.unity
-    guid: 5e2d0d463b7b48b4caa90f6d2c950a8b
+    path: Assets/Examples/3D/Flocking.unity
+    guid: a8ea7c2341ae6b043b33030f348b7cca
+  - enabled: 1
+    path: Assets/Examples/2D/Flocking.unity
+    guid: 5976789efd09c5f4c89cccd6da4d538d
   m_configObjects: {}
