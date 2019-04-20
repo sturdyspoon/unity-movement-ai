@@ -1,15 +1,24 @@
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-[Ll]ogs/
+# This .gitignore file should be placed at the root of your Unity project directory
+
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+
+# Never ignore Asset meta data
+!/[Aa]ssets/**/*.meta
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
-# [Aa]ssets/AssetStoreTools*
+# /[Aa]ssets/AssetStoreTools*
+
+# TextMesh Pro files
+[Aa]ssets/TextMesh*Pro/
 
 # Visual Studio cache directory
 .vs/
+.vscode/
 
 # Gradle cache directory
 .gradle/
@@ -42,7 +51,7 @@ sysinfo.txt
 
 # Builds
 *.apk
-# *.unitypackage
+#*.unitypackage
 
 # Crashlytics generated file
 crashlytics-build.properties
