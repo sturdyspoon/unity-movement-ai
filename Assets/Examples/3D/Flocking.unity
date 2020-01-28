@@ -94,8 +94,8 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
     m_ExportTrainingData: 0
+    m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -184,38 +184,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
-      propertyPath: thingsToAvoid.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
-      propertyPath: obj
-      value: 
-      objectReference: {fileID: 411838, guid: 7811d047f013c5f43a36b27f05f17bbb, type: 3}
-    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
-      propertyPath: randomizeOrientation
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
-      propertyPath: numberOfObjects
-      value: 75
-      objectReference: {fileID: 0}
-    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
-      propertyPath: thingsToAvoid.Array.data[0]
-      value: 
-      objectReference: {fileID: 1276413129}
-    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
-      propertyPath: thingsToAvoid.Array.data[1]
-      value: 
-      objectReference: {fileID: 975609148}
-    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
-      propertyPath: thingsToAvoid.Array.data[2]
-      value: 
-      objectReference: {fileID: 364184888}
-    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
-      propertyPath: thingsToAvoid.Array.data[3]
-      value: 
-      objectReference: {fileID: 1247253105}
     - target: {fileID: 491568, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -248,6 +216,38 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
+      propertyPath: thingsToAvoid.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
+      propertyPath: obj
+      value: 
+      objectReference: {fileID: 411838, guid: 7811d047f013c5f43a36b27f05f17bbb, type: 3}
+    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
+      propertyPath: randomizeOrientation
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
+      propertyPath: numberOfObjects
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
+      propertyPath: thingsToAvoid.Array.data[0]
+      value: 
+      objectReference: {fileID: 1276413129}
+    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
+      propertyPath: thingsToAvoid.Array.data[1]
+      value: 
+      objectReference: {fileID: 975609148}
+    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
+      propertyPath: thingsToAvoid.Array.data[2]
+      value: 
+      objectReference: {fileID: 364184888}
+    - target: {fileID: 11493774, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
+      propertyPath: thingsToAvoid.Array.data[3]
+      value: 
+      objectReference: {fileID: 1247253105}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c40413500bcaa84f884e9834bc27ec9, type: 3}
 --- !u!1 &551253050
@@ -390,6 +390,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2364876, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5eff0f9175d0e054290206daa1eef80e, type: 2}
     - target: {fileID: 11445756, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
       propertyPath: maxVelocity
       value: 3
@@ -398,10 +402,6 @@ PrefabInstance:
       propertyPath: maxAcceleration
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 2364876, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 5eff0f9175d0e054290206daa1eef80e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
 --- !u!1001 &710067751
@@ -447,6 +447,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 2364876, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5eff0f9175d0e054290206daa1eef80e, type: 2}
     - target: {fileID: 11445756, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
       propertyPath: maxVelocity
       value: 3
@@ -455,10 +459,6 @@ PrefabInstance:
       propertyPath: maxAcceleration
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 2364876, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 5eff0f9175d0e054290206daa1eef80e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
 --- !u!1 &735375198
@@ -676,6 +676,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 2364876, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5eff0f9175d0e054290206daa1eef80e, type: 2}
     - target: {fileID: 11445756, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
       propertyPath: maxVelocity
       value: 3
@@ -684,10 +688,6 @@ PrefabInstance:
       propertyPath: maxAcceleration
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 2364876, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 5eff0f9175d0e054290206daa1eef80e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
 --- !u!1001 &1667001092
@@ -733,6 +733,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 2364876, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5eff0f9175d0e054290206daa1eef80e, type: 2}
     - target: {fileID: 11445756, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
       propertyPath: maxVelocity
       value: 3
@@ -741,9 +745,5 @@ PrefabInstance:
       propertyPath: maxAcceleration
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 2364876, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 5eff0f9175d0e054290206daa1eef80e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd1d62c70d726f34eb654e97eb3686cd, type: 3}
