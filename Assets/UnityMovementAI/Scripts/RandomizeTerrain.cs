@@ -19,7 +19,7 @@ namespace UnityMovementAI
 
         public void GenerateHeights(Terrain terrain, float perlinScale)
         {
-            float radius = terrain.terrainData.heightmapWidth / 2;
+            float radius = terrain.terrainData.heightmapResolution / 2;
             float innerRadius = radius - circleCutoff;
 
             Vector2 center = new Vector2(radius, radius);
@@ -27,13 +27,13 @@ namespace UnityMovementAI
             float minHeightPercent = minHeight / terrain.terrainData.heightmapScale.y;
             float maxHeightPercent = maxHeight / terrain.terrainData.heightmapScale.y;
 
-            PerlinHelper ph = new PerlinHelper(terrain.terrainData.heightmapWidth, terrain.terrainData.heightmapHeight, perlinScale);
+            PerlinHelper ph = new PerlinHelper(terrain.terrainData.heightmapResolution, terrain.terrainData.heightmapResolution, perlinScale);
 
-            float[,] heights = new float[terrain.terrainData.heightmapWidth, terrain.terrainData.heightmapHeight];
+            float[,] heights = new float[terrain.terrainData.heightmapResolution, terrain.terrainData.heightmapResolution];
 
-            for (int i = 0; i < terrain.terrainData.heightmapWidth; i++)
+            for (int i = 0; i < terrain.terrainData.heightmapResolution; i++)
             {
-                for (int k = 0; k < terrain.terrainData.heightmapHeight; k++)
+                for (int k = 0; k < terrain.terrainData.heightmapResolution; k++)
                 {
                     float distFromCenter = Vector2.Distance(new Vector2(i, k), center);
 
