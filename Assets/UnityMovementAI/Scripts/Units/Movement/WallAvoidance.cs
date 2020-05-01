@@ -165,6 +165,9 @@ namespace UnityMovementAI
             }
             else
             {
+                bool defaultQueriesStartInColliders = Physics2D.queriesStartInColliders;
+                Physics2D.queriesStartInColliders = false;
+
                 RaycastHit2D h;
 
                 if (wallDetection == WallDetection.Raycast)
@@ -179,6 +182,8 @@ namespace UnityMovementAI
                 /* RaycastHit2D auto evaluates to true or false evidently */
                 result = (h.collider != null);
                 hit = new GenericCastHit(h);
+
+                Physics2D.queriesStartInColliders = defaultQueriesStartInColliders;
             }
 
             //Debug.DrawLine(origin, origin + direction * distance, Color.cyan, 0f, false);
